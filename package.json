@@ -1,0 +1,89 @@
+{
+  "name": "labs-api-starter",
+  "version": "1.0.0",
+  "private": false,
+  "license": "MIT",
+  "repository": "github:Lambda-School-Labs/labs-api-starter",
+  "scripts": {
+    "start": "node server.js",
+    "watch:dev": "nodemon",
+    "lint": "npx eslint .",
+    "lint:fix": "npx eslint --fix .",
+    "format": "npx prettier --write \"**/*.+(js|jsx|json|yml|yaml|css|md)\"",
+    "knex": "npx knex --knexfile config/knexfile.js",
+    "tests": "npx jest",
+    "coverage": "CI=true npx jest --coverage --detectOpenHandles --forceExit"
+  },
+  "lint-staged": {
+    "api/**/*.js": [
+      "eslint --fix",
+      "prettier-eslint --write"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testResultsProcessor": "jest-sonar-reporter",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/__tests__/",
+      "/vendor/",
+      "/coverage/"
+    ],
+    "collectCoverageFrom": [
+      "**/*.js"
+    ]
+  },
+  "nodemonConfig": {
+    "exec": "npm run start",
+    "watch": [
+      "api/*",
+      "public/*"
+    ],
+    "ignore": [
+      "**/__tests__/**",
+      "*.test.js",
+      "*.spec.js"
+    ]
+  },
+  "dependencies": {
+    "@okta/jwt-verifier": "^2.0.0",
+    "axios": "^0.21.1",
+    "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
+    "debug": "~2.6.9",
+    "dotenv": "^8.2.0",
+    "express": "~4.16.1",
+    "faker": "^4.1.0",
+    "helmet": "^3.23.1",
+    "http-errors": "~1.6.3",
+    "knex": "^0.21.1",
+    "morgan": "~1.9.1",
+    "pg": "^8.2.1",
+    "swagger-jsdoc": "^6.0.1",
+    "swagger-ui-express": "^4.1.6"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.2",
+    "eslint": "^7.3.1",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-jest": "^23.17.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "husky": "^4.3.0",
+    "jest": "^25.2.4",
+    "jest-sonar-reporter": "^2.0.0",
+    "lint-staged": "^10.4.2",
+    "nodemon": "^2.0.4",
+    "prettier": "^2.0.5",
+    "supertest": "^4.0.2"
+  }
+}

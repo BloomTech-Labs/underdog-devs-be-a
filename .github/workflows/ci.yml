@@ -1,0 +1,34 @@
+# The name of the workflow
+name: build
+
+# What conditions trigger the workflow
+#  In this case, all pushes and pull requests
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+# The jobs that will be run, usually in parallel
+jobs:
+  sonarcloud:
+    name: SonarCloud
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12"
+      - run: cp .env.sample .env
+      - name: Install dependencies
+        run:  npm install
+      - run: npm run lint
+      - name: Run Tests
+        run:  npm run coverage
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
