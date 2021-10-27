@@ -5,7 +5,7 @@ module.exports = {
       title: 'Lambda Labs Starter API',
       version: '1.0.0',
       description:
-        'A basic API server to act as a starting point for Labs projects',
+        'A basic API server to act as a starting point for underdog-devs projects',
       license: {
         name: 'MIT',
         url: 'https://en.wikipedia.org/wiki/MIT_License',
