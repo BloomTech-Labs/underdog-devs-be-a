@@ -11,6 +11,9 @@
     "lint:fix": "npx eslint --fix .",
     "format": "npx prettier --write \"**/*.+(js|jsx|json|yml|yaml|css|md)\"",
     "knex": "npx knex --knexfile config/knexfile.js",
+    "migrate": "npx knex --knexfile config/knexfile.js migrate:latest",
+    "rollback": "npx knex --knexfile config/knexfile.js migrate:rollback",
+    "seed": "npx knex --knexfile config/knexfile.js seed:run",
     "tests": "npx jest",
     "coverage": "CI=true npx jest --coverage --detectOpenHandles --forceExit"
   },
