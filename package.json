@@ -1,6 +1,7 @@
 {
-  "name": "labs-api-starter",
+  "name": "underdog-devs-be-a",
   "version": "1.0.0",
+  "description": "This is the backend portion of underdog-devs",
   "private": false,
   "license": "MIT",
   "repository": "github:Lambda-School-Labs/labs-api-starter",
