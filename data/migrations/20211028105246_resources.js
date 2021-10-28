@@ -6,7 +6,7 @@ exports.up = (knex) => {
       table.string('resource_name').notNullable();
       table
         .string('profile_id')
-        .notNullable()
+        .defaultTo(null)
         .references('profile_id')
         .inTable('profiles')
         .onDelete('RESTRICT')
