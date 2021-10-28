@@ -2,7 +2,7 @@ exports.up = (knex) => {
   return knex.schema
     .raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"')
     .createTable('profiles', function (table) {
-      table.string('user_id').notNullable().unique().primary();
+      table.string('profile_id').notNullable().unique().primary();
       table.string('email').notNullable().unique();
       table.string('first_name');
       table.string('last_name');
