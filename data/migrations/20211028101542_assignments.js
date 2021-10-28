@@ -2,7 +2,7 @@ exports.up = (knex) => {
   return knex.schema
     .raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"')
     .createTable('assignments', function (table) {
-      table.increment('assignment_id').notNullable().unique().primary();
+      table.increments('assignment_id').notNullable().unique().primary();
       table
         .string('mentor_id')
         .notNullable()

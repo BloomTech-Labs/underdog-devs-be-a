@@ -1,13 +1,26 @@
+const dummyData = [
+  {
+    mentor_id: '7',
+    mentee_id: '10',
+  },
+  {
+    mentor_id: '7',
+    mentee_id: '11',
+  },
+  {
+    mentor_id: '8',
+    mentee_id: '12',
+  },
+  {
+    mentor_id: '9',
+    mentee_id: '10',
+  },
+];
 
-exports.seed = function(knex) {
-  // Deletes ALL existing entries
-  return knex('table_name').del()
+exports.seed = function (knex) {
+  return knex('assignments')
+    .del()
     .then(function () {
-      // Inserts seed entries
-      return knex('table_name').insert([
-        {id: 1, colName: 'rowValue1'},
-        {id: 2, colName: 'rowValue2'},
-        {id: 3, colName: 'rowValue3'}
-      ]);
+      return knex('assignments').insert(dummyData);
     });
 };
