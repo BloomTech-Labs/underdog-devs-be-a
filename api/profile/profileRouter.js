@@ -293,6 +293,7 @@ router.delete('/:id', (req, res) => {
   }
 });
 
+// wip
 router.put('/roles', authRequired, (req, res) => {
   Profiles.findById(req.body.id).then(
     Profiles.update(req.body.id, req.body.role_name)
