@@ -24,7 +24,7 @@
   "lint-staged": {
     "api/**/*.js": [
       "eslint --fix",
-      "prettier --write"
+      "prettier-eslint --write"
     ]
   },
   "husky": {
@@ -93,6 +93,7 @@
     "nodemon": "^2.0.4",
     "prettier": "^2.0.5",
     "prettier-eslint": "^13.0.0",
+    "prettier-eslint-cli": "^5.0.1",
     "supertest": "^4.0.2"
   }
 }

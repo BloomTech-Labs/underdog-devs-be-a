@@ -293,18 +293,15 @@ router.delete('/:id', (req, res) => {
   }
 });
 
-// wip
 router.put('/roles', authRequired, (req, res) => {
-  Profiles.findById(req.body.id).then(
-    Profiles.update(req.body.id, req.body.role_name)
+  Profiles.findById(req.body.profile_id).then(
+    Profiles.update(req.body.profile_id, req.body.role_id)
       .then((updated) => {
-        res
-          .status(200)
-          .json({ message: 'role updated', role_name: updated[0] });
+        res.status(200).json({ message: 'role updated', role_id: updated[0] });
       })
       .catch((err) => {
         res.status(500).json({
-          message: `Could not update profile '${req.body.id}'`,
+          message: `Could not update profile '${req.body.profile_id}'`,
           error: err.message,
         });
       })
