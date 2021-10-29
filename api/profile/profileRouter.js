@@ -275,7 +275,7 @@ router.put('/', authRequired, (req, res) => {
  *                profile:
  *                  $ref: '#/components/schemas/Profile'
  */
-router.delete('/:id', (req, res) => {
+router.delete('/:id', authRequired, (req, res) => {
   const id = req.params.id;
   try {
     Profiles.findById(id).then((profile) => {
@@ -294,14 +294,16 @@ router.delete('/:id', (req, res) => {
 });
 
 router.put('/roles', authRequired, (req, res) => {
-  Profiles.findById(req.body.profile_id).then(
-    Profiles.update(req.body.profile_id, req.body.role_id)
+  const profile = req.body;
+  const id = profile.profile_id;
+  Profiles.findById(id).then(
+    Profiles.update(id, profile)
       .then((updated) => {
-        res.status(200).json({ message: 'role updated', role_id: updated[0] });
+        res.status(200).json({ message: 'role updated', role_id: updated });
       })
       .catch((err) => {
         res.status(500).json({
-          message: `Could not update profile '${req.body.profile_id}'`,
+          message: `Could not update profile '${id}'`,
           error: err.message,
         });
       })
