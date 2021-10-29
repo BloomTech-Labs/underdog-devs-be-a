@@ -15,7 +15,12 @@
     "rollback": "npx knex --knexfile config/knexfile.js migrate:rollback",
     "seed": "npx knex --knexfile config/knexfile.js seed:run",
     "tests": "npx jest",
-    "coverage": "CI=true npx jest --coverage --detectOpenHandles --forceExit"
+    "coverage": "CI=true npx jest --coverage --detectOpenHandles --forceExit",
+    "dev": "nodemon",
+    "up": "npx knex --knexfile config/knexfile.js migrate:up",
+    "down": "npx knex --knexfile config/knexfile.js migrate:down",
+    "seed": "npx knex --knexfile config/knexfile.js seed:run",
+    "update": "npx knex --knexfile config/knexfile.js migrate:rollback && npx knex --knexfile config/knexfile.js migrate:latest && npx knex --knexfile config/knexfile.js seed:run"
   },
   "lint-staged": {
     "api/**/*.js": [
@@ -65,6 +70,7 @@
     "helmet": "^3.23.1",
     "http-errors": "~1.6.3",
     "knex": "^0.21.1",
+    "knex-cleaner": "^1.3.1",
     "morgan": "~1.9.1",
     "pg": "^8.2.1",
     "swagger-jsdoc": "^6.0.1",
