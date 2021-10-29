@@ -293,4 +293,21 @@ router.delete('/:id', (req, res) => {
   }
 });
 
+router.put('/roles', authRequired, (req, res) => {
+  Profiles.findById(req.body.id).then(
+    Profiles.update(req.body.id, req.body.role_name)
+      .then((updated) => {
+        res
+          .status(200)
+          .json({ message: 'role updated', role_name: updated[0] });
+      })
+      .catch((err) => {
+        res.status(500).json({
+          message: `Could not update profile '${req.body.id}'`,
+          error: err.message,
+        });
+      })
+  );
+});
+
 module.exports = router;
