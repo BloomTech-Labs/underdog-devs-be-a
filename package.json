@@ -1,8 +1,9 @@
 {
-  "name": "labs-api-starter",
+  "name": "underdog-devs",
   "version": "1.0.0",
   "private": false,
   "license": "MIT",
+  "description": "A website for devs",
   "repository": "github:Lambda-School-Labs/labs-api-starter",
   "scripts": {
     "start": "node server.js",
@@ -19,7 +20,6 @@
     "dev": "nodemon",
     "up": "npx knex --knexfile config/knexfile.js migrate:up",
     "down": "npx knex --knexfile config/knexfile.js migrate:down",
-    "seed": "npx knex --knexfile config/knexfile.js seed:run",
     "update": "npx knex --knexfile config/knexfile.js migrate:rollback && npx knex --knexfile config/knexfile.js migrate:latest && npx knex --knexfile config/knexfile.js seed:run"
   },
   "lint-staged": {
@@ -93,6 +93,7 @@
     "lint-staged": "^10.4.2",
     "nodemon": "^2.0.4",
     "prettier": "^2.0.5",
+    "prettier-eslint-cli": "^5.0.1",
     "supertest": "^4.0.2"
   }
 }
