@@ -66,3 +66,8 @@ There are 3 options to get postgresql installed locally [Choose one]:
 
 See the [contributing doc](https://github.com/Lambda-School-Labs/labs-api-starter/blob/main/CONTRIBUTING.md)
 for more info.
+
+
+
+
+#### Paul my slack account was deactivated can not communicate contacted student sucess i can access everything else just not slack 
