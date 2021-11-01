@@ -299,7 +299,6 @@ router.put('/roles', authRequired, (req, res) => {
   Profiles.findById(id).then(
     Profiles.update(id, profile)
       .then((updated) => {
-        console.log(updated);
         res.status(200).json({ message: 'role updated', role_id: updated });
       })
       .catch((err) => {
@@ -310,32 +309,5 @@ router.put('/roles', authRequired, (req, res) => {
       })
   );
 });
-// router.put('/', authRequired, (req, res) => {
-//   const profile = req.body;
-//   if (profile) {
-//     const id = profile.id || 0;
-//     Profiles.findById(id)
-//       .then(
-//         Profiles.update(id, profile)
-//           .then((updated) => {
-//             res
-//               .status(200)
-//               .json({ message: 'profile created', profile: updated[0] });
-//           })
-//           .catch((err) => {
-//             res.status(500).json({
-//               message: `Could not update profile '${id}'`,
-//               error: err.message,
-//             });
-//           })
-//       )
-//       .catch((err) => {
-//         res.status(404).json({
-//           message: `Could not find profile '${id}'`,
-//           error: err.message,
-//         });
-//       });
-//   }
-// });
 
 module.exports = router;
