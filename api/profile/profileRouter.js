@@ -2,6 +2,7 @@ const express = require('express');
 const authRequired = require('../middleware/authRequired');
 const Profiles = require('./profileModel');
 const router = express.Router();
+// const superAdminRequired = require('../middleware/superAdminRequired');
 
 /**
  * @swagger
