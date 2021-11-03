@@ -1,10 +1,10 @@
 const Profiles = require('../profile/profileModel');
 const jwt_decode = require('jwt-decode');
 
-const superAdminRequired = (req, res, next) => {
+const superAdminRequired = async (req, res, next) => {
   const token = req.headers.authorization;
   const user = jwt_decode(token);
-  Profiles.findById(user.sub)
+  await Profiles.findById(user.sub)
     .then((selectedUser) => {
       if (selectedUser.role_id == 1) {
         next();
