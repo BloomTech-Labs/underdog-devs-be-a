@@ -63,7 +63,7 @@ const superAdminRequired = require('../middleware/superAdminRequired');
  *      403:
  *        $ref: '#/components/responses/UnauthorizedError'
  */
-router.get('/', superAdminRequired, function (req, res) {
+router.get('/', authRequired, superAdminRequired, function (req, res) {
   Profiles.findAll()
     .then((profiles) => {
       res.status(200).json(profiles);

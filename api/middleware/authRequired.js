@@ -36,7 +36,6 @@ const authRequired = async (req, res, next) => {
         }
         next();
       });
-    next();
   } catch (err) {
     next(createError(401, err.message));
   }
