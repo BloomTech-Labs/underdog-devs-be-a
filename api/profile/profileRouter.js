@@ -2,7 +2,7 @@ const express = require('express');
 const authRequired = require('../middleware/authRequired');
 const Profiles = require('./profileModel');
 const router = express.Router();
-const { adminRequired } = require('../middleware/permissionsRequired');
+const { mentorRequired } = require('../middleware/permissionsRequired');
 
 /**
  * @swagger
@@ -63,7 +63,7 @@ const { adminRequired } = require('../middleware/permissionsRequired');
  *      403:
  *        $ref: '#/components/responses/UnauthorizedError'
  */
-router.get('/', authRequired, adminRequired, function (req, res) {
+router.get('/', authRequired, mentorRequired, function (req, res) {
   Profiles.findAll()
     .then((profiles) => {
       res.status(200).json(profiles);

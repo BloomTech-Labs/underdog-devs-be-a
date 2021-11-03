@@ -31,7 +31,22 @@ const adminRequired = async (req, res, next) => {
     .catch(next);
 };
 
+const mentorRequired = async (req, res, next) => {
+  const token = req.headers.authorization;
+  const user = jwt_decode(token);
+  await Profiles.findById(user.sub)
+    .then((selectedUser) => {
+      if (selectedUser.role_id <= 3) {
+        next();
+      } else {
+        res.status(500).json({ message: 'invalid credentials / not mentor' });
+      }
+    })
+    .catch(next);
+};
+
 module.exports = {
   superAdminRequired,
   adminRequired,
+  mentorRequired,
 };
