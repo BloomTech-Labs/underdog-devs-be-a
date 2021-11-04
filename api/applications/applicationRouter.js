@@ -4,9 +4,6 @@ const Application = require('./applicationModel');
 const router = express.Router();
 const jwt = require('jwt-decode');
 
-// File created to prevent merge conflicts
-// This is meant to handle receiving applications for mentor or mentee
-
 router.post('/', authRequired, function (req, res, next) {
   const token = req.headers.authorization;
   const User = jwt(token);
