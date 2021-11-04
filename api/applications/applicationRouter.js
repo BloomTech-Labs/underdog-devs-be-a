@@ -12,8 +12,8 @@ router.post('/', authRequired, function (req, res, next) {
   const User = jwt(token);
   const newApplication = req.body;
   Application.add(User.sub, newApplication)
-    .then((addedApplication) => {
-      res.status(201).json(addedApplication);
+    .then(() => {
+      res.status(201).json({ message: 'Application has been submitted' });
     })
     .catch(next);
 });
