@@ -2,8 +2,9 @@ const express = require('express');
 // const authRequired = require('../middleware/authRequired');
 
 const Assignment = require('./assignmentsModel');
-
+const Profiles = require('../profile/profileModel');
 const router = express.Router();
+const jwt = require('jwt-decode');
 
 //get all assignments
 
@@ -33,7 +34,7 @@ router.get('/:id', validAssignID, (req, res) => {
 
 // get all the mentees a mentor has by the mentor's id
 
-router.get('/mentor/:id', (req, res) => {
+router.get('/mentor/:id', validProfileID, (req, res) => {
   const id = String(req.params.id);
   Assignment.findByMentorId(id)
     .then((profile) => {
@@ -52,7 +53,7 @@ router.get('/mentor/:id', (req, res) => {
 
 // get all the mentors a mentee has by the mentee's id
 
-router.get('/mentee/:id', (req, res) => {
+router.get('/mentee/:id', validProfileID, (req, res) => {
   const id = String(req.params.id);
   Assignment.findByMenteeId(id)
     .then((profile) => {
@@ -69,19 +70,54 @@ router.get('/mentee/:id', (req, res) => {
     });
 });
 
-// create a new assignment between a mentor and mentee, req.body must be in string format, BUGGGGGGGGGG
+//get current users mentors
+router.get('/mymentors', validProfileID, (req, res) => {
+  const token = req.headers.authorization;
+  const User = jwt(token);
+  Assignment.findByMenteeId(User.sub)
+    .then((profile) => {
+      if (profile !== null) {
+        res.status(200).json(profile);
+      } else {
+        res.status(404).json({ error: 'Assignment Not Found, Check ID' });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err.message });
+    });
+});
+
+//get current users mentees
+router.get('/mymentees', validProfileID, (req, res) => {
+  const token = req.headers.authorization;
+  const User = jwt(token);
+  Assignment.findByMentorId(User.sub)
+    .then((profile) => {
+      if (profile !== null) {
+        res.status(200).json(profile);
+      } else {
+        res.status(404).json({ error: 'Assignment Not Found, Check ID' });
+      }
+    })
+    .catch((err) => {
+      res.status(500).json({ error: err.message });
+    });
+});
+
+// create a new assignment between a mentor and mentee
 router.post('/', validNewAssign, (req, res) => {
   const assignment = {
     mentee_id: req.body.mentee_id,
     mentor_id: req.body.mentor_id,
   };
   Assignment.Add(assignment)
-    .then((added) => res.status(201).json(added))
+    .then((added) => {
+      res.status(201).json(added);
+    })
     .catch((err) => {
       console.log(err);
       res.status(500).json({
-        message:
-          'An Error occurred when attempting to add Assignment to the Database',
+        message: 'this message will pop up',
       });
     });
 });
@@ -134,27 +170,24 @@ function validAssignID(req, res, next) {
     })
     .catch(next);
 }
-// validate the profile_id
-// function validProfileID(req, res, next) {
-//   Profiles.findById(req.params.id)
-//     .then((profile) => {
-//       if (profile) {
-//         req.profile = profile;
-//         next();
-//       } else {
-//         res.status(400).json({
-//           message: 'Invalid profile_id',
-//         });
-//       }
-//     })
-//     .catch(next);
-// }
 
-// const hello = () => {
-//     if
-// }
+//validate the profile_id
+function validProfileID(req, res, next) {
+  Profiles.findById(req.params.id)
+    .then((profile) => {
+      if (profile) {
+        req.profile = profile;
+        next();
+      } else {
+        res.status(400).json({
+          message: 'Invalid ID',
+        });
+      }
+    })
+    .catch(next);
+}
 
-// validate new assignment include both mentor and mentee
+// validate new assignment includes both mentor_id and mentee_id
 function validNewAssign(req, res, next) {
   const assign = req.body;
   if (!assign) {
@@ -173,17 +206,5 @@ function validNewAssign(req, res, next) {
     next();
   }
 }
-
-// function notNull(req, res, next) {
-//   const id = String(req.params.id);
-//   const hello = Assignment.findByMenteeId(id);
-//   if (hello === []) {
-//     res.status(400).json({
-//       message: 'Has no one',
-//     });
-//   } else {
-//     next();
-//   }
-// }
 
 module.exports = router;

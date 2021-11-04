@@ -6,19 +6,45 @@ const findAll = async () => {
 };
 
 const findById = async (assignment_id) => {
-  return db('assignments').where({ assignment_id }).first();
+  return db.select('*').from('assignments').where({ assignment_id }).first();
 };
 
 function findByMentorId(id) {
-  return db.select('*').from('assignments as a').where({ mentor_id: id });
+  return db
+    .select(
+      'a.assignment_id',
+      'a.mentee_id',
+      'p.email',
+      'p.first_name',
+      'p.last_name',
+      'p.role_id',
+      'p.created_at',
+      'p.pending'
+    )
+    .from('assignments as a')
+    .join('profiles as p', 'p.profile_id', '=', 'a.mentee_id')
+    .where({ mentor_id: id });
 }
 
 function findByMenteeId(id) {
-  return db.select('*').from('assignments as a').where({ mentee_id: id });
+  return db
+    .select(
+      'a.assignment_id',
+      'a.mentor_id',
+      'p.email',
+      'p.first_name',
+      'p.last_name',
+      'p.role_id',
+      'p.created_at',
+      'p.pending'
+    )
+    .from('assignments as a')
+    .join('profiles as p', 'p.profile_id', '=', 'a.mentor_id')
+    .where({ mentee_id: id });
 }
-async function Add(ass) {
-  const [newAss] = await db('assignments').insert(ass);
-  const result = await findById(newAss);
+async function Add(assign) {
+  const [newAssign] = await db('assignments').insert(assign);
+  const result = await findById(newAssign);
   return result;
 }
 
