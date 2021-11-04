@@ -19,7 +19,7 @@ profiles[7].profile_id = '00u13oned0U8XP8Mb4x7';
 profiles[8].role_id = 3;
 profiles[9].role_id = 4;
 profiles[10].role_id = 4;
-profiles[11].role_id = 4;
+profiles[11].role_id = 5;
 
 exports.seed = function (knex) {
   return knex('profiles')
