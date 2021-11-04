@@ -105,21 +105,13 @@ router.get('/mymentees', validProfileID, (req, res) => {
 });
 
 // create a new assignment between a mentor and mentee
-router.post('/', validNewAssign, (req, res) => {
-  const assignment = {
-    mentee_id: req.body.mentee_id,
-    mentor_id: req.body.mentor_id,
-  };
-  Assignment.Add(assignment)
-    .then((added) => {
-      res.status(201).json(added);
+router.post('/', validNewAssign, (req, res, next) => {
+  const assignment = req.body;
+  Assignment.Create(assignment)
+    .then(() => {
+      res.status(201).json({ message: 'success' });
     })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).json({
-        message: 'this message will pop up',
-      });
-    });
+    .catch(next);
 });
 
 // update a assignment by assignment id, must be real mentee/mentor id

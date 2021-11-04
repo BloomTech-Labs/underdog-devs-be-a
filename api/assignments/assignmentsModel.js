@@ -1,4 +1,3 @@
-// File created to prevent merge conflicts
 const db = require('../../data/db-config');
 
 const findAll = async () => {
@@ -42,10 +41,9 @@ function findByMenteeId(id) {
     .join('profiles as p', 'p.profile_id', '=', 'a.mentor_id')
     .where({ mentee_id: id });
 }
-async function Add(assign) {
-  const [newAssign] = await db('assignments').insert(assign);
-  const result = await findById(newAssign);
-  return result;
+async function Create(assign) {
+  const newAssign = await db('assignments').insert(assign);
+  return newAssign;
 }
 
 function Update(assignment_id, changes) {
@@ -61,7 +59,7 @@ module.exports = {
   findById,
   findByMentorId,
   findByMenteeId,
-  Add,
+  Create,
   Update,
   Remove,
 };
