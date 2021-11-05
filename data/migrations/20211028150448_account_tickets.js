@@ -18,6 +18,7 @@ exports.up = (knex) => {
         .onDelete('RESTRICT')
         .onUpdate('RESTRICT');
       table.string('issue').notNullable();
+      table.string('comments');
       table.boolean('pending').defaultTo(true);
       table.boolean('resolved');
       table.boolean('strike').notNullable().defaultTo(false);

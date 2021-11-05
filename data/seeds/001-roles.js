@@ -3,6 +3,7 @@ const roles = [
   { role_name: 'admin' },
   { role_name: 'mentor' },
   { role_name: 'mentee' },
+  { role_name: 'pending' },
 ];
 
 exports.seed = function (knex) {

@@ -7,7 +7,7 @@ const profiles = [...new Array(12)].map((i, idx) => ({
   pending: idx < 6 ? false : true,
 }));
 
-profiles[0].profile_id = '00u19v1wwrVU5Ui1j5d7';
+profiles[0].profile_id = '00ulthapbErVUwVJy4x6';
 profiles[1].profile_id = '00u1humq824KiXNFp5d7';
 profiles[2].profile_id = '00u19v66wqTNTSBw85d7';
 profiles[3].profile_id = '00ulzenirO3Evj2U95d6';
@@ -18,7 +18,7 @@ profiles[7].role_id = 3;
 profiles[8].role_id = 3;
 profiles[9].role_id = 4;
 profiles[10].role_id = 4;
-profiles[11].role_id = 4;
+profiles[11].role_id = 5;
 
 exports.seed = function (knex) {
   return knex('profiles')
