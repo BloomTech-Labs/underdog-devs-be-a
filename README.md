@@ -6,7 +6,7 @@ Underdog Devs is a group of software developers supporting the formerly incarcer
 
 ## Getting Started
 
-The base technologies are JavaScript, HTML and CSS. The frontend leverages [React](https://reactjs.org/), the backend uses [Express](https://expressjs.com/) and [PostgreSQL](https://www.postgresql.org/), the server runs on [Heroku](heroku.com), and the authentication workflow runs on [Okta](https://developer.okta.com/okta-sdk-nodejs/jsdocs/).
+The base technologies are JavaScript, HTML and CSS. The frontend leverages [React](https://reactjs.org/), the backend uses [Express](https://expressjs.com/) and [PostgreSQL](https://www.postgresql.org/), the server runs on [Heroku](https://www.heroku.com/), and the authentication workflow runs on [Okta](https://developer.okta.com/okta-sdk-nodejs/jsdocs/).
 
 ### Developer Instructions
 
@@ -46,17 +46,16 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
         "approved": True
     }
 
-| Method | Endpoint            | Request Body        | Returns                          |
-| ------ | ------------------- | ------------------- | -------------------------------- |
-| GET    | `/profiles`         | -                   | `get all profiles`               |
-| GET    | `/profiles/:id`     | -                   | `get profile by id`              |
-| GET    | `/profiles/pending` | -                   | `get all pending profiles`       |
-| POST   | `/profiles`         | `first/last, email` | `create new profile`             |
-| PUT    | `/profiles/:id`     | `first/last, email` | `update a profile by profile id` |
-| PUT    | `/profiles/roles`   | `role`              | `update a profiles role`         |
-| DELETE | `/profiles/:id`     | -                   | `delete a profile by profile id` |
+| Method | Endpoint          | Request Body        | Returns                          |
+| ------ | ----------------- | ------------------- | -------------------------------- |
+| GET    | `/profiles`       | -                   | `get all profiles`               |
+| GET    | `/profiles/:id`   | -                   | `get profile by id`              |
+| POST   | `/profiles`       | `first/last, email` | `create new profile`             |
+| PUT    | `/profiles/:id`   | `first/last, email` | `update a profile by profile id` |
+| PUT    | `/profiles/roles` | `role`              | `update a profiles role`         |
+| DELETE | `/profiles/:id`   | -                   | `delete a profile by profile id` |
 
-## Assignments
+## Assignments - Matching Mentors and Mentees
 
 ###### Assignments schema:
 
@@ -79,14 +78,14 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
         "pending": true
     }
 
-| Method | Endpoint                      | Request Body                 | Returns                                               |
-| ------ | ----------------------------- | ---------------------------- | ----------------------------------------------------- |
-| GET    | `/assignments`                | -                            | `get all assignments`                                 |
-| GET    | `/assignments/:assignment_id` | -                            | `get assignment by assignment id`                     |
-| GET    | `/assignments/mentor/:id`     | -                            | `get all the mentees a mentor has by the mentor's id` |
-| GET    | `/assignments/mentee/:id`     |                              | `get all the mentors a mentee has by the mentee's id` |
-| GET    | `/assignments/mymentors`      |                              | `get all the mentors the current user has`            |
-| GET    | `/assignments/mymentees`      |                              | `get all the mentees the current user has`            |
-| POST   | `/assignments`                | - `mentor_id`,`mentee_id`    | `create a new assignment between a mentor and mentee` |
-| PUT    | `/assignments/:id`            | - `mentor_id` or `mentee_id` | `update a assignment by assignment id,`               |
-| DELETE | `/assignments/:ID`            | -                            | `delete Assignment by assignment_id`                  |
+| Method | Endpoint                      | Request Body               | Returns                                               |
+| ------ | ----------------------------- | -------------------------- | ----------------------------------------------------- |
+| GET    | `/assignments`                | -                          | `get all assignments`                                 |
+| GET    | `/assignments/:assignment_id` | -                          | `get assignment by assignment id`                     |
+| GET    | `/assignments/mentor/:id`     | -                          | `get all the mentees a mentor has by the mentor's id` |
+| GET    | `/assignments/mentee/:id`     | -                          | `get all the mentors a mentee has by the mentee's id` |
+| GET    | `/assignments/mymentors`      | -                          | `get all the mentors the current user has`            |
+| GET    | `/assignments/mymentees`      | -                          | `get all the mentees the current user has`            |
+| POST   | `/assignments`                | `mentor_id`,`mentee_id`    | `create a new assignment between a mentor and mentee` |
+| PUT    | `/assignments/:id`            | `mentor_id` or `mentee_id` | `update a assignment by assignment id,`               |
+| DELETE | `/assignments/:id`            | -                          | `delete assignment by assignment_id`                  |

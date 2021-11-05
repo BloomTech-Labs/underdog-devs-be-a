@@ -1,6 +1,4 @@
 const express = require('express');
-// const authRequired = require('../middleware/authRequired');
-
 const Assignment = require('./assignmentsModel');
 const Profiles = require('../profile/profileModel');
 const router = express.Router();
@@ -10,8 +8,8 @@ const jwt = require('jwt-decode');
 
 router.get('/', (req, res) => {
   Assignment.findAll()
-    .then((applications) => {
-      res.status(200).json(applications);
+    .then((assignments) => {
+      res.status(200).json(assignments);
     })
     .catch((err) => {
       console.log(err);
@@ -24,8 +22,8 @@ router.get('/', (req, res) => {
 router.get('/:id', validAssignID, (req, res) => {
   const id = req.params.id;
   Assignment.findById(id)
-    .then((profile) => {
-      res.status(200).json(profile);
+    .then((assigns) => {
+      res.status(200).json(assigns);
     })
     .catch((err) => {
       res.status(500).json({ error: err.message });
@@ -35,11 +33,11 @@ router.get('/:id', validAssignID, (req, res) => {
 // get all the mentees a mentor has by the mentor's id
 
 router.get('/mentor/:id', validProfileID, (req, res) => {
-  const id = String(req.params.id);
+  const id = req.params.id;
   Assignment.findByMentorId(id)
-    .then((profile) => {
-      if (profile) {
-        res.status(200).json(profile);
+    .then((mentees) => {
+      if (mentees) {
+        res.status(200).json(mentees);
       } else {
         res
           .status(404)
@@ -54,15 +52,15 @@ router.get('/mentor/:id', validProfileID, (req, res) => {
 // get all the mentors a mentee has by the mentee's id
 
 router.get('/mentee/:id', validProfileID, (req, res) => {
-  const id = String(req.params.id);
+  const id = req.params.id;
   Assignment.findByMenteeId(id)
-    .then((profile) => {
-      if (profile !== null) {
-        res.status(200).json(profile);
+    .then((mentors) => {
+      if (mentors) {
+        res.status(200).json(mentors);
       } else {
         res
           .status(404)
-          .json({ error: 'Assignment Not Found, Check mentor ID' });
+          .json({ error: 'Assignment Not Found, Check mentee ID' });
       }
     })
     .catch((err) => {
@@ -71,15 +69,16 @@ router.get('/mentee/:id', validProfileID, (req, res) => {
 });
 
 //get current users mentors
+
 router.get('/mymentors', validProfileID, (req, res) => {
   const token = req.headers.authorization;
   const User = jwt(token);
   Assignment.findByMenteeId(User.sub)
-    .then((profile) => {
-      if (profile !== null) {
-        res.status(200).json(profile);
+    .then((mentors) => {
+      if (mentors) {
+        res.status(200).json(mentors);
       } else {
-        res.status(404).json({ error: 'Assignment Not Found, Check ID' });
+        res.status(404).json({ error: 'Mentors not found' });
       }
     })
     .catch((err) => {
@@ -88,15 +87,16 @@ router.get('/mymentors', validProfileID, (req, res) => {
 });
 
 //get current users mentees
+
 router.get('/mymentees', validProfileID, (req, res) => {
   const token = req.headers.authorization;
   const User = jwt(token);
   Assignment.findByMentorId(User.sub)
-    .then((profile) => {
-      if (profile !== null) {
-        res.status(200).json(profile);
+    .then((mentees) => {
+      if (mentees) {
+        res.status(200).json(mentees);
       } else {
-        res.status(404).json({ error: 'Assignment Not Found, Check ID' });
+        res.status(404).json({ error: 'Mentees not found' });
       }
     })
     .catch((err) => {
@@ -105,6 +105,7 @@ router.get('/mymentees', validProfileID, (req, res) => {
 });
 
 // create a new assignment between a mentor and mentee
+
 router.post('/', validNewAssign, (req, res, next) => {
   const assignment = req.body;
   Assignment.Create(assignment)
@@ -115,6 +116,7 @@ router.post('/', validNewAssign, (req, res, next) => {
 });
 
 // update a assignment by assignment id, must be real mentee/mentor id
+
 router.put('/:id', validAssignID, (req, res, next) => {
   const id = req.params.id;
   const changes = req.body;
@@ -148,6 +150,7 @@ router.delete('/:id', validAssignID, (req, res, next) => {
 });
 
 // Validate the Assignment_id Middleware
+
 function validAssignID(req, res, next) {
   Assignment.findById(req.params.id)
     .then((assignment) => {
@@ -164,6 +167,7 @@ function validAssignID(req, res, next) {
 }
 
 //validate the profile_id
+
 function validProfileID(req, res, next) {
   Profiles.findById(req.params.id)
     .then((profile) => {
@@ -180,6 +184,7 @@ function validProfileID(req, res, next) {
 }
 
 // validate new assignment includes both mentor_id and mentee_id
+
 function validNewAssign(req, res, next) {
   const assign = req.body;
   if (!assign) {
