@@ -70,7 +70,7 @@ router.get('/mentee/:id', validProfileID, (req, res) => {
 
 //get current users mentors
 
-router.get('/mymentors', validProfileID, (req, res) => {
+router.get('/mymentors', (req, res) => {
   const token = req.headers.authorization;
   const User = jwt(token);
   Assignment.findByMenteeId(User.sub)
@@ -88,7 +88,7 @@ router.get('/mymentors', validProfileID, (req, res) => {
 
 //get current users mentees
 
-router.get('/mymentees', validProfileID, (req, res) => {
+router.get('/mymentees', (req, res) => {
   const token = req.headers.authorization;
   const User = jwt(token);
   Assignment.findByMentorId(User.sub)
