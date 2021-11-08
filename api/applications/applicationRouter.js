@@ -4,8 +4,9 @@ const Application = require('./applicationModel');
 const Profile = require('../profile/profileModel');
 const router = express.Router();
 const jwt = require('jwt-decode');
+const adminRequired = require('../middleware/permissionsRequired.js');
 
-router.get('/', (req, res, next) => {
+router.get('/', authRequired, adminRequired, (req, res, next) => {
   Application.getPendingTickets()
     .then((applicationList) => {
       res.status(200).json(applicationList);
@@ -24,18 +25,20 @@ router.post('/', authRequired, function (req, res, next) {
     .catch(next);
 });
 
-router.put('/', function (req, res, next) {
+router.put('/', authRequired, adminRequired, function (req, res, next) {
   const profile_id = req.body.profile_id;
   const application_id = req.body.application_id;
   const role_id = req.body.position;
   Profile.update(profile_id, { role_id: role_id })
     .then(() => {
-      res.status(202).json({ message: 'User role has been updated' });
-    })
-    .catch(next);
-  Application.update(application_id, { approved: true })
-    .then(() => {
-      res.status(202).json({ message: 'This application has been approved' });
+      Application.updateTicket(application_id, { approved: true })
+        .then(() => {
+          res.status(202).json({
+            message:
+              'This application has been approved, and User role has been updated',
+          });
+        })
+        .catch(next);
     })
     .catch(next);
 });
