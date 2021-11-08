@@ -89,3 +89,27 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 | POST   | `/assignments`                | `mentor_id`,`mentee_id`    | `create a new assignment between a mentor and mentee` |
 | PUT    | `/assignments/:id`            | `mentor_id` or `mentee_id` | `update a assignment by assignment id,`               |
 | DELETE | `/assignments/:id`            | -                          | `delete assignment by assignment_id`                  |
+
+###### Meetings:
+
+    {
+        "meeting_id": 4,
+        "created_at": "2021-11-08T19:21:16.551Z",
+        "updated_at": "2021-11-08T19:21:16.551Z",
+        "meeting_topic": "Resume Help",
+        "meeting_date": "2021-12-04",
+        "meeting_time": "4pm PCT - 5pm PCT",
+        "host_id": "9",
+        "attendee_id": "7",
+        "meeting_notes": "Remember to bring your resume"
+    }
+
+| Method | Endpoint                        | Request Body               | Returns                                            |
+| ------ | ------------------------------- | -------------------------- | -------------------------------------------------- |
+| GET    | `/meetings`                     | -                          | `get all meetings`                                 |
+| GET    | `/meetings/:meeting_id`         | -                          | `get meeting by meeting id`                        |
+| GET    | `/meetings/profile/:profile_id` | -                          | `get all the meetings a profile_id has scheduled`  |
+| GET    | `/meetings/my-meetings`          | -                          | `get all the meetings the current user has`         |
+| POST   | `/meetings`                     | `mentor_id`,`mentee_id`    | `create a new meeting between a mentor and mentee` |
+| PUT    | `/meetings/:meeting_id`         | `mentor_id` or `mentee_id` | `update a meeting by meeting_id,`                  |
+| DELETE | `/meetings/:meeting_id`         | -                          | `delete meeting by meeting_id`                     |
