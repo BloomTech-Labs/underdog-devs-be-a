@@ -90,7 +90,9 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 | PUT    | `/assignments/:id`            | `mentor_id` or `mentee_id` | `update a assignment by assignment id,`               |
 | DELETE | `/assignments/:id`            | -                          | `delete assignment by assignment_id`                  |
 
-###### Meetings:
+## Meetings
+
+###### Meetings schema:
 
     {
         "meeting_id": 4,
@@ -109,7 +111,7 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 | GET    | `/meetings`                     | -                          | `get all meetings`                                 |
 | GET    | `/meetings/:meeting_id`         | -                          | `get meeting by meeting id`                        |
 | GET    | `/meetings/profile/:profile_id` | -                          | `get all the meetings a profile_id has scheduled`  |
-| GET    | `/meetings/my-meetings`          | -                          | `get all the meetings the current user has`         |
+| GET    | `/meetings/my-meetings`         | -                          | `get all the meetings the current user has`        |
 | POST   | `/meetings`                     | `mentor_id`,`mentee_id`    | `create a new meeting between a mentor and mentee` |
 | PUT    | `/meetings/:meeting_id`         | `mentor_id` or `mentee_id` | `update a meeting by meeting_id,`                  |
 | DELETE | `/meetings/:meeting_id`         | -                          | `delete meeting by meeting_id`                     |
