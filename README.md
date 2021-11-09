@@ -106,12 +106,12 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
         "meeting_notes": "Remember to bring your resume"
     }
 
-| Method | Endpoint                        | Request Body                                                               | Returns                                           |
-| ------ | ------------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------- |
-| GET    | `/meetings`                     | -                                                                          | `get all meetings`                                |
-| GET    | `/meetings/:meeting_id`         | -                                                                          | `get meeting by meeting id`                       |
-| GET    | `/meetings/profile/:profile_id` | -                                                                          | `get all the meetings a profile_id has scheduled` |
-| GET    | `/meetings/my-meetings`         | -                                                                          | `get all the meetings the current user has`       |
-| POST   | `/meetings`                     | `meeting_topic`,`meeting_date`, `meeting_time`,`host_id`,`attendee_id`,    | `create a new meeting`                            |
-| PUT    | `/meetings/:meeting_id`         | `meeting_topic`or`meeting_date`or`meeting_time`or`host_id`or`attendee_id`, | `update a meeting by meeting_id,`                 |
-| DELETE | `/meetings/:meeting_id`         | -                                                                          | `delete meeting by meeting_id`                    |
+| Method | Endpoint                        | Request Body                                                                      | Returns                                           |
+| ------ | ------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------- |
+| GET    | `/meetings`                     | -                                                                                 | `get all meetings`                                |
+| GET    | `/meetings/:meeting_id`         | -                                                                                 | `get meeting by meeting id`                       |
+| GET    | `/meetings/profile/:profile_id` | -                                                                                 | `get all the meetings a profile_id has scheduled` |
+| GET    | `/meetings/my-meetings`         | -                                                                                 | `get all the meetings the current user has`       |
+| POST   | `/meetings`                     | `meeting_topic`,`meeting_date`, `meeting_time`,`host_id`,`attendee_id`,           | `create a new meeting`                            |
+| PUT    | `/meetings/:meeting_id`         | `meeting_topic` or `meeting_date` or `meeting_time` or `host_id` or `attendee_id` | `update a meeting by meeting_id,`                 |
+| DELETE | `/meetings/:meeting_id`         | -                                                                                 | `delete meeting by meeting_id`                    |
