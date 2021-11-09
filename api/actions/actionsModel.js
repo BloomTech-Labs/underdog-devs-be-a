@@ -17,7 +17,6 @@ const create = async (actions) => {
 };
 
 const update = (id, actions) => {
-  console.log(actions);
   return db('account_tickets')
     .where({ submitted_by: id })
     .first()
