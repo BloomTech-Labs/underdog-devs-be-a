@@ -3,10 +3,14 @@ const Meeting = require('../meetings/meetingsModel');
 const Profiles = require('../profile/profileModel');
 const router = express.Router();
 const jwt = require('jwt-decode');
+const {
+  mentorRequired,
+  adminRequired,
+} = require('../middleware/permissionsRequired');
 
 // get all meetings
 
-router.get('/', (req, res) => {
+router.get('/', adminRequired, (req, res) => {
   Meeting.findAll()
     .then((meetings) => {
       res.status(200).json(meetings);
@@ -16,42 +20,35 @@ router.get('/', (req, res) => {
     });
 });
 
-// get a meeting by meeting_id
-
-router.get('/:meeting_id', validMeetingID, (req, res) => {
-  const id = req.params.meeting_id;
-  Meeting.findByMeetingId(id)
-    .then((meeting) => {
-      res.status(200).json(meeting);
-    })
-    .catch((err) => {
-      res.status(500).json({ error: err.message });
-    });
-});
-
 // get all the meetings a profile_id has scheduled
 
-router.get('/profile/:profile_id', validProfileID, (req, res) => {
-  const id = req.params.profile_id;
-  Meeting.findByProfileId(id)
-    .then((meetings) => {
-      if (meetings) {
-        res.status(200).json(meetings);
-      } else {
-        res.status(404).json({ error: 'Meetings not found' });
-      }
-    })
-    .catch((err) => {
-      res.status(500).json({ error: err.message });
-    });
-});
+router.get(
+  '/profile/:profile_id',
+  validProfileID,
+  adminRequired,
+  (req, res) => {
+    const id = req.params.profile_id;
+    Meeting.findByProfileId(id)
+      .then((meetings) => {
+        if (meetings) {
+          res.status(200).json(meetings);
+        } else {
+          res.status(404).json({ error: 'Meetings not found' });
+        }
+      })
+      .catch((err) => {
+        res.status(500).json({ error: err.message });
+      });
+  }
+);
 
 // get all the meetings the current user has
 
-router.get('/my-meetings', (req, res) => {
+router.get('/my-meetings', async (req, res) => {
   const token = req.headers.authorization;
-  const User = jwt(token);
-  Meeting.findByProfileId(User.sub)
+  const user = jwt(token);
+  const id = user.sub;
+  await Meeting.findByProfileId(id)
     .then((meetings) => {
       res.status(200).json(meetings);
     })
@@ -66,12 +63,13 @@ router.post(
   '/',
   validNewMeeting,
   validHostID,
-  validAtendeeID,
+  validAttendeeID,
+  mentorRequired,
   (req, res, next) => {
     const meeting = req.body;
     Meeting.Create(meeting)
       .then(() => {
-        res.status(201).json({ message: 'success' });
+        res.status(201).json({ message: 'success', meeting });
       })
       .catch(next);
   }
@@ -83,6 +81,7 @@ router.put(
   '/:meeting_id',
   validMeetingID,
   validNewMeeting,
+  mentorRequired,
   (req, res, next) => {
     const id = req.params.meeting_id;
     const changes = req.body;
@@ -103,20 +102,38 @@ router.put(
 
 //delete a meeting
 
-router.delete('/:meeting_id', validMeetingID, (req, res, next) => {
+router.delete(
+  '/:meeting_id',
+  validMeetingID,
+  mentorRequired,
+  (req, res, next) => {
+    const id = req.params.meeting_id;
+    Meeting.Remove(id)
+      .then((meeting) => {
+        if (meeting) {
+          res.status(200).json({
+            message: 'Meeting deleted',
+          });
+        }
+      })
+      .catch(next);
+  }
+);
+
+// get a meeting by meeting_id
+
+router.get('/:meeting_id', validMeetingID, (req, res) => {
   const id = req.params.meeting_id;
-  Meeting.Remove(id)
+  Meeting.findByMeetingId(id)
     .then((meeting) => {
-      if (meeting) {
-        res.status(200).json({
-          message: 'Meeting deleted',
-        });
-      }
+      res.status(200).json(meeting);
     })
-    .catch(next);
+    .catch((err) => {
+      res.status(500).json({ error: err.message });
+    });
 });
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////MIDDLEWARE///////////////////////////////
 
 //validate meeting_id middleware
 
@@ -169,7 +186,7 @@ function validHostID(req, res, next) {
 
 //attendee_id must have a valid profile_id
 
-function validAtendeeID(req, res, next) {
+function validAttendeeID(req, res, next) {
   Profiles.findById(req.body.attendee_id)
     .then((profile) => {
       if (profile) {
