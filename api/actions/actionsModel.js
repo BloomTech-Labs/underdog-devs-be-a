@@ -1,7 +1,7 @@
 const db = require('../../data/db-config');
 
-const findAll = async () => {
-  return await db('account_tickets');
+const findAll = () => {
+  return db('account_tickets');
 };
 
 const findBy = (filter) => {

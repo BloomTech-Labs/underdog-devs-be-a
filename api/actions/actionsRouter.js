@@ -1,9 +1,9 @@
 const express = require('express');
-const authRequired = require('../middleware/authRequired');
+// const authRequired = require('../middleware/authRequired');
 const Actions = require('./actionsModel');
 const router = express.Router();
 
-router.get('/', authRequired, function (req, res) {
+router.get('/', function (req, res) {
   Actions.findAll()
     .then((actions) => {
       res.status(200).json(actions);
@@ -13,4 +13,4 @@ router.get('/', authRequired, function (req, res) {
       res.status(500).json({ message: err.message });
     });
 });
-module.export = router;
+module.exports = router;
