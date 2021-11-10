@@ -27,5 +27,5 @@ exports.up = (knex) => {
 };
 
 exports.down = (knex) => {
-  return knex.schema.dropTableIfExists('account_tickets');
+  return knex.schema.dropTableIfExists('action_tickets');
 };
