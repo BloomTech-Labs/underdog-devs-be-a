@@ -4,7 +4,7 @@ const Application = require('./applicationModel');
 const Profile = require('../profile/profileModel');
 const router = express.Router();
 const jwt = require('jwt-decode');
-const adminRequired = require('../middleware/permissionsRequired.js');
+const { adminRequired } = require('../middleware/permissionsRequired.js');
 
 router.get('/', authRequired, adminRequired, (req, res, next) => {
   Application.getPendingTickets()
