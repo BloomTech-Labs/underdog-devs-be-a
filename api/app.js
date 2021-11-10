@@ -24,6 +24,7 @@ const profileRouter = require('./profile/profileRouter');
 const dsRouter = require('./dsService/dsRouter');
 const assignmentsRouter = require('./assignments/assignmentsRouter');
 const applicationRouter = require('./applications/applicationRouter');
+const meetingsRouter = require('./meetings/meetingsRouter');
 const actionsRouter = require('./actions/actionsRouter');
 
 const app = express();
@@ -56,6 +57,7 @@ app.use(['/profile', '/profiles'], profileRouter);
 app.use('/data', dsRouter);
 app.use('/assignments', assignmentsRouter);
 app.use('/application', applicationRouter);
+app.use('/meetings', meetingsRouter);
 app.use('/actions', actionsRouter);
 
 // catch 404 and forward to error handler
