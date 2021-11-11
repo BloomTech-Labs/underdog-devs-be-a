@@ -1,8 +1,8 @@
 exports.up = (knex) => {
   return knex.schema
     .raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"')
-    .createTable('account_tickets', function (table) {
-      table.increments('account_ticket_id').notNullable().unique().primary();
+    .createTable('action_tickets', function (table) {
+      table.increments('action_ticket_id').notNullable().unique().primary();
       table
         .string('submitted_by')
         .notNullable()
@@ -27,5 +27,5 @@ exports.up = (knex) => {
 };
 
 exports.down = (knex) => {
-  return knex.schema.dropTableIfExists('account_tickets');
+  return knex.schema.dropTableIfExists('action_tickets');
 };

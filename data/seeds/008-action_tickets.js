@@ -26,9 +26,9 @@ const dummyData = [
 ];
 
 exports.seed = function (knex) {
-  return knex('account_tickets')
+  return knex('action_tickets')
     .del()
     .then(function () {
-      return knex('account_tickets').insert(dummyData);
+      return knex('action_tickets').insert(dummyData);
     });
 };

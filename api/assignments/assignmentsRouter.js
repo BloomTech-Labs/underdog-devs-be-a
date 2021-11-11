@@ -3,10 +3,12 @@ const Assignment = require('./assignmentsModel');
 const Profiles = require('../profile/profileModel');
 const router = express.Router();
 const jwt = require('jwt-decode');
+const { adminRequired } = require('../middleware/permissionsRequired');
+const authRequired = require('../middleware/authRequired');
 
 //get all assignments
 
-router.get('/', (req, res) => {
+router.get('/', authRequired, adminRequired, (req, res) => {
   Assignment.findAll()
     .then((assignments) => {
       res.status(200).json(assignments);
@@ -17,60 +19,59 @@ router.get('/', (req, res) => {
     });
 });
 
-// get assignment by assignment id
-
-router.get('/:id', validAssignID, (req, res) => {
-  const id = req.params.id;
-  Assignment.findById(id)
-    .then((assigns) => {
-      res.status(200).json(assigns);
-    })
-    .catch((err) => {
-      res.status(500).json({ error: err.message });
-    });
-});
-
 // get all the mentees a mentor has by the mentor's id
 
-router.get('/mentor/:id', validProfileID, (req, res) => {
-  const id = req.params.id;
-  Assignment.findByMentorId(id)
-    .then((mentees) => {
-      if (mentees) {
-        res.status(200).json(mentees);
-      } else {
-        res
-          .status(404)
-          .json({ error: 'Assignment Not Found, Check mentor ID' });
-      }
-    })
-    .catch((err) => {
-      res.status(500).json({ error: err.message });
-    });
-});
+router.get(
+  '/mentor/:id',
+  authRequired,
+  validProfileID,
+  adminRequired,
+  (req, res) => {
+    const id = req.params.id;
+    Assignment.findByMentorId(id)
+      .then((mentees) => {
+        if (mentees) {
+          res.status(200).json(mentees);
+        } else {
+          res
+            .status(404)
+            .json({ error: 'Assignment Not Found, Check mentor ID' });
+        }
+      })
+      .catch((err) => {
+        res.status(500).json({ error: err.message });
+      });
+  }
+);
 
 // get all the mentors a mentee has by the mentee's id
 
-router.get('/mentee/:id', validProfileID, (req, res) => {
-  const id = req.params.id;
-  Assignment.findByMenteeId(id)
-    .then((mentors) => {
-      if (mentors) {
-        res.status(200).json(mentors);
-      } else {
-        res
-          .status(404)
-          .json({ error: 'Assignment Not Found, Check mentee ID' });
-      }
-    })
-    .catch((err) => {
-      res.status(500).json({ error: err.message });
-    });
-});
+router.get(
+  '/mentee/:id',
+  authRequired,
+  validProfileID,
+  adminRequired,
+  (req, res) => {
+    const id = req.params.id;
+    Assignment.findByMenteeId(id)
+      .then((mentors) => {
+        if (mentors) {
+          res.status(200).json(mentors);
+        } else {
+          res
+            .status(404)
+            .json({ error: 'Assignment Not Found, Check mentee ID' });
+        }
+      })
+      .catch((err) => {
+        res.status(500).json({ error: err.message });
+      });
+  }
+);
 
 //get current users mentors
 
-router.get('/mymentors', (req, res) => {
+router.get('/mymentors', authRequired, (req, res) => {
   const token = req.headers.authorization;
   const User = jwt(token);
   Assignment.findByMenteeId(User.sub)
@@ -88,7 +89,7 @@ router.get('/mymentors', (req, res) => {
 
 //get current users mentees
 
-router.get('/mymentees', (req, res) => {
+router.get('/mymentees', authRequired, (req, res) => {
   const token = req.headers.authorization;
   const User = jwt(token);
   Assignment.findByMentorId(User.sub)
@@ -106,48 +107,81 @@ router.get('/mymentees', (req, res) => {
 
 // create a new assignment between a mentor and mentee
 
-router.post('/', validNewAssign, (req, res, next) => {
-  const assignment = req.body;
-  Assignment.Create(assignment)
-    .then(() => {
-      res.status(201).json({ message: 'success' });
-    })
-    .catch(next);
-});
+router.post(
+  '/',
+  authRequired,
+  validNewAssign,
+  adminRequired,
+  (req, res, next) => {
+    const assignment = req.body;
+    Assignment.Create(assignment)
+      .then(() => {
+        res.status(201).json({ message: 'success' });
+      })
+      .catch(next);
+  }
+);
 
 // update a assignment by assignment id, must be real mentee/mentor id
 
-router.put('/:id', validAssignID, (req, res, next) => {
-  const id = req.params.id;
-  const changes = req.body;
-  Assignment.Update(id, changes)
-    .then((change) => {
-      if (change === 1) {
-        Assignment.findById(id).then((success) => {
-          res.status(200).json({
-            message: `Assignment '${success.assignment_id}' updated`,
-            success,
+router.put(
+  '/:id',
+  authRequired,
+  validAssignID,
+  adminRequired,
+  (req, res, next) => {
+    const id = req.params.id;
+    const changes = req.body;
+    Assignment.Update(id, changes)
+      .then((change) => {
+        if (change === 1) {
+          Assignment.findById(id).then((success) => {
+            res.status(200).json({
+              message: `Assignment '${success.assignment_id}' updated`,
+              success,
+            });
           });
-        });
-      }
-    })
-    .catch(next);
-});
+        }
+      })
+      .catch(next);
+  }
+);
 
 //delete Assignment by assignment_id
 
-router.delete('/:id', validAssignID, (req, res, next) => {
+router.delete(
+  '/:id',
+  authRequired,
+  validAssignID,
+  adminRequired,
+  (req, res, next) => {
+    const id = req.params.id;
+    Assignment.Remove(id)
+      .then((assignment) => {
+        if (assignment) {
+          res.status(200).json({
+            message: 'assignment deleted',
+          });
+        }
+      })
+      .catch(next);
+  }
+);
+
+// get assignment by assignment id
+
+router.get('/:id', authRequired, validAssignID, adminRequired, (req, res) => {
   const id = req.params.id;
-  Assignment.Remove(id)
-    .then((assignment) => {
-      if (assignment) {
-        res.status(200).json({
-          message: 'assignment deleted',
-        });
-      }
+  Assignment.findById(id)
+    .then((assigns) => {
+      res.status(200).json(assigns);
     })
-    .catch(next);
+    .catch((err) => {
+      res.status(500).json({ error: err.message });
+    });
 });
+
+///////////////////////////MIDDLEWARE///////////////////////////////
 
 // Validate the Assignment_id Middleware
 
