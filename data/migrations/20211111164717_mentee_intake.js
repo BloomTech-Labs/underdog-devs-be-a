@@ -20,7 +20,7 @@ exports.up = function (knex) {
       table.string('tech_stack').notNullable();
       table.string('experience_level').notNullable();
       table.string('your_hope').notNullable();
-      table.string('other_info');
+      table.string('other_info', 255);
     });
 };
 
