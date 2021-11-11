@@ -14,7 +14,7 @@ exports.up = function (knex) {
       table.string('email').notNullable();
       table.string('location').notNullable();
       table.string('name').notNullable();
-      table.boolean('lives_in_US').notNullable();
+      table.boolean('lives_in_us').notNullable();
       table.boolean('formerly_incarcerated').notNullable();
       table.string('list_convictions');
       table.string('tech_stack').notNullable();
