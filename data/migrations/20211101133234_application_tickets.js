@@ -20,7 +20,6 @@ exports.up = function (knex) {
         .onUpdate('RESTRICT');
       table.boolean('approved').notNullable().defaultTo(false);
       table.timestamps(true, true);
-      table.string('application_info').notNullable();
     });
 };
 
