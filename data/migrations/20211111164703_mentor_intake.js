@@ -11,6 +11,14 @@ exports.up = function (knex) {
         .inTable('application_tickets')
         .onDelete('RESTRICT')
         .onUpdate('RESTRICT');
+      table.string('email').notNullable();
+      table.string('location').notNullable();
+      table.string('name').notNullable();
+      table.string('current_comp');
+      table.string('tech_stack').notNullable();
+      table.boolean('can_commit').notNullable();
+      table.string('how_commit', 255);
+      table.string('other_info', 255);
     });
 };
 
