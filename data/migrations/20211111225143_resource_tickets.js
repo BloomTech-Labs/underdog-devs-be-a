@@ -11,6 +11,7 @@ exports.up = function (knex) {
         .onUpdate('RESTRICT')
         .onDelete('RESTRICT')
         .notNullable();
+      table.string('pertains_to');
       table.string('message').notNullable();
     });
 };

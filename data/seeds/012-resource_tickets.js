@@ -1,8 +1,9 @@
 const dummyData = [
   {
     submitted_by: '7',
+    pertains_to: 'Elon Musk',
     message:
-      'Bob deserves to have the 2020 macbook pro. Of all the mentees I have, I think he has the most potential.',
+      'Elon deserves to have the 2020 macbook pro. Of all the mentees I have, I think he has the most potential.',
   },
   {
     submitted_by: '9',
