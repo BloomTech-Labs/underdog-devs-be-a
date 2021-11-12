@@ -7,7 +7,7 @@ exports.up = function (knex) {
       table.string('resource_name').notNullable();
       table.string('category').notNullable();
       table.string('condition').notNullable();
-      table.boolean('assigned').notNullable();
+      table.boolean('assigned').notNullable().defaultTo(false);
       table
         .string('current_assignee')
         .references('profile_id')
