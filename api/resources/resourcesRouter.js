@@ -1,8 +1,6 @@
 const express = require('express');
-const Resources = require('./resourcesModel');
-// const Profiles = require('../profile/profileModel');
 const router = express.Router();
-// const jwt = require('jwt-decode');
+const Resources = require('./resourcesModel');
 const authRequired = require('../middleware/authRequired');
 const { adminRequired } = require('../middleware/permissionsRequired');
 
@@ -27,7 +25,7 @@ router.get('/:resource_id', authRequired, (req, res) => {
       if (resource) {
         res.status(200).json(resource);
       } else {
-        res.status(404).json({ error: 'Resource not found' });
+        res.status(404).json({ error: 'Resource not found, check the ID' });
       }
     })
     .catch((err) => {

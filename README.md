@@ -144,9 +144,9 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 
 ## Resource Tickets
 
-###### Resource Ticket schema:
-
 ###### Resource tickets is the management system for Mentors/Admin to communicate about a specific resource. (Requests, Recommendations, etc.)
+
+###### Resource Ticket schema:
 
     {
         "resource_ticket_id": 1,
