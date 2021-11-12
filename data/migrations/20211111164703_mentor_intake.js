@@ -4,11 +4,11 @@ exports.up = function (knex) {
     .createTable('mentor_intake', function (table) {
       table.increments('mentor_intake_id').notNullable().unique().primary();
       table
-        .integer('application_id')
+        .string('profile_id')
         .unsigned()
         .notNullable()
-        .references('application_id')
-        .inTable('application_tickets')
+        .references('profile_id')
+        .inTable('profiles')
         .onDelete('RESTRICT')
         .onUpdate('RESTRICT');
       table.string('email').notNullable();

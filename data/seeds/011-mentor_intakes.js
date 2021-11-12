@@ -1,6 +1,6 @@
 const dummyData = [
   {
-    application_id: 2,
+    profile_id: '00u13oned0U8XP8Mb4x7',
     email: 'fakeemail2@gmail.com',
     location: 'Bumville, USA',
     name: 'Hotdog Jeopardy',

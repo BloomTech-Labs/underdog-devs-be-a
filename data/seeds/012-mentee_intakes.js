@@ -1,6 +1,6 @@
 const dummyData = [
   {
-    application_id: 1,
+    profile_id: '12',
     email: 'fakeemail1@gmail.com',
     location: 'California, USA',
     name: 'Joe Baseball',
