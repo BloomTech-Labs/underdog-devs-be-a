@@ -121,7 +121,7 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 ###### Mentor intake schema:
 
   {
-    application_id: 2,
+    profile_id: '00u13oned0U8XP8Mb4x7',
     email: 'fakeemail2@gmail.com',
     location: 'Bumville, USA',
     name: 'Hotdog Jeopardy',
@@ -134,7 +134,7 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 ###### Mentee intake schema:
 
   {
-    application_id: 1,
+    profile_id: '12',
     email: 'fakeemail1@gmail.com',
     location: 'California, USA',
     name: 'Joe Baseball',
