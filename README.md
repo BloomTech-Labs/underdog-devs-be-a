@@ -116,7 +116,7 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 | PUT    | `/meetings/:meeting_id`         | `meeting_topic` or `meeting_date` or `meeting_time` or `host_id` or `attendee_id` | `update a meeting by meeting_id,`                 |
 | DELETE | `/meetings/:meeting_id`         | -                                                                                 | `delete meeting by meeting_id`                    |
 
-## Resources and Resource Tickets
+## Resources
 
 ###### Resources schema:
 
@@ -142,9 +142,11 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 | PUT    | `/resources/:resource_id` | `resource_name`,`category`,`condition` | `update a resource by resource_id,`        |
 | DELETE | `/resources/:resource_id` | -                                      | `delete a resource by resource_id from db` |
 
+## Resource Tickets
+
 ###### Resource Ticket schema:
 
-    Resource tickets is the management system for Mentors/Admin to communicate about a specific resource. (Requests, Recommendations, etc.)
+###### Resource tickets is the management system for Mentors/Admin to communicate about a specific resource. (Requests, Recommendations, etc.)
 
     {
         "resource_ticket_id": 1,
