@@ -46,14 +46,14 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
         "approved": True
     }
 
-| Method | Endpoint          | Request Body        | Returns                          |
-| ------ | ----------------- | ------------------- | -------------------------------- |
-| GET    | `/profiles`       | -                   | `get all profiles`               |
-| GET    | `/profiles/:id`   | -                   | `get profile by id`              |
-| POST   | `/profiles`       | `first/last, email` | `create new profile`             |
-| PUT    | `/profiles/:id`   | `first/last, email` | `update a profile by profile id` |
-| PUT    | `/profiles/roles` | `role`              | `update a profiles role`         |
-| DELETE | `/profiles/:id`   | -                   | `delete a profile by profile id` |
+| Method | Endpoint          | Required Request Body | Returns                          |
+| ------ | ----------------- | --------------------- | -------------------------------- |
+| GET    | `/profiles`       | -                     | `get all profiles`               |
+| GET    | `/profiles/:id`   | -                     | `get profile by id`              |
+| POST   | `/profiles`       | `first/last, email`   | `create new profile`             |
+| PUT    | `/profiles/:id`   | `first/last, email`   | `update a profile by profile id` |
+| PUT    | `/profiles/roles` | `role`                | `update a profiles role`         |
+| DELETE | `/profiles/:id`   | -                     | `delete a profile by profile id` |
 
 ## Assignments - Matching Mentors and Mentees
 
@@ -78,7 +78,7 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
         "pending": true
     }
 
-| Method | Endpoint                      | Request Body               | Returns                                               |
+| Method | Endpoint                      | Required Request Body      | Returns                                               |
 | ------ | ----------------------------- | -------------------------- | ----------------------------------------------------- |
 | GET    | `/assignments`                | -                          | `get all assignments`                                 |
 | GET    | `/assignments/:assignment_id` | -                          | `get assignment by assignment id`                     |
@@ -106,7 +106,7 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
         "meeting_notes": "Remember to bring your resume"
     }
 
-| Method | Endpoint                        | Request Body                                                                      | Returns                                           |
+| Method | Endpoint                        | Required Request Body                                                             | Returns                                           |
 | ------ | ------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------- |
 | GET    | `/meetings`                     | -                                                                                 | `get all meetings`                                |
 | GET    | `/meetings/:meeting_id`         | -                                                                                 | `get meeting by meeting id`                       |
@@ -115,3 +115,51 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 | POST   | `/meetings`                     | `meeting_topic`,`meeting_date`, `meeting_time`,`host_id`,`attendee_id`,           | `create a new meeting`                            |
 | PUT    | `/meetings/:meeting_id`         | `meeting_topic` or `meeting_date` or `meeting_time` or `host_id` or `attendee_id` | `update a meeting by meeting_id,`                 |
 | DELETE | `/meetings/:meeting_id`         | -                                                                                 | `delete meeting by meeting_id`                    |
+
+## Resources and Resource Tickets
+
+###### Resources schema:
+
+    {
+        "resource_id": 1,
+        "created_at": "2021-11-12T19:50:44.914Z",
+        "updated_at": "2021-11-12T19:50:44.914Z",
+        "resource_name": "MacBook Pro 2020",
+        "category": "Computers",
+        "condition": "Excellent",
+        "assigned": true,
+        "current_assignee": "9",
+        "previous_assignee": "7",
+        "monetary_value": "1000$",
+        "deductible_donation": true
+    }
+
+| Method | Endpoint                  | Required Request Body                  | Returns                                    |
+| ------ | ------------------------- | -------------------------------------- | ------------------------------------------ |
+| GET    | `/resources`              | -                                      | `get all resources`                        |
+| GET    | `/resources/:resource_id` | -                                      | `get a resource by resource_id`            |
+| POST   | `/resources`              | `resource_name`,`category`,`condition` | `add a new resource to the db`             |
+| PUT    | `/resources/:resource_id` | `resource_name`,`category`,`condition` | `update a resource by resource_id,`        |
+| DELETE | `/resources/:resource_id` | -                                      | `delete a resource by resource_id from db` |
+
+###### Resource Ticket schema:
+
+    Resource tickets is the management system for Mentors/Admin to communicate about a specific resource. (Requests, Recommendations, etc.)
+
+    {
+        "resource_ticket_id": 1,
+        "created_at": "2021-11-12T19:50:44.916Z",
+        "updated_at": "2021-11-12T19:50:44.916Z",
+        "submitted_by": "7",
+        "pertains_to": "Elon Musk",
+        "message": "Elon deserves to have the 2020 MacBook Pro. Of all the mentees I have, I think he has the most potential."
+    }
+
+| Method | Endpoint                                | Required Request Body | Returns                                  |
+| ------ | --------------------------------------- | --------------------- | ---------------------------------------- |
+| GET    | `/resource-tickets`                     | -                     | `get all resource tickets`               |
+| GET    | `/resource-tickets/:resource_ticket_id` | -                     | `get a ticket by it id`                  |
+| GET    | `/resource-tickets/mytickets`           | -                     | `get all the current user's tickets`     |
+| POST   | `/resource-tickets`                     | `message`             | `create a new ticket`                    |
+| PUT    | `/resource-tickets/:resource_id`        | `message`             | `update a ticket by resource_ticket_id,` |
+| DELETE | `/resource-tickets/:resource_id`        | -                     | `delete a ticket by resource_id from db` |

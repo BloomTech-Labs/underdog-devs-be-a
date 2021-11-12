@@ -36,6 +36,7 @@ router.get('/:resource_id', authRequired, (req, res) => {
 });
 
 // add a resource to the resources database
+
 router.post(
   '/',
   authRequired,
