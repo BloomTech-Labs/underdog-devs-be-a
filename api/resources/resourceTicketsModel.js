@@ -1,3 +1,7 @@
-// const db = require('../../data/db-config');
+const db = require('../../data/db-config');
 
-// module.exports = {};
+const findAll = async () => {
+  return await db('resource_tickets');
+};
+
+module.exports = { findAll };

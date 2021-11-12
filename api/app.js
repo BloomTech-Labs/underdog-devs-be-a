@@ -26,6 +26,8 @@ const assignmentsRouter = require('./assignments/assignmentsRouter');
 const applicationRouter = require('./applications/applicationRouter');
 const meetingsRouter = require('./meetings/meetingsRouter');
 const actionsRouter = require('./actions/actionsRouter');
+const resourcesRouter = require('./resources/resourcesRouter');
+const resourceTicketRouter = require('./resources/resourceTicketsRouter');
 
 const app = express();
 
@@ -59,6 +61,8 @@ app.use('/assignments', assignmentsRouter);
 app.use('/application', applicationRouter);
 app.use('/meetings', meetingsRouter);
 app.use('/actions', actionsRouter);
+app.use('/resources', resourcesRouter);
+app.use('/resource-tickets', resourceTicketRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
