@@ -6,7 +6,7 @@ const { adminRequired } = require('../middleware/permissionsRequired');
 
 //get all resources
 
-router.get('/', (req, res) => {
+router.get('/', authRequired, (req, res) => {
   Resources.findAll()
     .then((resources) => {
       res.status(200).json(resources);
@@ -75,7 +75,7 @@ router.put(
   }
 );
 
-//delete a meeting
+//delete a resource
 
 router.delete(
   '/:resource_id',
