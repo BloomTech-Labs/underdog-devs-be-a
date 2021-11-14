@@ -30,6 +30,16 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 | ------ | -------- | ------------ | -------------------------- |
 | GET    | `/`      | -            | `{ api: "up", timestamp }` |
 
+## User Authorization
+
+###### Except for non-logged in features, users must be logged in to access all endpoints
+
+| User       | Authorization                 |
+| ---------- | ----------------------------- |
+| Mentor     | only mentor and up can access |
+| Admin      | only admin and up can access  |
+| SuperAdmin | only admin and up can access  |
+
 ## Profiles
 
 ###### Reference profile schema:
@@ -46,14 +56,14 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
         "approved": True
     }
 
-| Method | Endpoint          | Required Request Body | Returns                          |
-| ------ | ----------------- | --------------------- | -------------------------------- |
-| GET    | `/profiles`       | -                     | `get all profiles`               |
-| GET    | `/profiles/:id`   | -                     | `get profile by id`              |
-| POST   | `/profiles`       | `first/last, email`   | `create new profile`             |
-| PUT    | `/profiles/:id`   | `first/last, email`   | `update a profile by profile id` |
-| PUT    | `/profiles/roles` | `role`                | `update a profiles role`         |
-| DELETE | `/profiles/:id`   | -                     | `delete a profile by profile id` |
+| Method | Endpoint          | Required Request Body | Returns                          | User Auth |
+| ------ | ----------------- | --------------------- | -------------------------------- | --------- |
+| GET    | `/profiles`       | -                     | `get all profiles`               |           |
+| GET    | `/profiles/:id`   | -                     | `get profile by id`              |           |
+| POST   | `/profiles`       | `first/last, email`   | `create new profile`             |           |
+| PUT    | `/profiles/:id`   | `first/last, email`   | `update a profile by profile id` |           |
+| PUT    | `/profiles/roles` | `role`                | `update a profiles role`         |           |
+| DELETE | `/profiles/:id`   | -                     | `delete a profile by profile id` |           |
 
 ## Assignments - Matching Mentors and Mentees
 
@@ -78,17 +88,17 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
         "pending": true
     }
 
-| Method | Endpoint                      | Required Request Body      | Returns                                               |
-| ------ | ----------------------------- | -------------------------- | ----------------------------------------------------- |
-| GET    | `/assignments`                | -                          | `get all assignments`                                 |
-| GET    | `/assignments/:assignment_id` | -                          | `get assignment by assignment id`                     |
-| GET    | `/assignments/mentor/:id`     | -                          | `get all the mentees a mentor has by the mentor's id` |
-| GET    | `/assignments/mentee/:id`     | -                          | `get all the mentors a mentee has by the mentee's id` |
-| GET    | `/assignments/mymentors`      | -                          | `get all the mentors the current user has`            |
-| GET    | `/assignments/mymentees`      | -                          | `get all the mentees the current user has`            |
-| POST   | `/assignments`                | `mentor_id`,`mentee_id`    | `create a new assignment between a mentor and mentee` |
-| PUT    | `/assignments/:id`            | `mentor_id` or `mentee_id` | `update a assignment by assignment id,`               |
-| DELETE | `/assignments/:id`            | -                          | `delete assignment by assignment_id`                  |
+| Method | Endpoint                      | Required Request Body      | Returns                                               | User Auth |
+| ------ | ----------------------------- | -------------------------- | ----------------------------------------------------- | --------- |
+| GET    | `/assignments`                | -                          | `get all assignments`                                 | Admin     |
+| GET    | `/assignments/:assignment_id` | -                          | `get assignment by assignment id`                     | Admin     |
+| GET    | `/assignments/mentor/:id`     | -                          | `get all the mentees a mentor has by the mentor's id` | Admin     |
+| GET    | `/assignments/mentee/:id`     | -                          | `get all the mentors a mentee has by the mentee's id` | Admin     |
+| GET    | `/assignments/mymentors`      | -                          | `get all the mentors the current user has`            |           |
+| GET    | `/assignments/mymentees`      | -                          | `get all the mentees the current user has`            |           |
+| POST   | `/assignments`                | `mentor_id`,`mentee_id`    | `create a new assignment between a mentor and mentee` | Admin     |
+| PUT    | `/assignments/:id`            | `mentor_id` or `mentee_id` | `update a assignment by assignment id,`               | Admin     |
+| DELETE | `/assignments/:id`            | -                          | `delete assignment by assignment_id`                  | Admin     |
 
 ## Meetings
 
@@ -106,15 +116,15 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
         "meeting_notes": "Remember to bring your resume"
     }
 
-| Method | Endpoint                        | Required Request Body                                                             | Returns                                           |
-| ------ | ------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------- |
-| GET    | `/meetings`                     | -                                                                                 | `get all meetings`                                |
-| GET    | `/meetings/:meeting_id`         | -                                                                                 | `get meeting by meeting id`                       |
-| GET    | `/meetings/profile/:profile_id` | -                                                                                 | `get all the meetings a profile_id has scheduled` |
-| GET    | `/meetings/my-meetings`         | -                                                                                 | `get all the meetings the current user has`       |
-| POST   | `/meetings`                     | `meeting_topic`,`meeting_date`, `meeting_time`,`host_id`,`attendee_id`,           | `create a new meeting`                            |
-| PUT    | `/meetings/:meeting_id`         | `meeting_topic` or `meeting_date` or `meeting_time` or `host_id` or `attendee_id` | `update a meeting by meeting_id,`                 |
-| DELETE | `/meetings/:meeting_id`         | -                                                                                 | `delete meeting by meeting_id`                    |
+| Method | Endpoint                        | Required Request Body                                                             | Returns                                           | User Auth |
+| ------ | ------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------- | --------- |
+| GET    | `/meetings`                     | -                                                                                 | `get all meetings`                                | Admin     |
+| GET    | `/meetings/:meeting_id`         | -                                                                                 | `get meeting by meeting id`                       | Admin     |
+| GET    | `/meetings/profile/:profile_id` | -                                                                                 | `get all the meetings a profile_id has scheduled` | Admin     |
+| GET    | `/meetings/my-meetings`         | -                                                                                 | `get all the meetings the current user has`       |           |
+| POST   | `/meetings`                     | `meeting_topic`,`meeting_date`, `meeting_time`,`host_id`,`attendee_id`,           | `create a new meeting`                            | Mentor    |
+| PUT    | `/meetings/:meeting_id`         | `meeting_topic` or `meeting_date` or `meeting_time` or `host_id` or `attendee_id` | `update a meeting by meeting_id,`                 | Mentor    |
+| DELETE | `/meetings/:meeting_id`         | -                                                                                 | `delete meeting by meeting_id`                    | Mentor    |
 
 ## Resources
 
@@ -134,13 +144,13 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
         "deductible_donation": true
     }
 
-| Method | Endpoint                  | Required Request Body                  | Returns                                    |
-| ------ | ------------------------- | -------------------------------------- | ------------------------------------------ |
-| GET    | `/resources`              | -                                      | `get all resources`                        |
-| GET    | `/resources/:resource_id` | -                                      | `get a resource by resource_id`            |
-| POST   | `/resources`              | `resource_name`,`category`,`condition` | `add a new resource to the db`             |
-| PUT    | `/resources/:resource_id` | `resource_name`,`category`,`condition` | `update a resource by resource_id,`        |
-| DELETE | `/resources/:resource_id` | -                                      | `delete a resource by resource_id from db` |
+| Method | Endpoint                  | Required Request Body                  | Returns                                    | User Auth |
+| ------ | ------------------------- | -------------------------------------- | ------------------------------------------ | --------- |
+| GET    | `/resources`              | -                                      | `get all resources`                        |           |
+| GET    | `/resources/:resource_id` | -                                      | `get a resource by resource_id`            |           |
+| POST   | `/resources`              | `resource_name`,`category`,`condition` | `add a new resource to the db`             | Admin     |
+| PUT    | `/resources/:resource_id` | `resource_name`,`category`,`condition` | `update a resource by resource_id,`        | Admin     |
+| DELETE | `/resources/:resource_id` | -                                      | `delete a resource by resource_id from db` | Admin     |
 
 ## Resource Tickets
 
@@ -157,11 +167,11 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
         "message": "Elon deserves to have the 2020 MacBook Pro. Of all the mentees I have, I think he has the most potential."
     }
 
-| Method | Endpoint                                | Required Request Body | Returns                                  |
-| ------ | --------------------------------------- | --------------------- | ---------------------------------------- |
-| GET    | `/resource-tickets`                     | -                     | `get all resource tickets`               |
-| GET    | `/resource-tickets/:resource_ticket_id` | -                     | `get a ticket by it id`                  |
-| GET    | `/resource-tickets/mytickets`           | -                     | `get all the current user's tickets`     |
-| POST   | `/resource-tickets`                     | `message`             | `create a new ticket`                    |
-| PUT    | `/resource-tickets/:resource_id`        | `message`             | `update a ticket by resource_ticket_id,` |
-| DELETE | `/resource-tickets/:resource_id`        | -                     | `delete a ticket by resource_id from db` |
+| Method | Endpoint                                | Required Request Body | Returns                                  | User Auth |
+| ------ | --------------------------------------- | --------------------- | ---------------------------------------- | --------- |
+| GET    | `/resource-tickets`                     | -                     | `get all resource tickets`               | Admin     |
+| GET    | `/resource-tickets/:resource_ticket_id` | -                     | `get a ticket by it id`                  | Admin     |
+| GET    | `/resource-tickets/mytickets`           | -                     | `get all the current user's tickets`     |           |
+| POST   | `/resource-tickets`                     | `message`             | `create a new ticket`                    | Mentor    |
+| PUT    | `/resource-tickets/:resource_id`        | `message`             | `update a ticket by resource_ticket_id,` | Mentor    |
+| DELETE | `/resource-tickets/:resource_id`        | -                     | `delete a ticket by resource_id from db` | Mentor    |
