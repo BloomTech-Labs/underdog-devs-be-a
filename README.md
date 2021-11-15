@@ -22,6 +22,10 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
    1. Download the frontend dependencies by running `npm install`
    1. Start up the app by running `npm start`
 
+## Database Design
+
+![image](https://whimsical.com/relationship-tables-and-api-s-backend-3TEHn4ZVYCjj6CKHua8BB8)
+
 # Endpoints
 
 ## Status
@@ -36,9 +40,10 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 
 | User       | Authorization                 |
 | ---------- | ----------------------------- |
-| Mentor     | only mentor and up can access |
+| SuperAdmin | only SuperAdmin can access    |
 | Admin      | only admin and up can access  |
-| SuperAdmin | only admin and up can access  |
+| Mentor     | only mentor and up can access |
+|            | Anyone can access             |
 
 ## Profiles
 
