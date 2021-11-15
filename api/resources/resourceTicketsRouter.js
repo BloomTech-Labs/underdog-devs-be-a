@@ -120,6 +120,8 @@ router.delete(
 
 ///////////////////////////MIDDLEWARE///////////////////////////////
 
+// validate the ticket id exists in the database
+
 function validRecTicketID(req, res, next) {
   Ticket.findByTicketId(req.params.resource_ticket_id).then(
     (resourceTicket) => {
@@ -134,6 +136,8 @@ function validRecTicketID(req, res, next) {
     }
   );
 }
+
+// validate the req.body when creating or updating a new ticket
 
 function validNewTicket(req, res, next) {
   const ticket = req.body;

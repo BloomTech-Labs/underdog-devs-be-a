@@ -2,7 +2,7 @@ const express = require('express');
 const authRequired = require('../middleware/authRequired');
 const Profiles = require('./profileModel');
 const router = express.Router();
-// const { superAdminRequired } = require('../middleware/permissionsRequired');
+const { superAdminRequired } = require('../middleware/permissionsRequired');
 
 /**
  * @swagger
@@ -294,7 +294,7 @@ router.delete('/:id', authRequired, (req, res) => {
   }
 });
 
-router.put('/roles', authRequired, (req, res) => {
+router.put('/roles', authRequired, superAdminRequired, (req, res) => {
   const profile = req.body;
   const id = profile.profile_id;
   Profiles.findById(id).then(
