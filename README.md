@@ -43,7 +43,7 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 | SuperAdmin | only SuperAdmin can access    |
 | Admin      | only admin and up can access  |
 | Mentor     | only mentor and up can access |
-|            | Anyone can access             |
+|            | Anyone has access             |
 
 ## Profiles
 
