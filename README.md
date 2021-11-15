@@ -63,12 +63,12 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 
 | Method | Endpoint          | Required Request Body | Returns                          | User Auth    |
 | ------ | ----------------- | --------------------- | -------------------------------- | ------------ |
-| GET    | `/profiles`       | -                     | `get all profiles`               |              |
-| GET    | `/profiles/:id`   | -                     | `get profile by id`              |              |
+| GET    | `/profiles`       | -                     | `get all profiles`               | `Admin`      |
+| GET    | `/profiles/:id`   | -                     | `get profile by id`              | `Admin`      |
 | POST   | `/profiles`       | `first/last, email`   | `create new profile`             |              |
 | PUT    | `/profiles/:id`   | `first/last, email`   | `update a profile by profile id` |              |
-| PUT    | `/profiles/roles` | `role`                | `update a profiles role`         | `SuperAdmin` |
-| DELETE | `/profiles/:id`   | -                     | `delete a profile by profile id` |              |
+| PUT    | `/profiles/roles` | `role`                | `update a profiles role`         | `Admin`      |
+| DELETE | `/profiles/:id`   | -                     | `delete a profile by profile id` | `SuperAdmin` |
 
 ## Assignments - Matching Mentors and Mentees
 

@@ -2,7 +2,10 @@ const express = require('express');
 const authRequired = require('../middleware/authRequired');
 const Profiles = require('./profileModel');
 const router = express.Router();
-const { superAdminRequired } = require('../middleware/permissionsRequired');
+const {
+  adminRequired,
+  superAdminRequired,
+} = require('../middleware/permissionsRequired');
 
 /**
  * @swagger
@@ -63,7 +66,7 @@ const { superAdminRequired } = require('../middleware/permissionsRequired');
  *      403:
  *        $ref: '#/components/responses/UnauthorizedError'
  */
-router.get('/', authRequired, function (req, res) {
+router.get('/', authRequired, adminRequired, function (req, res) {
   Profiles.findAll()
     .then((profiles) => {
       res.status(200).json(profiles);
@@ -109,7 +112,7 @@ router.get('/', authRequired, function (req, res) {
  *      404:
  *        description: 'Profile not found'
  */
-router.get('/:id', authRequired, function (req, res) {
+router.get('/:id', authRequired, adminRequired, function (req, res) {
   const id = String(req.params.id);
   Profiles.findById(id)
     .then((profile) => {
@@ -276,7 +279,7 @@ router.put('/', authRequired, (req, res) => {
  *                profile:
  *                  $ref: '#/components/schemas/Profile'
  */
-router.delete('/:id', authRequired, (req, res) => {
+router.delete('/:id', authRequired, superAdminRequired, (req, res) => {
   const id = req.params.id;
   try {
     Profiles.findById(id).then((profile) => {
@@ -294,7 +297,7 @@ router.delete('/:id', authRequired, (req, res) => {
   }
 });
 
-router.put('/roles', authRequired, superAdminRequired, (req, res) => {
+router.put('/roles', authRequired, adminRequired, (req, res) => {
   const profile = req.body;
   const id = profile.profile_id;
   Profiles.findById(id).then(
