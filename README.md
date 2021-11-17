@@ -180,3 +180,35 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 | POST   | `/resource-tickets`                     | `message`             | `create a new ticket`                    | `Mentor`  |
 | PUT    | `/resource-tickets/:resource_id`        | `message`             | `update a ticket by resource_ticket_id,` | `Mentor`  |
 | DELETE | `/resource-tickets/:resource_id`        | -                     | `delete a ticket by resource_id from db` | `Mentor`  |
+
+## Intakes
+
+###### Mentor intake schema:
+
+  {
+    profile_id: '00u13oned0U8XP8Mb4x7',
+    email: 'fakeemail2@gmail.com',
+    location: 'Bumville, USA',
+    name: 'Hotdog Jeopardy',
+    current_comp: 'Amazin',
+    tech_stack: 'Node.js, Axios',
+    can_commit: false,
+    how_commit: '1:1 sessions - Once a month',
+  }
+
+###### Mentee intake schema:
+
+  {
+    profile_id: '12',
+    email: 'fakeemail1@gmail.com',
+    location: 'California, USA',
+    name: 'Joe Baseball',
+    lives_in_us: true,
+    formerly_incarcerated: true,
+    list_convictions: 'coded too much',
+    tech_stack: 'HTML/CSS/JS',
+    experience_level: '2 years',
+    your_hope: 'I want a career in coding',
+    other_info: 'Not really',
+  }
+

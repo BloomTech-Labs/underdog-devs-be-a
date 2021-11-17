@@ -1,23 +1,23 @@
 const db = require('../../data/db-config');
 
 const findAll = () => {
-  return db('account_tickets');
+  return db('action_tickets');
 };
 
 const findBy = (filter) => {
-  return db('account_tickets').where(filter);
+  return db('action_tickets').where(filter);
 };
 
 const findById = async (submitted_by) => {
-  return db('account_tickets').where({ submitted_by }).first().select('*');
+  return db('action_tickets').where({ submitted_by }).first().select('*');
 };
 
 const create = async (actions) => {
-  return db('account_tickets').insert(actions).returning('*');
+  return db('action_tickets').insert(actions).returning('*');
 };
 
 const update = (id, actions) => {
-  return db('account_tickets')
+  return db('action_tickets')
     .where({ submitted_by: id })
     .first()
     .update(actions)
@@ -25,7 +25,7 @@ const update = (id, actions) => {
 };
 
 const remove = async (id) => {
-  return await db('account_tickets').where({ id }).del();
+  return await db('action_tickets').where({ id }).del();
 };
 
 const findOrCreateActions = async (actionsObj) => {
