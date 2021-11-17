@@ -9,6 +9,26 @@ const dummyData = [
     position: 3,
     approved: false,
   },
+  {
+    profile_id: '7',
+    position: 4,
+    approved: true,
+  },
+  {
+    profile_id: '9',
+    position: 3,
+    approved: true,
+  },
+  {
+    profile_id: '00ulzfj6nX79gu0Nh5d6',
+    position: 3,
+    approved: false,
+  },
+  {
+    profile_id: '10',
+    position: 4,
+    approved: false,
+  },
 ];
 
 exports.seed = function (knex) {
