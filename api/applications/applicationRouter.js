@@ -8,7 +8,7 @@ const { adminRequired } = require('../middleware/permissionsRequired.js');
 
 // get all pending mentee applications
 
-router.get('/mentee', (req, res, next) => {
+router.get('/mentee', authRequired, adminRequired, (req, res, next) => {
   Application.getPendingMenteeTickets()
     .then((applicationList) => {
       res.status(200).json(applicationList);
