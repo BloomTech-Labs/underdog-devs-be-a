@@ -41,7 +41,11 @@ router.post('/new-application', authRequired, function (req, res, next) {
 
 // update the role_id for the profile of the applicant and update the application approved value to true
 
-router.put('/update', authRequired, adminRequired, function (req, res, next) {
+router.put('/update-role', authRequired, adminRequired, function (
+  req,
+  res,
+  next
+) {
   const profile_id = req.body.profile_id;
   const application_id = req.body.application_id;
   const role_id = req.body.position;
@@ -59,11 +63,26 @@ router.put('/update', authRequired, adminRequired, function (req, res, next) {
     .catch(next);
 });
 
+// post the information for the mentee intake for the currently logged in user
+
 router.post('/new-mentee', authRequired, function (req, res, next) {
   const token = req.headers.authorization;
   const User = jwt(token);
   const newMenteeIntake = req.body;
   Application.insertMenteeIntake(User.sub, newMenteeIntake)
+    .then(() => {
+      res.status(201).json({ message: 'Information has been submitted' });
+    })
+    .catch(next);
+});
+
+// post the information for the mentor intake for the currently logged in user
+
+router.post('/new-mentor', authRequired, function (req, res, next) {
+  const token = req.headers.authorization;
+  const User = jwt(token);
+  const newMentorIntake = req.body;
+  Application.insertMenteeIntake(User.sub, newMentorIntake)
     .then(() => {
       res.status(201).json({ message: 'Information has been submitted' });
     })
