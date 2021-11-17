@@ -20,7 +20,7 @@ exports.up = (knex) => {
       table.string('issue').notNullable();
       table.string('comments');
       table.boolean('pending').defaultTo(true);
-      table.boolean('resolved');
+      table.boolean('resolved').defaultTo(false);
       table.boolean('strike').notNullable().defaultTo(false);
       table.timestamps(true, true);
     });

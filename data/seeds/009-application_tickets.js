@@ -2,7 +2,11 @@ const dummyData = [
   {
     profile_id: '12',
     position: 4,
-    application_info: 'This is our made up application info',
+    approved: false,
+  },
+  {
+    profile_id: '00u13oned0U8XP8Mb4x7',
+    position: 3,
     approved: false,
   },
 ];
