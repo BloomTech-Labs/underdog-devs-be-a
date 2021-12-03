@@ -9,6 +9,24 @@ const dummyData = [
     can_commit: false,
     how_commit: '1:1 sessions - Once a month',
   },
+  {
+    profile_id: '9',
+    email: 'fakeemail3@gmail.com',
+    location: 'Bumville, USA',
+    name: 'Mr. America',
+    tech_stack: 'JS, HTML',
+    can_commit: true,
+  },
+  {
+    profile_id: '00ulzfj6nX79gu0Nh5d6',
+    email: 'fakeemail5@gmail.com',
+    location: 'Carolina, USA',
+    name: 'Carolina Baby',
+    current_comp: 'Oil United',
+    tech_stack: 'Quickbooks',
+    can_commit: true,
+    how_commit: 'Daily, 9 hours',
+  },
 ];
 
 exports.seed = function (knex) {

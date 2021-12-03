@@ -12,8 +12,28 @@ function getTicketById(application_id) {
     .first();
 }
 
-function getPendingTickets() {
-  return db('application_tickets').where('approved', false);
+async function insertMenteeIntake(id, newMenteeIntake) {
+  newMenteeIntake.profile_id = id;
+  const form = await db('mentee_intake').insert(newMenteeIntake);
+  return form;
+}
+
+async function insertMentorIntake(id, newMentorIntake) {
+  newMentorIntake.profile_id = id;
+  const form = await db('mentor_intake').insert(newMentorIntake);
+  return form;
+}
+
+function getPendingMenteeTickets() {
+  return db('application_tickets as a')
+    .join('mentee_intake as m', 'm.profile_id', 'a.profile_id')
+    .where('a.approved', false);
+}
+
+function getPendingMentorTickets() {
+  return db('application_tickets as a')
+    .join('mentor_intake as m', 'm.profile_id', 'a.profile_id')
+    .where('a.approved', false);
 }
 
 function updateTicket(application_id, changes) {
@@ -23,4 +43,12 @@ function updateTicket(application_id, changes) {
     .update(changes);
 }
 
-module.exports = { add, updateTicket, getPendingTickets, getTicketById };
+module.exports = {
+  add,
+  updateTicket,
+  getPendingMenteeTickets,
+  getPendingMentorTickets,
+  insertMenteeIntake,
+  insertMentorIntake,
+  getTicketById,
+};

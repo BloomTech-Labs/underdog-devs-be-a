@@ -24,6 +24,8 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 
 ## Database Design
 
+[DB Designer](https://dbdesigner.page.link/TpVFGQTXgwyFKyDg8)
+
 [Whimsical Relational Database Design](https://whimsical.com/relationship-tables-and-api-s-backend-3TEHn4ZVYCjj6CKHua8BB8)
 
 # Endpoints
@@ -69,6 +71,56 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 | PUT    | `/profiles/:id`   | `first/last, email`   | `update a profile by profile id` |              |
 | PUT    | `/profiles/roles` | `role`                | `update a profiles role`         | `Admin`      |
 | DELETE | `/profiles/:id`   | -                     | `delete a profile by profile id` | `SuperAdmin` |
+
+## Applications / Mentee-Mentor Intakes
+
+###### Application schema:
+
+    {
+        "application_id": 1,
+        "position": "4",
+        "profile_id": "10",
+        "approved": false,
+        "created_at": "2021-11-01T17:59:02.023Z"
+    }
+
+###### Mentor intake schema:
+
+    {
+        "profile_id": '00u13oned0U8XP8Mb4x7',
+        "email": 'fakeemail2@gmail.com',
+        "location": 'Bumville, USA',
+        "name": 'Hotdog Jeopardy',
+        "current_comp": 'Amazin',
+        "tech_stack": 'Node.js, Axios',
+        "can_commit": false,
+        "how_commit": '1:1 sessions - Once a month',
+    }
+
+###### Mentee intake schema:
+
+    {
+        "profile_id": '12',
+        "email": 'fakeemail1@gmail.com',
+        "location": 'California, USA',
+        "name": 'Joe Baseball',
+        "lives_in_us": true,
+        "formerly_incarcerated": true,
+        "list_convictions": 'coded too much',
+        "tech_stack": 'HTML/CSS/JS',
+        "experience_level": '2 years',
+        "your_hope": 'I want a career in coding',
+        "other_info": 'Not really',
+    }
+
+| Method | Endpoint                       | Required Request Body                                                                                              | Returns                                                        | User Auth |
+| ------ | ------------------------------ | ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------- | --------- |
+| GET    | `/application/mentee`          | -                                                                                                                  | `gets all pending mentee applications`                         | `Admin`   |
+| GET    | `/application/mentor`          | -                                                                                                                  | `gets all pending mentor applications`                         | `Admin`   |
+| POST   | `/application/new-application` | -`position (role_id)`                                                                                              | `create and application for the current user`                  |           |
+| POST   | `/application/new-mentee`      | -`email`, `location`, `name`, `lives_in_us`, `formerly_incarcerated`,`tech_stack`, `experience_level`, `your_hope` | `create a mentee intake for the current user`                  |           |
+| POST   | `/application/new-mentor`      | -`email`, `location`, `name`, `can_commit`, `tech_stack`,                                                          | `create a mentor intake for the current user`                  |           |
+| PUT    | `/application/update-role`     | -`position (role_id)`, `application_id`, `profile_id`,                                                             | `update profile role and update application to approved: true` | `Admin`   |
 
 ## Assignments - Matching Mentors and Mentees
 
@@ -180,35 +232,3 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 | POST   | `/resource-tickets`                     | `message`             | `create a new ticket`                    | `Mentor`  |
 | PUT    | `/resource-tickets/:resource_id`        | `message`             | `update a ticket by resource_ticket_id,` | `Mentor`  |
 | DELETE | `/resource-tickets/:resource_id`        | -                     | `delete a ticket by resource_id from db` | `Mentor`  |
-
-## Intakes
-
-###### Mentor intake schema:
-
-  {
-    profile_id: '00u13oned0U8XP8Mb4x7',
-    email: 'fakeemail2@gmail.com',
-    location: 'Bumville, USA',
-    name: 'Hotdog Jeopardy',
-    current_comp: 'Amazin',
-    tech_stack: 'Node.js, Axios',
-    can_commit: false,
-    how_commit: '1:1 sessions - Once a month',
-  }
-
-###### Mentee intake schema:
-
-  {
-    profile_id: '12',
-    email: 'fakeemail1@gmail.com',
-    location: 'California, USA',
-    name: 'Joe Baseball',
-    lives_in_us: true,
-    formerly_incarcerated: true,
-    list_convictions: 'coded too much',
-    tech_stack: 'HTML/CSS/JS',
-    experience_level: '2 years',
-    your_hope: 'I want a career in coding',
-    other_info: 'Not really',
-  }
-
