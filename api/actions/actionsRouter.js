@@ -16,7 +16,7 @@ router.get('/', function (req, res) {
 
 router.post('/', validateSubjectBody, (req, res, next) => {
   const action = req.body;
-  Actions.Create(action)
+  Actions.create(action)
     .then(() => {
       res.status(201).json({ message: 'success', action });
     })
@@ -24,14 +24,14 @@ router.post('/', validateSubjectBody, (req, res, next) => {
 });
 
 router.put('/:id', validateSubjectBody, (req, res, next) => {
-  const issue = req.params.subject_id;
+  const id = req.params.id;
   const changes = req.body;
-  Actions.Update(issue, changes)
+  Actions.update(id, changes)
     .then((change) => {
       if (change) {
-        Actions.findById(issue).then((success) => {
+        Actions.findById(id).then((success) => {
           res.status(200).json({
-            message: `Action '${success.subject_id}' 
+            message: `Action '${success.action_ticket_id}' 
             updated`,
             success,
           });
