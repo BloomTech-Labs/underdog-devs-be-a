@@ -1,6 +1,5 @@
 const express = require('express');
 const { validateSubjectBody } = require('./actionsMiddleware');
-// const authRequired = require('../middleware/authRequired');
 const Actions = require('./actionsModel');
 const router = express.Router();
 
@@ -41,8 +40,17 @@ router.put('/:id', validateSubjectBody, (req, res, next) => {
     .catch(next);
 });
 
-router.delete('/:id', (req, res) => {
-  res.json('delete wired/fired');
+router.delete('/:id', validateSubjectBody, (req, res, next) => {
+  const id = req.params.id;
+  Actions.Remove(id)
+    .then((issue) => {
+      if (issue) {
+        res.status(200).json({
+          message: 'issue deleted',
+        });
+      }
+    })
+    .catch(next);
 });
 
 module.exports = router;
