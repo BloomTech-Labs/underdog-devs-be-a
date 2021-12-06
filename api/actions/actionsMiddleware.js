@@ -1,6 +1,6 @@
 // const subject = required('./actionsModel/');
 
-const subjectBody = (req, res, next) => {
+const validateSubjectBody = (req, res, next) => {
   const { issue } = req.body;
   if (!issue)
     return next({
@@ -10,5 +10,5 @@ const subjectBody = (req, res, next) => {
   next();
 };
 module.exports = {
-  subjectBody,
+  validateSubjectBody,
 };
