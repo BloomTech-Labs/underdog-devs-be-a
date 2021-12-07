@@ -248,9 +248,9 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
         "updated_at": "2021-12-07T17:08:00.987Z"
     }
 
-| Method | Endpoint               | Required Request Body | Returns                       | User Auth |
-| ------ | ---------------------- | --------------------- | ----------------------------- | --------- |
-| GET    | `/actions`             | -                     | `get all actions tickets`     | -         |
-| GET    | `/actions/:actions-id` | -                     | `get an actions ticket by id` | -         |
-| POST   | `/actions`             | -                     | `create a new actions ticket` | -         |
-| PUT    | `/actions/:actions-id` | -                     | `update an actions ticket`    | -         |
+| Method | Endpoint               | Required Request Body                 | Returns                       | User Auth |
+| ------ | ---------------------- | ------------------------------------- | ----------------------------- | --------- |
+| GET    | `/actions`             | -                                     | `get all actions tickets`     | -         |
+| GET    | `/actions/:actions_id` | -                                     | `get an actions ticket by id` | -         |
+| POST   | `/actions`             | `submitted_by`, `subject_id`, `issue` | `create a new actions ticket` | -         |
+| PUT    | `/actions/:actions_id` | -                                     | `update an actions ticket`    | -         |
