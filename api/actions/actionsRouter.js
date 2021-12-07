@@ -40,7 +40,7 @@ router.put('/:id', validateSubjectBody, (req, res, next) => {
     .catch(next);
 });
 
-router.delete('/:id', validateSubjectBody, (req, res, next) => {
+router.delete('/:id', (req, res, next) => {
   const id = req.params.id;
   Actions.Remove(id)
     .then((issue) => {
