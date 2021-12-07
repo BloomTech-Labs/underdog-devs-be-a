@@ -1,5 +1,3 @@
-// const subject = required('./actionsModel/');
-
 const validateSubjectBody = (req, res, next) => {
   const { issue } = req.body;
   if (!issue)
