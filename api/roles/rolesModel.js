@@ -1,7 +1,7 @@
 const db = require('../../data/db-config');
 
 const findByProfileId = async (profile_id) => {
-  return db.select('*').from('roles').where({ profile_id }).first();
+  return db('profiles').where({ profile_id }).first().select('role_id');
 };
 
 module.exports = { findByProfileId };
