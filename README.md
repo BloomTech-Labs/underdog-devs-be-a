@@ -236,19 +236,21 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 ###### Actions Tickets schema:
 
     {
-        "Action_id": "00ulzfj6nX72gu3Nh4d6",
-        "email": "email@email.mail",
-        "first_name":"John",
-        "last_name":"Doe",
-        "role_id": 3,
-        "role_name": "user",
-        "created_at": "2021-04-21T18:47:18.712Z",
-        "updated_at": "2021-04-21T18:47:18.712Z",
-        "approved": True
+        "action_ticket_id": 2,
+        "submitted_by": "11",
+        "subject_id": "00u13oned0U8XP8Mb4x7",
+        "issue": "My mentor isn't really helping me learn, could I seek reassignment?",
+        "comments": null,
+        "pending": true,
+        "resolved": true,
+        "strike": false,
+        "created_at": "2021-12-07T17:08:00.987Z",
+        "updated_at": "2021-12-07T17:08:00.987Z"
     }
 
-| Method | Endpoint       | Required Request Body | Returns                       | User Auth |
-| ------ | -------------- | --------------------- | ----------------------------- | --------- |
-| GET    | `/actions`     | -                     | `get all actions tickets`     | -         |
-| POST   | `/new-actions` | -                     | `create a new actions ticket` | -         |
-| PUT    | `/:actions-id` | -                     | `update an actions ticket`    | -         |
+| Method | Endpoint               | Required Request Body | Returns                       | User Auth |
+| ------ | ---------------------- | --------------------- | ----------------------------- | --------- |
+| GET    | `/actions`             | -                     | `get all actions tickets`     | -         |
+| GET    | `/actions/:actions-id` | -                     | `get an actions ticket by id` | -         |
+| POST   | `/actions`             | -                     | `create a new actions ticket` | -         |
+| PUT    | `/actions/:actions-id` | -                     | `update an actions ticket`    | -         |
