@@ -233,7 +233,6 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 | PUT    | `/resource-tickets/:resource_id`        | `message`             | `update a ticket by resource_ticket_id,` | `Mentor`  |
 | DELETE | `/resource-tickets/:resource_id`        | -                     | `delete a ticket by resource_id from db` | `Mentor`  |
 
-
 ###### Actions Tickets schema:
 
     {
@@ -248,7 +247,8 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
         "approved": True
     }
 
-| Method | Endpoint          | Required Request Body | Returns                          | User Auth    |
-| ------ | ----------------- | --------------------- | -------------------------------- | ------------ |
-|GET|`/actions`|-|`get all actions tickets`|-|
-||
+| Method | Endpoint       | Required Request Body | Returns                       | User Auth |
+| ------ | -------------- | --------------------- | ----------------------------- | --------- |
+| GET    | `/actions`     | -                     | `get all actions tickets`     | -         |
+| POST   | `/new-actions` | -                     | `create a new actions ticket` | -         |
+| PUT    | `/:actions-id` | -                     | `update an actions ticket`    | -         |

@@ -13,6 +13,17 @@ router.get('/', function (req, res) {
     });
 });
 
+router.get('/:id', function (req, res) {
+  const id = req.params.id;
+  Actions.findById(id)
+    .then((action) => {
+      res.status(200).json(action);
+    })
+    .catch((err) => {
+      res.status(500).json({ message: err.message });
+    });
+});
+
 router.post('/', validateSubjectBody, (req, res, next) => {
   const action = req.body;
   Actions.create(action)
