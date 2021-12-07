@@ -237,7 +237,7 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 ###### Actions Tickets schema:
 
     {
-        "user_id": "00ulzfj6nX72gu3Nh4d6",
+        "Action_id": "00ulzfj6nX72gu3Nh4d6",
         "email": "email@email.mail",
         "first_name":"John",
         "last_name":"Doe",
@@ -250,3 +250,5 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 
 | Method | Endpoint          | Required Request Body | Returns                          | User Auth    |
 | ------ | ----------------- | --------------------- | -------------------------------- | ------------ |
+|GET|`/actions`|-|`get all actions tickets`|-|
+||
