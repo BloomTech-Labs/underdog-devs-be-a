@@ -40,17 +40,4 @@ router.put('/:id', validateSubjectBody, (req, res, next) => {
     .catch(next);
 });
 
-router.delete('/:id', (req, res, next) => {
-  const id = req.params.id;
-  Actions.Remove(id)
-    .then((issue) => {
-      if (issue) {
-        res.status(200).json({
-          message: 'issue deleted',
-        });
-      }
-    })
-    .catch(next);
-});
-
 module.exports = router;

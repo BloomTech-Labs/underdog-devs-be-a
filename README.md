@@ -232,3 +232,21 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 | POST   | `/resource-tickets`                     | `message`             | `create a new ticket`                    | `Mentor`  |
 | PUT    | `/resource-tickets/:resource_id`        | `message`             | `update a ticket by resource_ticket_id,` | `Mentor`  |
 | DELETE | `/resource-tickets/:resource_id`        | -                     | `delete a ticket by resource_id from db` | `Mentor`  |
+
+
+###### Actions Tickets schema:
+
+    {
+        "user_id": "00ulzfj6nX72gu3Nh4d6",
+        "email": "email@email.mail",
+        "first_name":"John",
+        "last_name":"Doe",
+        "role_id": 3,
+        "role_name": "user",
+        "created_at": "2021-04-21T18:47:18.712Z",
+        "updated_at": "2021-04-21T18:47:18.712Z",
+        "approved": True
+    }
+
+| Method | Endpoint          | Required Request Body | Returns                          | User Auth    |
+| ------ | ----------------- | --------------------- | -------------------------------- | ------------ |
