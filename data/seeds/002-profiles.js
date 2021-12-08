@@ -5,6 +5,7 @@ const profiles = [...new Array(12)].map((i, idx) => ({
   last_name: idx < 2 ? `${idx + 1}` : `${idx + 1}`,
   role_id: idx < 2 ? 1 : idx == 2 ? 2 : 3,
   pending: idx < 6 ? false : true,
+  progress_id: null,
 }));
 
 profiles[0].profile_id = '00ulthapbErVUwVJy4x6';
@@ -21,6 +22,12 @@ profiles[8].role_id = 3;
 profiles[9].role_id = 4;
 profiles[10].role_id = 4;
 profiles[11].role_id = 5;
+
+for (let i = 0; i < profiles.length; i++) {
+  if (profiles[i].role_id === 4) {
+    profiles[i].progress_id = Math.floor(Math.random() * (4 - 1) + 1);
+  }
+}
 
 exports.seed = function (knex) {
   return knex('profiles')
