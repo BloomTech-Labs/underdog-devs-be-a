@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Roles = require('./rolesModel');
-const authRequired = require('../middleware/authRequired');
 
 // gets a profile's role id
-router.get('/:id', authRequired, (req, res) => {
+router.get('/:id', (req, res) => {
   const id = req.params.id;
   Roles.findByProfileId(id)
     .then((profile) => {

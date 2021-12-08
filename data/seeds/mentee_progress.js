@@ -1,11 +1,15 @@
 const dummyData = [
   {
-    profile_id: '7',
-    progress: 'Hired',
+    progress: 'Learning',
   },
   {
-    profile_id: '10',
-    progress: 'Learning',
+    progress: 'Applying',
+  },
+  {
+    progress: 'Interviewing',
+  },
+  {
+    progress: 'Hired',
   },
 ];
 exports.seed = function (knex) {
