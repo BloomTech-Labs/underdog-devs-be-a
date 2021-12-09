@@ -1,13 +1,13 @@
-const { findProfileByRoleId } = require('./progressionModel');
+const { findRoleIdByProfileId } = require('./progressionModel');
 
 const checkIfMentee = async (req, res, next) => {
   const { profile_id } = req.params;
   try {
-    const { role_id } = await findProfileByRoleId(profile_id);
+    const { role_id } = await findRoleIdByProfileId(profile_id);
     if (role_id != 4) {
       next({
         status: 400,
-        message: 'User is not a mentee',
+        message: 'Requested user is not a mentee',
       });
     } else {
       next();

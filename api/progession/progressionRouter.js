@@ -3,6 +3,7 @@ const router = express.Router();
 const Progression = require('./progressionModel');
 const checkIfMentee = require('./progressionMiddleware');
 
+// Responds with a mentee's current progress.
 router.get('/:profile_id', checkIfMentee, (req, res) => {
   const { profile_id } = req.params;
   Progression.findByMenteeId(profile_id)
