@@ -13,7 +13,7 @@ const checkIfMentee = async (req, res, next) => {
       next();
     }
   } catch (err) {
-    next;
+    next();
   }
 };
 
