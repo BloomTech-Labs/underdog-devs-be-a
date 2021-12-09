@@ -6,13 +6,13 @@ const { mentorRequired } = require('../middleware/permissionsRequired');
 
 // Responds with a mentee's current progress.
 router.get('/:profile_id', mentorRequired, checkIfMentee, (req, res) => {
-  const { profile_id } = req.params;
+  const profile_id = req.params.profile_id;
   Progression.findByMenteeId(profile_id)
-    .then((progress) => {
-      if (progress) {
-        res.status(200).json({ progress: progress.progress_id });
+    .then((mentee) => {
+      if (mentee) {
+        res.status(200).json({ progress: mentee.progress });
       } else {
-        res.status(404).json({ error: 'Mentee not found, check profile ID' });
+        res.status(404).json({ error: 'User not found, check profile ID' });
       }
     })
     .catch((err) => {
