@@ -1,5 +1,9 @@
 const db = require('../../data/db-config');
 
+const findProfileByRoleId = (profile_id) => {
+  return db('profiles').where({ profile_id }).first().select('role_id');
+};
+
 const findByMenteeId = (profile_id) => {
   return db('profiles')
     .leftJoin(
@@ -12,4 +16,4 @@ const findByMenteeId = (profile_id) => {
     .select('mentee_progression.progress');
 };
 
-module.exports = { findByMenteeId };
+module.exports = { findByMenteeId, findProfileByRoleId };
