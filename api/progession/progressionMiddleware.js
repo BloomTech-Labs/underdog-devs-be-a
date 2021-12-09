@@ -5,10 +5,7 @@ const checkIfMentee = async (req, res, next) => {
   try {
     const { role_id } = await findRoleIdByProfileId(profile_id);
     if (role_id != 4) {
-      next({
-        status: 400,
-        message: 'Requested user is not a mentee',
-      });
+      res.status(400).json({ message: 'Requested user is not a mentee' });
     } else {
       next();
     }
