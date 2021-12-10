@@ -41,11 +41,7 @@ router.post('/new-application', authRequired, function (req, res, next) {
 
 // update the role_id for the profile of the applicant and update the application approved value to true
 
-router.put('/update-role', authRequired, adminRequired, function (
-  req,
-  res,
-  next
-) {
+router.put('/update-role', authRequired, adminRequired, (req, res, next) => {
   const profile_id = req.body.profile_id;
   const application_id = req.body.application_id;
   const role_id = req.body.position;
