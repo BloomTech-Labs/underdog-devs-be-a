@@ -232,3 +232,25 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 | POST   | `/resource-tickets`                     | `message`             | `create a new ticket`                    | `Mentor`  |
 | PUT    | `/resource-tickets/:resource_id`        | `message`             | `update a ticket by resource_ticket_id,` | `Mentor`  |
 | DELETE | `/resource-tickets/:resource_id`        | -                     | `delete a ticket by resource_id from db` | `Mentor`  |
+
+###### Actions Tickets schema:
+
+    {
+        "action_ticket_id": 2,
+        "submitted_by": "11",
+        "subject_id": "00u13oned0U8XP8Mb4x7",
+        "issue": "My mentor isn't really helping me learn, could I seek reassignment?",
+        "comments": null,
+        "pending": true,
+        "resolved": true,
+        "strike": false,
+        "created_at": "2021-12-07T17:08:00.987Z",
+        "updated_at": "2021-12-07T17:08:00.987Z"
+    }
+
+| Method | Endpoint               | Required Request Body                 | Returns                       | User Auth |
+| ------ | ---------------------- | ------------------------------------- | ----------------------------- | --------- |
+| GET    | `/actions`             | -                                     | `get all actions tickets`     | -         |
+| GET    | `/actions/:actions_id` | -                                     | `get an actions ticket by id` | -         |
+| POST   | `/actions`             | `submitted_by`, `subject_id`, `issue` | `create a new actions ticket` | -         |
+| PUT    | `/actions/:actions_id` | -                                     | `update an actions ticket`    | -         |
