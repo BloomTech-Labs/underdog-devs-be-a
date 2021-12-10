@@ -3,10 +3,13 @@ const dummyData = [
     progress: 'Learning',
   },
   {
-    progress: 'Applying',
+    progress: 'In Program',
   },
   {
-    progress: 'Interviewing',
+    progress: 'Interview Prep',
+  },
+  {
+    progress: 'Applying/Interviewing',
   },
   {
     progress: 'Hired',
