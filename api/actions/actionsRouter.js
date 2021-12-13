@@ -1,5 +1,5 @@
 const express = require('express');
-// const authRequired = require('../middleware/authRequired');
+const { validateSubjectBody } = require('./actionsMiddleware');
 const Actions = require('./actionsModel');
 const router = express.Router();
 
@@ -12,4 +12,43 @@ router.get('/', function (req, res) {
       res.status(500).json({ message: err.message });
     });
 });
+
+router.get('/:id', function (req, res) {
+  const id = req.params.id;
+  Actions.findById(id)
+    .then((action) => {
+      res.status(200).json(action);
+    })
+    .catch((err) => {
+      res.status(500).json({ message: err.message });
+    });
+});
+
+router.post('/', validateSubjectBody, (req, res, next) => {
+  const action = req.body;
+  Actions.create(action)
+    .then(() => {
+      res.status(201).json({ message: 'success', action });
+    })
+    .catch(next);
+});
+
+router.put('/:id', validateSubjectBody, (req, res, next) => {
+  const id = req.params.id;
+  const changes = req.body;
+  Actions.update(id, changes)
+    .then((change) => {
+      if (change) {
+        Actions.findById(id).then((success) => {
+          res.status(200).json({
+            message: `Action '${success.action_ticket_id}' 
+            updated`,
+            success,
+          });
+        });
+      }
+    })
+    .catch(next);
+});
+
 module.exports = router;

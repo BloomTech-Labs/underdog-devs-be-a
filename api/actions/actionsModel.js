@@ -8,8 +8,8 @@ const findBy = (filter) => {
   return db('action_tickets').where(filter);
 };
 
-const findById = async (submitted_by) => {
-  return db('action_tickets').where({ submitted_by }).first().select('*');
+const findById = async (action_ticket_id) => {
+  return db('action_tickets').where({ action_ticket_id }).first().select('*');
 };
 
 const create = async (actions) => {
@@ -18,7 +18,7 @@ const create = async (actions) => {
 
 const update = (id, actions) => {
   return db('action_tickets')
-    .where({ submitted_by: id })
+    .where({ action_ticket_id: id })
     .first()
     .update(actions)
     .returning('*');
