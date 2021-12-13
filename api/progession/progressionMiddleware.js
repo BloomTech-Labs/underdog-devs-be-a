@@ -1,24 +1,10 @@
 const {
   findRoleIdByProfileId,
   findCurrentProgress,
+  findProgressById,
 } = require('./progressionModel');
 
-const { findById } = require('../profile/profileModel');
-
-const validateUser = async (req, res, next) => {
-  try {
-    const user = await findById(req.params.profile_id);
-    if (!user) {
-      res.status(400).json({ message: 'Requested user not found' });
-    } else {
-      next();
-    }
-  } catch (err) {
-    next();
-  }
-};
-
-const validateProgressId = async (req, res, next) => {
+const validateProgressId = (req, res, next) => {
   const { progress_id } = req.body;
   if (progress_id > 5) {
     res.status(400).json({ message: 'Invalid progress_id. Valid ids are 1-5' });
@@ -47,6 +33,7 @@ const checkMenteeProgress = async (req, res, next) => {
   try {
     const { progress_id } = await findCurrentProgress(profile_id);
     if (current_progress == progress_id) {
+      findProgressById(current_progress);
       res
         .status(400)
         .json({ message: 'This is already their current progress' });
@@ -61,6 +48,5 @@ const checkMenteeProgress = async (req, res, next) => {
 module.exports = {
   checkIfMentee,
   checkMenteeProgress,
-  validateUser,
   validateProgressId,
 };

@@ -4,13 +4,17 @@ const Progression = require('./progressionModel');
 const {
   checkIfMentee,
   checkMenteeProgress,
-  validateUser,
   validateProgressId,
 } = require('./progressionMiddleware');
-// const { mentorRequired } = require('../middleware/permissionsRequired');
+const { validateUser } = require('../middleware/generalMiddleware');
+const {
+  mentorRequired,
+  adminRequired,
+} = require('../middleware/permissionsRequired');
+const authRequired = require('../middleware/authRequired');
 
 // Responds with the available progression labels
-router.get('/', (req, res) => {
+router.get('/', authRequired, mentorRequired, (req, res) => {
   Progression.findAllLabels()
     .then((labels) => {
       res.status(200).json(labels);
@@ -21,19 +25,28 @@ router.get('/', (req, res) => {
 });
 
 // Responds with a mentee's current progress.
-router.get('/:profile_id', validateUser, checkIfMentee, async (req, res) => {
-  const { profile_id } = req.params;
-  try {
-    const mentee = await Progression.findByMenteeId(profile_id);
-    res.status(200).json({ progress: mentee.progress });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+router.get(
+  '/:profile_id',
+  authRequired,
+  mentorRequired,
+  validateUser,
+  checkIfMentee,
+  async (req, res) => {
+    const { profile_id } = req.params;
+    try {
+      const data = await Progression.findByMenteeId(profile_id);
+      res.status(200).json(data);
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
   }
-});
+);
 
 // allows an admin to update a mentee's progress
 router.put(
   '/:profile_id',
+  authRequired,
+  adminRequired,
   validateUser,
   validateProgressId,
   checkIfMentee,

@@ -1,7 +1,11 @@
 const db = require('../../data/db-config');
 
-const findAllLabels = async () => {
-  return await db('mentee_progression');
+const findAllLabels = () => {
+  return db('mentee_progression');
+};
+
+const findProgressById = (progress_id) => {
+  return db('mentee_progression').where({ progress_id }).first().select('*');
 };
 
 const findRoleIdByProfileId = (profile_id) => {
@@ -35,4 +39,5 @@ module.exports = {
   findAllLabels,
   updateMenteeProgress,
   findCurrentProgress,
+  findProgressById,
 };
