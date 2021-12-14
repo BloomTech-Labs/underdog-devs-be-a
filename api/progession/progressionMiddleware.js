@@ -6,7 +6,7 @@ const {
 
 const validateProgressId = (req, res, next) => {
   const { progress_id } = req.body;
-  if (progress_id > 5) {
+  if (progress_id > 5 || progress_id < 1) {
     res.status(400).json({ message: 'Invalid progress_id. Valid ids are 1-5' });
   } else {
     next();

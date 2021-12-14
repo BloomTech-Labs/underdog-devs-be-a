@@ -19,21 +19,21 @@ router.get('/', authRequired, adminRequired, (req, res) => {
 });
 
 // gets a profile's role_id
-router.get(
-  '/:profile_id',
-  authRequired,
-  adminRequired,
-  validateUser,
-  async (req, res) => {
-    const { profile_id } = req.params;
-    try {
-      const data = await Roles.findByProfileId(profile_id);
-      res.status(200).json(data);
-    } catch (err) {
+router.get('/:profile_id', validateUser, (req, res) => {
+  console.log(req.params);
+  const { profile_id } = req.params;
+  Roles.findByProfileId(profile_id)
+    .then((profile) => {
+      if (profile) {
+        res.status(200).json({ role_id: profile.role_id });
+      } else {
+        res.status(404).json({ error: 'Profile not found, check ID' });
+      }
+    })
+    .catch((err) => {
       res.status(500).json({ error: err.message });
-    }
-  }
-);
+    });
+});
 
 module.exports = router;
 
