@@ -4,7 +4,7 @@ const profiles = [...new Array(12)].map((i, idx) => ({
   first_name: idx < 2 ? `Admin` : idx == 2 ? `Moderator` : `User`,
   last_name: idx < 2 ? `${idx + 1}` : `${idx + 1}`,
   role_id: idx < 2 ? 1 : idx == 2 ? 2 : 3,
-  pending: idx < 6 ? false : true,
+  is_active: true,
   progress_id: null,
 }));
 

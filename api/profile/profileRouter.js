@@ -297,21 +297,4 @@ router.delete('/:id', authRequired, superAdminRequired, (req, res) => {
   }
 });
 
-router.put('/roles', authRequired, adminRequired, (req, res) => {
-  const profile = req.body;
-  const id = profile.profile_id;
-  Profiles.findById(id).then(
-    Profiles.update(id, profile)
-      .then((updated) => {
-        res.status(200).json({ message: 'role updated', role_id: updated });
-      })
-      .catch((err) => {
-        res.status(500).json({
-          message: `Could not update profile '${id}'`,
-          error: err.message,
-        });
-      })
-  );
-});
-
 module.exports = router;
