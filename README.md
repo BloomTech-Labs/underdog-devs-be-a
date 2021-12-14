@@ -259,7 +259,7 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 
     {
         "profile_id": 2,
-        "role_id": 4 (from 1 to 5)
+        "role_id": 4 (from 2 to 5)
     }
 
 | Method | Endpoint             | Required Request Body | Returns                            | User Auth |
@@ -272,7 +272,7 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 
     {
         "profile_id": 2,
-        "progress_id": 4 (from 2 to 5)
+        "progress_id": 4 (from 1 to 5)
     }
 
 | Method | Endpoint                | Required Request Body | Returns                                     | User Auth |
