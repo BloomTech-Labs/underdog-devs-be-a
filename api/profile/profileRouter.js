@@ -6,6 +6,8 @@ const {
   adminRequired,
   superAdminRequired,
 } = require('../middleware/permissionsRequired');
+const { validateUser } = require('../middleware/generalMiddleware');
+validateUser;
 
 /**
  * @swagger
@@ -225,7 +227,7 @@ router.post('/', authRequired, async (req, res) => {
 router.put('/', authRequired, (req, res) => {
   const profile = req.body;
   if (profile) {
-    const id = profile.id || 0;
+    const id = profile.profile_id || 0;
     Profiles.findById(id)
       .then(
         Profiles.update(id, profile)
@@ -249,52 +251,30 @@ router.put('/', authRequired, (req, res) => {
       });
   }
 });
-/**
- * @swagger
- * /profile/{id}:
- *  delete:
- *    summary: Remove a profile
- *    security:
- *      - okta: []
- *    tags:
- *      - profile
- *    parameters:
- *      - $ref: '#/components/parameters/profileId'
- *    responses:
- *      401:
- *        $ref: '#/components/responses/UnauthorizedError'
- *      404:
- *        $ref: '#/components/responses/NotFound'
- *      200:
- *        description: A profile object
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  description: A message about the result
- *                  example: Profile '00uhjfrwdWAQvD8JV4x6' was deleted.
- *                profile:
- *                  $ref: '#/components/schemas/Profile'
- */
-router.delete('/:id', authRequired, superAdminRequired, (req, res) => {
-  const id = req.params.id;
-  try {
-    Profiles.findById(id).then((profile) => {
-      Profiles.remove(profile.id).then(() => {
-        res
-          .status(200)
-          .json({ message: `Profile '${id}' was deleted.`, profile: profile });
+
+// Activates or deactivates a user depending on what their current is_active status is
+router.put(
+  '/is_active/:profile_id',
+  authRequired,
+  superAdminRequired,
+  validateUser,
+  async (req, res) => {
+    const { profile_id } = req.params;
+    try {
+      const profile = await Profiles.findById(profile_id);
+      Profiles.updateIsActive(profile_id, profile.is_active);
+      if (!profile.is_active) {
+        res.status(200).json({ message: 'profile is now active' });
+      } else {
+        res.status(200).json({ message: 'profile is now inactive' });
+      }
+    } catch (err) {
+      res.status(500).json({
+        message: `Could not update active status of profile with with ID: ${profile_id}`,
+        error: err.message,
       });
-    });
-  } catch (err) {
-    res.status(500).json({
-      message: `Could not delete profile with ID: ${id}`,
-      error: err.message,
-    });
+    }
   }
-});
+);
 
 module.exports = router;
