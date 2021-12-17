@@ -20,7 +20,6 @@ router.get('/', authRequired, adminRequired, (req, res) => {
 
 // gets a profile's role_id
 router.get('/:profile_id', validateUser, (req, res) => {
-  console.log(req.params);
   const { profile_id } = req.params;
   Roles.findByProfileId(profile_id)
     .then((profile) => {
