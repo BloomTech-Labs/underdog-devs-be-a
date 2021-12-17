@@ -27,5 +27,12 @@ describe('actions router endpoints', () => {
 
       expect(res.status).toBe(200);
     });
+
+    // it('should return 500 when encountering an unexpected condition', async () => {
+    //   Actions.findAll.mockResolvedValue([]);
+    //   const res = await request(server).get('/actions');
+
+    //   expect(res.status).toBe(500);
+    // });
   });
 });
