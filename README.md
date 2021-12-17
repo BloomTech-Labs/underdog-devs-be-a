@@ -63,14 +63,14 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
         "approved": True
     }
 
-| Method | Endpoint          | Required Request Body | Returns                          | User Auth    |
-| ------ | ----------------- | --------------------- | -------------------------------- | ------------ |
-| GET    | `/profiles`       | -                     | `get all profiles`               | `Admin`      |
-| GET    | `/profiles/:id`   | -                     | `get profile by id`              | `Admin`      |
-| POST   | `/profiles`       | `first/last, email`   | `create new profile`             |              |
-| PUT    | `/profiles/:id`   | `first/last, email`   | `update a profile by profile id` |              |
-| PUT    | `/profiles/roles` | `role`                | `update a profiles role`         | `Admin`      |
-| DELETE | `/profiles/:id`   | -                     | `delete a profile by profile id` | `SuperAdmin` |
+| Method | Endpoint                  | Required Request Body | Returns                           | User Auth    |
+| ------ | ------------------------- | --------------------- | --------------------------------- | ------------ |
+| GET    | `/profiles`               | -                     | `get all profiles`                | `Admin`      |
+| GET    | `/profiles/:id`           | -                     | `get profile by id`               | `Admin`      |
+| POST   | `/profiles`               | `first/last, email`   | `create new profile`              |              |
+| PUT    | `/profiles/:id`           | `first/last, email`   | `update a profile by profile id`  |              |
+| PUT    | `/profiles/roles`         | `role`                | `update a profiles role`          | `Admin`      |
+| PUT    | `/profiles/is_active/:id` | -                     | `activates/deactivates a profile` | `SuperAdmin` |
 
 ## Applications / Mentee-Mentor Intakes
 
@@ -254,3 +254,29 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 | GET    | `/actions/:actions_id` | -                                     | `get an actions ticket by id` | -         |
 | POST   | `/actions`             | `submitted_by`, `subject_id`, `issue` | `create a new actions ticket` | -         |
 | PUT    | `/actions/:actions_id` | -                                     | `update an actions ticket`    | -         |
+
+###### Roles schema:
+
+    {
+        "profile_id": 2,
+        "role_id": 4 (from 2 to 5)
+    }
+
+| Method | Endpoint             | Required Request Body | Returns                            | User Auth |
+| ------ | -------------------- | --------------------- | ---------------------------------- | --------- |
+| GET    | `/roles`             | -                     | `get all available roles`          | `admin`   |
+| GET    | `/roles/:profile_id` | -                     | `get a specific profile's role_id` | -         |
+| PUT    | `/roles/:profile_id` | `role_id`             | `update a profile's role`          | `admin`   |
+
+###### Progress schema:
+
+    {
+        "profile_id": 2,
+        "progress_id": 4 (from 1 to 5)
+    }
+
+| Method | Endpoint                | Required Request Body | Returns                                     | User Auth |
+| ------ | ----------------------- | --------------------- | ------------------------------------------- | --------- |
+| GET    | `/progress`             | -                     | `get all available progress tags`           | `mentor`  |
+| GET    | `/progress/:profile_id` | -                     | `get a specific profile's current progress` | -         |
+| PUT    | `/progress/:profile_id` | `progress_id`         | `update a profile's progress`               | `admin`   |

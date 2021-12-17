@@ -16,7 +16,7 @@ exports.up = (knex) => {
         .onDelete('RESTRICT')
         .onUpdate('RESTRICT');
       table.timestamps(true, true);
-      table.boolean('pending');
+      table.boolean('is_active');
       table.string('progress_status');
     });
 };

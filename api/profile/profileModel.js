@@ -24,6 +24,18 @@ const update = (id, profile) => {
     .returning('*');
 };
 
+const updateIsActive = (profile_id, status) => {
+  const oppositeStatus = !status;
+  db('profiles')
+    .where({ profile_id })
+    .update({
+      is_active: oppositeStatus,
+    })
+    .then(() => {
+      return db('profiles').select('is_active');
+    });
+};
+
 const remove = async (id) => {
   return await db('profiles').where({ id }).del();
 };
@@ -47,4 +59,5 @@ module.exports = {
   update,
   remove,
   findOrCreateProfile,
+  updateIsActive,
 };
