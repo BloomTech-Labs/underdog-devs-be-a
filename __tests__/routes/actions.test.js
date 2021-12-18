@@ -1,8 +1,11 @@
 const request = require('supertest');
 const express = require('express');
-const Actions = require('../../api/actions/actionsModel');
+const actionsModel = require('../../api/actions/actionsModel');
 const actionsRouter = require('../../api/actions/actionsRouter');
 const server = express();
+const sinon = require('sinon');
+const app = require('../../api/app');
+
 server.use(express.json());
 
 test('sanity test environment', () => {
@@ -22,17 +25,17 @@ describe('actions router endpoints', () => {
 
   describe('GET /actions', () => {
     it('should return 200', async () => {
-      Actions.findAll.mockResolvedValue([]);
+      actionsModel.findAll.mockResolvedValue([]);
       const res = await request(server).get('/actions');
-
       expect(res.status).toBe(200);
     });
 
-    // it('should return 500 when encountering an unexpected condition', async () => {
-    //   Actions.findAll.mockResolvedValue([]);
-    //   const res = await request(server).get('/actions');
-
-    //   expect(res.status).toBe(500);
-    // });
+    it('should return 500 when encountering an unexpected condition', async () => {
+      //attempts to stub an error
+      sinon.stub(actionsModel, 'findAll').throws(Error('query failed'));
+      await request(app) //passes Express app to supertest
+        .get('/actions')
+        .expect(500);
+    });
   });
 });
