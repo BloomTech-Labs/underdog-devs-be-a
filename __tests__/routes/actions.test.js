@@ -76,4 +76,22 @@ describe('actions router endpoints', () => {
       expect(actionsModel.create.mock.calls.length).toBe(1);
     });
   });
+
+  describe('PUT /actions', () => {
+    it('should return 200 when actions is created', async () => {
+      const action = {
+        // id: 'd376de0577681ca93614',
+        issue: 'Test Issue changed',
+      };
+      actionsModel.update.mockResolvedValue([action]);
+
+      const res = await request(server)
+        .put('/actions/d376de0577681ca93614')
+        .send(action);
+      console.log('look for this', res);
+      expect(res.status).toBe(200);
+      // expect(res.body.action.submitted_by).toBe('char_varying');
+      // expect(actionsModel.update.mock.calls.length).toBe(1);
+    });
+  });
 });
