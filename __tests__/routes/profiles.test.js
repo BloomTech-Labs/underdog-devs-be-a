@@ -5,11 +5,20 @@ const profileRouter = require('../../api/profile/profileRouter');
 const server = express();
 server.use(express.json());
 
+test('sanity test environment', () => {
+  expect(process.env.NODE_ENV).toBe('test');
+});
+
 jest.mock('../../api/profile/profileModel');
 // mock the auth middleware completely
 jest.mock('../../api/middleware/authRequired', () =>
   jest.fn((req, res, next) => next())
 );
+
+jest.mock('../../api/middleware/permissionsRequired', () => ({
+  adminRequired: jest.fn((req, res, next) => next()),
+  superAdminRequired: jest.fn((req, res, next) => next()),
+}));
 
 describe('profiles router endpoints', () => {
   beforeAll(() => {
