@@ -33,22 +33,46 @@ router.post('/', validateSubjectBody, (req, res, next) => {
     .catch(next);
 });
 
-router.put('/:id', validateSubjectBody, (req, res) => {
-  const id = req.params.id;
+router.put('/', validateSubjectBody, (req, res) => {
   const changes = req.body;
-  Actions.update(id, changes)
-    .then((change) => {
-      if (change) {
-        Actions.findById(id).then((success) => {
-          res.status(200).json({
-            message: `Action '${success.action_ticket_id}' 
-            updated`,
-            success,
-          });
+
+  if (changes) {
+    const id = changes.id;
+    Actions.findById(id)
+      .then(
+        Actions.update(id, changes)
+          .then((updated) => {
+            res
+              .status(200)
+              .json({ message: 'ticket updated', changes: updated[0] });
+          })
+          .catch((err) => {
+            res.status(500).json({
+              message: "couldn't update ticket",
+              error: err.message,
+            });
+          })
+      )
+      .catch((err) => {
+        res.status(404).json({
+          message: 'could not find ticket',
+          error: err.message,
         });
-      }
-    })
-    .catch((err) => res.json({ message: err }));
+      });
+  }
+  // Actions.update(id, changes)
+  //   .then((change) => {
+  //     if (change) {
+  //       Actions.findById(id).then((success) => {
+  //         res.status(200).json({
+  //           message: `Action '${success.action_ticket_id}'
+  //           updated`,
+  //           success,
+  //         });
+  //       });
+  //     }
+  //   })
+  //   .catch((err) => res.json({ message: err }));
 });
 
 module.exports = router;

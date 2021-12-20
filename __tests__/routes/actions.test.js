@@ -80,18 +80,17 @@ describe('actions router endpoints', () => {
   describe('PUT /actions', () => {
     it('should return 200 when actions is updated', async () => {
       const action = {
-        action_ticket_id: 1,
+        id: 1,
         issue: 'Test Issue changed',
       };
       actionsModel.update.mockResolvedValue([action]);
-      actionsModel.findById.mockResolvedValue(action.action_ticket_id);
+      actionsModel.findById.mockResolvedValue(action);
 
-      const res = await request(server)
-        .put(`/actions/${action.action_ticket_id}`)
-        .send(action);
+      const res = await request(server).put('/actions/').send(action);
 
+      console.log(res.body);
       expect(res.status).toBe(200);
-      // expect(res.body.action.submitted_by).toBe('char_varying');
+      // expect(res.body.issue).toBe('Test Issue changed');
       // expect(actionsModel.update.mock.calls.length).toBe(1);
     });
   });
