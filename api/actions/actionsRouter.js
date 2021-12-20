@@ -33,11 +33,10 @@ router.post('/', validateSubjectBody, (req, res, next) => {
     .catch(next);
 });
 
-router.put('/', validateSubjectBody, (req, res) => {
+router.put('/:id', validateSubjectBody, (req, res) => {
   const changes = req.body;
-
   if (changes) {
-    const id = changes.id;
+    const id = req.params.id;
     Actions.findById(id)
       .then(
         Actions.update(id, changes)
@@ -60,19 +59,6 @@ router.put('/', validateSubjectBody, (req, res) => {
         });
       });
   }
-  // Actions.update(id, changes)
-  //   .then((change) => {
-  //     if (change) {
-  //       Actions.findById(id).then((success) => {
-  //         res.status(200).json({
-  //           message: `Action '${success.action_ticket_id}'
-  //           updated`,
-  //           success,
-  //         });
-  //       });
-  //     }
-  //   })
-  //   .catch((err) => res.json({ message: err }));
 });
 
 module.exports = router;
