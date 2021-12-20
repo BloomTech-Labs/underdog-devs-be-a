@@ -57,4 +57,23 @@ describe('actions router endpoints', () => {
         .expect(500);
     });
   });
+
+  describe('POST /actions', () => {
+    it('should return 200 when action is created', async () => {
+      const action = {
+        submitted_by: 'char_varying',
+        subject_id: 'char_varying',
+        issue: 'Test Issue',
+      };
+      actionsModel.findById.mockResolvedValue(undefined);
+      actionsModel.create.mockResolvedValue([
+        Object.assign({ action_ticket_id: '7' }, action),
+      ]);
+      const res = await request(server).post('/actions').send(action);
+
+      expect(res.status).toBe(201);
+      expect(res.body.action.issue).toBe('Test Issue');
+      expect(actionsModel.create.mock.calls.length).toBe(1);
+    });
+  });
 });
