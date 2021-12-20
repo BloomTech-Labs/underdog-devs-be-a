@@ -33,7 +33,7 @@ router.post('/', validateSubjectBody, (req, res, next) => {
     .catch(next);
 });
 
-router.put('/:id', validateSubjectBody, (req, res, next) => {
+router.put('/:id', validateSubjectBody, (req, res) => {
   const id = req.params.id;
   const changes = req.body;
   Actions.update(id, changes)
@@ -48,7 +48,7 @@ router.put('/:id', validateSubjectBody, (req, res, next) => {
         });
       }
     })
-    .catch(next);
+    .catch((err) => res.json({ message: err }));
 });
 
 module.exports = router;
