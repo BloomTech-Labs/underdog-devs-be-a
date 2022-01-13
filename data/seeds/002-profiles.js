@@ -13,7 +13,8 @@ profiles[1].profile_id = '00ultwew80Onb2vOT4x6';
 profiles[2].profile_id = '00ultx74kMUmEW8054x6';
 profiles[3].profile_id = '00ultwqjtqt4VCcS24x6';
 profiles[4].profile_id = '00ultwz1n9ORpNFc04x6';
-profiles[5].profile_id = '00u13ol5x1kmKxVJU4x7';
+profiles[5].profile_id = '00u13omswyZM1xVya4x7';
+profiles[6].profile_id = '00u13ol5x1kmKxVJU4x7';
 profiles[7].profile_id = '00u13oned0U8XP8Mb4x7';
 
 profiles[4].role_id = 5;
