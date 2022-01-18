@@ -12,15 +12,19 @@ const { validateResource } = require('../middleware/resourcesMiddleware');
  *    Resource:
  *      type: object
  *      required:
- *        - resource_id
  *        - resource_name
  *        - category
  *        - condition
- *        - assigned
  *      properties:
  *        resource_id:
  *          type: integer
- *          description: Primary key referencing a resource's auto-assigned ID
+ *          description: Unique primary key referencing a resource's auto-assigned ID
+ *        created_at:
+ *          type: timestamp
+ *          description: Automatic date-time string from a resource's creation in the database
+ *        updated_at:
+ *          type: timestamp
+ *          description: Automatic date-time string from a resource's last update in the database
  *        resource_name:
  *          type: string
  *          description: The name of a resource
@@ -32,13 +36,13 @@ const { validateResource } = require('../middleware/resourcesMiddleware');
  *          description: An evaluation of the resource's current condition
  *        assigned:
  *          type: boolean
- *          description: State of whether or not a resource is assigned to someone already
+ *          description: State of whether or not a resource is assigned to someone already - defaults to false
  *        current_assignee:
  *          type: string
- *          description: Foreign key referencing the profile_id of the current assignee
+ *          description: Foreign key referencing the profile_id of the current assignee - defaults to null
  *        previous_assignee:
  *          type: string
- *          description: Foreign key referencing the profile_id of the previous assignee
+ *          description: Foreign key referencing the profile_id of the previous assignee - defaults to null
  *        monetary_value:
  *          type: string
  *          description: The approximate price/value of the resource
@@ -170,8 +174,48 @@ router.get('/:resource_id', authRequired, (req, res) => {
     });
 });
 
-// add a resource to the resources database
-
+/**
+ * @swagger
+ * /resources:
+ *  post:
+ *    summary: Adds a new resource to the database
+ *    description: Posts a new resource object to the resources table, if the resource is validly formatted. You only need to include resource_name, category, and condition in the request body, but other fields that adhere to the schema can be included if desired. Only data provided in the request body will be reflected in the response body.
+ *    tags:
+ *      - resource
+ *    security:
+ *      - okta: []
+ *    requestBody:
+ *      description: Information about the resource to be posted
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Resource'
+ *      required: true
+ *    responses:
+ *      '200':
+ *        description: Response from successful post
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  description: Status of the request as a message
+ *                  type: string
+ *                resource:
+ *                  description: Object mirroring the newly created resource -- will only display keys included in the request body upon posting, even if other keys are present/made in the database at creation
+ *                  type: object
+ *              example:
+ *                message: 'success'
+ *                resource:
+ *                  resource_name: 'Composition Notebook'
+ *                  category: 'Office Supplies'
+ *                  condition: 'New'
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *      '403':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ */
 router.post(
   '/',
   authRequired,
