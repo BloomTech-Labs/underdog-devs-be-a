@@ -59,7 +59,51 @@ const { validateResource } = require('../middleware/resourcesMiddleware');
  *        deductible_donation: true
  */
 
-// get all resources
+/**
+ * @swagger
+ * /resources:
+ *  get:
+ *    summary: Returns a list of resources
+ *    tags:
+ *      - resource
+ *    responses:
+ *      '200':
+ *        description: A JSON array of resources (as objects) currently available for/assigned to clients
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                $ref: '#/components/schemas/Resource'
+ *              example:
+ *                - resource_id: 54
+ *                  resource_name: 'Mead Composition Notebook'
+ *                  category: 'Office Supplies'
+ *                  condition: 'New'
+ *                  assigned: false
+ *                  current_assignee: null
+ *                  previous_assignee: null
+ *                  monetary_value: '$2'
+ *                  deductible_donation: false
+ *                - resource_id: 27
+ *                  resource_name: 'Lenovo Chromebook S330'
+ *                  category: 'Computers'
+ *                  condition: 'New'
+ *                  assigned: true
+ *                  current_assignee: Rueben Andrews
+ *                  previous_assignee: Hunter Phillips
+ *                  monetary_value: '$250'
+ *                  deductible_donation: true
+ *                - resource_id: 33
+ *                  resource_name: 'Sharpie Pens (Black), 12pcs'
+ *                  category: 'Office Supplies'
+ *                  condition: 'New'
+ *                  assigned: false
+ *                  current_assignee: null
+ *                  previous_assignee: null
+ *                  monetary_value: '$15'
+ *                  deductible_donation: true
+ */
 router.get('/', authRequired, (req, res) => {
   Resources.findAll()
     .then((resources) => {
