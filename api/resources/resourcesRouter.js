@@ -76,6 +76,8 @@ const { adminRequired } = require('../middleware/permissionsRequired');
  *                $ref: '#/components/schemas/Resource'
  *              example:
  *                - resource_id: 54
+ *                  created_at: "2022-01-13T20:54:47.222Z"
+ *                  updated_at: "2022-01-13T20:54:47.222Z"
  *                  resource_name: 'Mead Composition Notebook'
  *                  category: 'Office Supplies'
  *                  condition: 'New'
@@ -85,6 +87,8 @@ const { adminRequired } = require('../middleware/permissionsRequired');
  *                  monetary_value: '$2'
  *                  deductible_donation: false
  *                - resource_id: 27
+ *                  created_at: "2022-01-13T20:54:47.222Z"
+ *                  updated_at: "2022-01-13T20:54:47.222Z"
  *                  resource_name: 'Lenovo Chromebook S330'
  *                  category: 'Computers'
  *                  condition: 'New'
@@ -94,6 +98,8 @@ const { adminRequired } = require('../middleware/permissionsRequired');
  *                  monetary_value: '$250'
  *                  deductible_donation: true
  *                - resource_id: 33
+ *                  created_at: "2022-01-13T20:54:47.222Z"
+ *                  updated_at: "2022-01-13T20:54:47.222Z"
  *                  resource_name: 'Sharpie Pens (Black), 12pcs'
  *                  category: 'Office Supplies'
  *                  condition: 'New'
