@@ -103,6 +103,10 @@ const { validateResource } = require('../middleware/resourcesMiddleware');
  *                  previous_assignee: null
  *                  monetary_value: '$15'
  *                  deductible_donation: true
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *      '403':
+ *        $ref: '#/components/responses/UnauthorizedError'
  */
 router.get('/', authRequired, (req, res) => {
   Resources.findAll()
