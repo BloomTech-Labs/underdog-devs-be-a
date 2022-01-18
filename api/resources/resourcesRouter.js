@@ -235,8 +235,74 @@ router.post(
   }
 );
 
-//update a resource
-
+/**
+ * @swagger
+ * /resources/{resource_id}:
+ *  put:
+ *    summary: Updates resource details
+ *    description: Allows you to edit information about a resource. Requires resource_name, category, and condition fields. Only information included in the request body will be altered about the resource in question (i.e. empty fields will be ignored).
+ *    tags:
+ *      - resource
+ *    security:
+ *      - okta: []
+ *    parameters:
+ *      - in: path
+ *        name: resource_id
+ *        schema:
+ *          type: integer
+ *        required: true
+ *        description: Numeric ID of the resource to edit
+ *    requestBody:
+ *      description: Information to update about the desired resource
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Resource'
+ *      required: true
+ *    responses:
+ *      '200':
+ *        description: Response from a successful resource update
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: Success message, including the ID of the updated resource
+ *                success:
+ *                  type: object
+ *                  description: Object containing all information pertaining to the newly updated resource
+ *              example:
+ *                message: "Resource '108' updated"
+ *                success:
+ *                  resource_id: 108
+ *                  created_at: "2022-01-18T22:00:08.001Z"
+ *                  updated_at: "2022-02-18T22:00:09.001Z"
+ *                  resource_name: "Logitech HD Webcam C310"
+ *                  category: "Electronics"
+ *                  condition: "Acceptable"
+ *                  assigned: false
+ *                  current_assignee: null
+ *                  previous_assignee: '12'
+ *                  monetary_value: $35
+ *                  deductible_donation: true
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *      '403':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *      '404':
+ *        description: Resource with the given ID could not be found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: Error message returned by the API
+ *                  example: 'Not Found'
+ */
 router.put(
   '/:resource_id',
   authRequired,
