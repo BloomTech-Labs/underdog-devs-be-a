@@ -7,9 +7,50 @@ async function add(id, newApplication) {
 }
 
 function getTicketById(application_id) {
-  return db('application_tickets')
+  return db('application_tickets as a')
+    .join('profiles as p', 'a.profile_id', 'p.profile_id')
+    .join('roles as r', 'r.role_id', 'p.role_id')
+    .select(
+      'p.profile_id',
+      'p.first_name',
+      'p.last_name',
+      'r.role_name',
+      'a.created_at',
+      'a.application_id'
+    )
     .where('application_id', application_id)
     .first();
+}
+
+function getPendingTickets() {
+  return db('application_tickets as a')
+    .join('profiles as p', 'a.profile_id', 'p.profile_id')
+    .join('roles as r', 'r.role_id', 'p.role_id')
+    .select(
+      'p.profile_id',
+      'p.first_name',
+      'p.last_name',
+      'r.role_name',
+      'a.created_at',
+      'a.application_id'
+    )
+    .where('a.approved', false);
+}
+
+function getPendingTicketsByRole(role_name) {
+  return db('application_tickets as a')
+    .join('profiles as p', 'a.profile_id', 'p.profile_id')
+    .join('roles as r', 'r.role_id', 'p.role_id')
+    .select(
+      'p.profile_id',
+      'p.first_name',
+      'p.last_name',
+      'r.role_name',
+      'a.created_at',
+      'a.application_id'
+    )
+    .where('a.approved', false)
+    .where('r.role_name', role_name);
 }
 
 async function insertMenteeIntake(id, newMenteeIntake) {
@@ -24,18 +65,6 @@ async function insertMentorIntake(id, newMentorIntake) {
   return form;
 }
 
-function getPendingMenteeTickets() {
-  return db('application_tickets as a')
-    .join('mentee_intake as m', 'm.profile_id', 'a.profile_id')
-    .where('a.approved', false);
-}
-
-function getPendingMentorTickets() {
-  return db('application_tickets as a')
-    .join('mentor_intake as m', 'm.profile_id', 'a.profile_id')
-    .where('a.approved', false);
-}
-
 function updateTicket(application_id, changes) {
   return db('application_tickets')
     .where('application_id', application_id)
@@ -46,8 +75,8 @@ function updateTicket(application_id, changes) {
 module.exports = {
   add,
   updateTicket,
-  getPendingMenteeTickets,
-  getPendingMentorTickets,
+  getPendingTickets,
+  getPendingTicketsByRole,
   insertMenteeIntake,
   insertMentorIntake,
   getTicketById,
