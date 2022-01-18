@@ -62,12 +62,15 @@ const { adminRequired } = require('../middleware/permissionsRequired');
  * @swagger
  * /resources:
  *  get:
- *    summary: Returns a list of resources
+ *    summary: Get the list of all resources
+ *    description: Provides a JSON array of resources (as objects) currently available for/assigned to clients
  *    tags:
  *      - resource
+ *    security:
+ *      - okta: []
  *    responses:
  *      '200':
- *        description: A JSON array of resources (as objects) currently available for/assigned to clients
+ *        description: An array of resource objects
  *        content:
  *          application/json:
  *            schema:
@@ -93,8 +96,8 @@ const { adminRequired } = require('../middleware/permissionsRequired');
  *                  category: 'Computers'
  *                  condition: 'New'
  *                  assigned: true
- *                  current_assignee: Rueben Andrews
- *                  previous_assignee: Hunter Phillips
+ *                  current_assignee: '5'
+ *                  previous_assignee: '4'
  *                  monetary_value: '$250'
  *                  deductible_donation: true
  *                - resource_id: 33
@@ -139,8 +142,34 @@ router.get('/', authRequired, async (req, res, next) => {
   }
 });
 
-// get a resource by its id
-
+/**
+ * @swagger
+ * /resources/{resource_id}:
+ *  get:
+ *    summary: Get details about a single resource
+ *    tags:
+ *      - resource
+ *    security:
+ *      - okta: []
+ *    parameters:
+ *      - in: path
+ *        name: resource_id
+ *        schema:
+ *          type: integer
+ *        required: true
+ *        description: Numeric ID of the resource to look for
+ *    responses:
+ *      '200':
+ *        description: Information about a specific resource
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Resource'
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *      '403':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ */
 router.get('/:resource_id', authRequired, (req, res) => {
   const id = req.params.resource_id;
   Resources.findByResourceId(id)
