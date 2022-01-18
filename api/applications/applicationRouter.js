@@ -6,20 +6,30 @@ const router = express.Router();
 const jwt = require('jwt-decode');
 const { adminRequired } = require('../middleware/permissionsRequired.js');
 
-// get all pending mentee applications
+// get all pending tickets
 
-router.get('/mentee', authRequired, adminRequired, (req, res, next) => {
-  Application.getPendingMenteeTickets()
+router.get('/', authRequired, adminRequired, (req, res, next) => {
+  Application.getPendingTickets()
     .then((applicationList) => {
       res.status(200).json(applicationList);
     })
     .catch(next);
 });
 
-// get all pending mentor application
+// get pending tickets by role
 
-router.get('/mentor', authRequired, adminRequired, (req, res, next) => {
-  Application.getPendingMentorTickets()
+router.get('/:role', authRequired, adminRequired, (req, res, next) => {
+  Application.getPendingTicketsByRole(req.params.role)
+    .then((applicationList) => {
+      res.status(200).json(applicationList);
+    })
+    .catch(next);
+});
+
+// get application by application id
+
+router.get('/id/:id', (req, res, next) => {
+  Application.getTicketById(req.params.id)
     .then((applicationList) => {
       res.status(200).json(applicationList);
     })
@@ -78,7 +88,7 @@ router.post('/new-mentor', authRequired, function (req, res, next) {
   const token = req.headers.authorization;
   const User = jwt(token);
   const newMentorIntake = req.body;
-  Application.insertMenteeIntake(User.sub, newMentorIntake)
+  Application.insertMentorIntake(User.sub, newMentorIntake)
     .then(() => {
       res.status(201).json({ message: 'Information has been submitted' });
     })
