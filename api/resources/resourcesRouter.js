@@ -4,7 +4,59 @@ const Resources = require('./resourcesModel');
 const authRequired = require('../middleware/authRequired');
 const { adminRequired } = require('../middleware/permissionsRequired');
 
-//get all resources
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    Resource:
+ *      type: object
+ *      required:
+ *        - resource_id
+ *        - resource_name
+ *        - category
+ *        - condition
+ *        - assigned
+ *      properties:
+ *        resource_id:
+ *          type: integer
+ *          description: Primary key referencing a resource's auto-assigned ID
+ *        resource_name:
+ *          type: string
+ *          description: The name of a resource
+ *        category:
+ *          type: string
+ *          description: The name of the category the resource belongs to
+ *        condition:
+ *          type: string
+ *          description: An evaluation of the resource's current condition
+ *        assigned:
+ *          type: boolean
+ *          description: State of whether or not a resource is assigned to someone already
+ *        current_assignee:
+ *          type: string
+ *          description: Foreign key referencing the profile_id of the current assignee
+ *        previous_assignee:
+ *          type: string
+ *          description: Foreign key referencing the profile_id of the previous assignee
+ *        monetary_value:
+ *          type: string
+ *          description: The approximate price/value of the resource
+ *        deductible_donation:
+ *          type: boolean
+ *          description: State of whether or not a resource is a deductible donation
+ *      example:
+ *        resource_id: 1
+ *        created_at: "2021-11-12T19:50:44.914Z"
+ *        updated_at: "2021-11-12T19:50:44.914Z"
+ *        resource_name: "MacBook Pro 2020"
+ *        category: "Computers"
+ *        condition: "Excellent"
+ *        assigned: true
+ *        current_assignee: "9"
+ *        previous_assignee: "7"
+ *        monetary_value: "$1000"
+ *        deductible_donation: true
+ */
 
 router.get('/', authRequired, async (req, res, next) => {
   try {
