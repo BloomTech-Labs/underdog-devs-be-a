@@ -102,6 +102,10 @@ const { adminRequired } = require('../middleware/permissionsRequired');
  *                  previous_assignee: null
  *                  monetary_value: '$15'
  *                  deductible_donation: true
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *      '403':
+ *        $ref: '#/components/responses/UnauthorizedError'
  */
 router.get('/', authRequired, async (req, res, next) => {
   try {
