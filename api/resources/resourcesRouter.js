@@ -332,6 +332,19 @@ router.post(
  *                  deductible_donation: true
  *      '401':
  *        $ref: '#/components/responses/UnauthorizedError'
+ *      '403':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *      '404':
+ *        description: Resource with the given ID could not be found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: Error message returned by the API
+ *                  example: 'Not Found'
  */
 
 router.put(
