@@ -326,8 +326,41 @@ router.put(
   }
 );
 
-//delete a resource
-
+/**
+ * @swagger
+ * /resources/{resource_id}:
+ *  delete:
+ *    summary: Deletes a resource from the database
+ *    description: If a resource with the ID provided as a URL parameter for this request exists, it will be deleted from the database. If the ID is invalid, the request will time out (this needs to be addressed in the future).
+ *    tags:
+ *      - resource
+ *    security:
+ *      - okta: []
+ *    parameters:
+ *      - in: path
+ *        name: resource_id
+ *        schema:
+ *          type: integer
+ *        required: true
+ *        description: Numeric ID of the resource to delete
+ *    responses:
+ *      '200':
+ *        description: Successful deletion of a resource
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: Message relaying a resource's successful deletion
+ *              example:
+ *                message: 'Resource deleted'
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *      '403':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ */
 router.delete(
   '/:resource_id',
   authRequired,
