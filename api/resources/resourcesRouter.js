@@ -6,14 +6,30 @@ const { adminRequired } = require('../middleware/permissionsRequired');
 
 //get all resources
 
-router.get('/', authRequired, (req, res) => {
-  Resources.findAll()
-    .then((resources) => {
-      res.status(200).json(resources);
-    })
-    .catch((err) => {
-      res.status(500).json({ error: err.message });
+router.get('/', authRequired, async (req, res, next) => {
+  try {
+    const filters = req.query;
+    const allResources = await Resources.findAll();
+
+    if (!filters) {
+      return res.status(200).json(allResources);
+    }
+
+    const filteredResources = allResources.filter((resource) => {
+      let resourceIsValid = true;
+      for (let key in filters) {
+        resourceIsValid =
+          resourceIsValid &&
+          (resource[key] === filters[key] ||
+            resource[key].startsWith(filters[key]));
+      }
+      return resourceIsValid;
     });
+
+    return res.status(200).json(filteredResources);
+  } catch (err) {
+    return next(err);
+  }
 });
 
 // get a resource by its id
