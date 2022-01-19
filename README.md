@@ -115,12 +115,26 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 
 | Method | Endpoint                       | Required Request Body                                                                                              | Returns                                                        | User Auth |
 | ------ | ------------------------------ | ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------- | --------- |
-| GET    | `/application/mentee`          | -                                                                                                                  | `gets all pending mentee applications`                         | `Admin`   |
-| GET    | `/application/mentor`          | -                                                                                                                  | `gets all pending mentor applications`                         | `Admin`   |
-| POST   | `/application/new-application` | -`position (role_id)`                                                                                              | `create and application for the current user`                  |           |
-| POST   | `/application/new-mentee`      | -`email`, `location`, `name`, `lives_in_us`, `formerly_incarcerated`,`tech_stack`, `experience_level`, `your_hope` | `create a mentee intake for the current user`                  |           |
-| POST   | `/application/new-mentor`      | -`email`, `location`, `name`, `can_commit`, `tech_stack`,                                                          | `create a mentor intake for the current user`                  |           |
+| GET    | `/application/`                | -                                                                                                                  | `gets all pending applications`                                | `Admin`   |
+| GET    | `/application/:role`           | -`/mentor or /mentee (req.param)`                                                                                  | `gets all pending applications filtered by role`               | `Admin`   |
+| GET    | `/application/id/:id`          | -`application id`                                                                                                  | `gets pending application by application id`                   | `Admin`   |
+| POST   | `/application/new-application` | -`position (role_id)`                                                                                              | `create and application for the current user`                  | `Okta`    |
+| POST   | `/application/new-mentee`      | -`email`, `location`, `name`, `lives_in_us`, `formerly_incarcerated`,`tech_stack`, `experience_level`, `your_hope` | `create a mentee intake for the current user`                  | `Okta`    |
+| POST   | `/application/new-mentor`      | -`email`, `location`, `name`, `can_commit`, `tech_stack`,                                                          | `create a mentor intake for the current user`                  | `Okta`    |
 | PUT    | `/application/update-role`     | -`position (role_id)`, `application_id`, `profile_id`,                                                             | `update profile role and update application to approved: true` | `Admin`   |
+
+## Application - Matching Mentors and Mentees
+
+###### Application schema:
+
+    {
+        "application_id": 2,
+        "created_at": "2022-01-13T20:44:31.827Z",
+        "first_name": "User",
+        "last_name": "8",
+        "profile_id": "00u13oned0U8XP8Mb4x7",
+        "role_name": "mentee"
+    }
 
 ## Assignments - Matching Mentors and Mentees
 

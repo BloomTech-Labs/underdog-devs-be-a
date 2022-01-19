@@ -28,7 +28,7 @@ router.get('/:role', authRequired, adminRequired, (req, res, next) => {
 
 // get application by application id
 
-router.get('/id/:id', (req, res, next) => {
+router.get('/id/:id', authRequired, adminRequired, (req, res, next) => {
   Application.getTicketById(req.params.id)
     .then((applicationList) => {
       res.status(200).json(applicationList);
