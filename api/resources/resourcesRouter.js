@@ -158,6 +158,17 @@ router.get('/', authRequired, (req, res) => {
  *        $ref: '#/components/responses/UnauthorizedError'
  *      '403':
  *        $ref: '#/components/responses/UnauthorizedError'
+ *      '404':
+ *        description: Resource with the given ID could not be found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: Error message returned by the API
+ *                  example: 'Resource not found, check the ID'
  */
 router.get('/:resource_id', authRequired, (req, res) => {
   const id = req.params.resource_id;
@@ -240,7 +251,7 @@ router.post(
  * /resources/{resource_id}:
  *  put:
  *    summary: Updates resource details
- *    description: Allows you to edit information about a resource. Requires resource_name, category, and condition fields. Only information included in the request body will be altered about the resource in question (i.e. empty fields will be ignored).
+ *    description: Allows you to edit information about a resource. Requires resource_name, category, and condition fields. Only information included in the request body will be altered about the resource in question (i.e. empty fields will be ignored). If the ID provided by the resource_id URL parameter is invalid, the request will time out (this needs to be addressed in the future).
  *    tags:
  *      - resource
  *    security:
@@ -291,17 +302,6 @@ router.post(
  *        $ref: '#/components/responses/UnauthorizedError'
  *      '403':
  *        $ref: '#/components/responses/UnauthorizedError'
- *      '404':
- *        description: Resource with the given ID could not be found
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  description: Error message returned by the API
- *                  example: 'Not Found'
  */
 router.put(
   '/:resource_id',
