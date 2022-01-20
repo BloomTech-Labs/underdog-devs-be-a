@@ -59,7 +59,7 @@ describe('application router endpoints', () => {
     });
   });
 
-  describe('GET /application/id/:id', () => {
+  describe('GET /application/profileId/:id', () => {
     Application.getTicketById.mockResolvedValue({
       profile_id: '00u13oned0U8XP8Mb4x7',
       first_name: 'User',
@@ -69,14 +69,18 @@ describe('application router endpoints', () => {
       application_id: 2,
     });
     test('returns 200 OK', async () => {
-      const res = await request(server).get('/application/id/2');
+      const res = await request(server).get(
+        '/application/profileId/00u13oned0U8XP8Mb4x7'
+      );
 
       expect(res.status).toBe(200);
     });
-    test('application_id matches requested id', async () => {
-      const res = await request(server).get('/application/id/2');
+    test('application with appropriate profile_id is returned', async () => {
+      const res = await request(server).get(
+        '/application/profileId/00u13oned0U8XP8Mb4x7'
+      );
 
-      expect(res.body.application_id).toBe(2);
+      expect(res.body.profile_id).toBe('00u13oned0U8XP8Mb4x7');
     });
   });
 });
