@@ -21,7 +21,7 @@ router.get('/', authRequired, async (req, res, next) => {
         resourceIsValid =
           resourceIsValid &&
           (resource[key] === filters[key] ||
-            resource[key].startsWith(filters[key]));
+            resource[key].toLowerCase().includes(filters[key].toLowerCase()));
       }
       return resourceIsValid;
     });
