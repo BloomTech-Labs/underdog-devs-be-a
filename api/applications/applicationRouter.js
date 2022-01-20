@@ -6,7 +6,7 @@ const router = express.Router();
 const jwt = require('jwt-decode');
 const { adminRequired } = require('../middleware/permissionsRequired.js');
 
-// get all pending tickets
+// get all pending application tickets
 
 router.get('/', authRequired, adminRequired, (req, res, next) => {
   Application.getPendingTickets()
@@ -16,7 +16,7 @@ router.get('/', authRequired, adminRequired, (req, res, next) => {
     .catch(next);
 });
 
-// get pending tickets by role
+// get pending application tickets by role
 
 router.get('/:role', authRequired, adminRequired, (req, res, next) => {
   Application.getPendingTicketsByRole(req.params.role)
@@ -26,9 +26,9 @@ router.get('/:role', authRequired, adminRequired, (req, res, next) => {
     .catch(next);
 });
 
-// get application by application id
+// get application by profile id
 
-router.get('/id/:id', authRequired, adminRequired, (req, res, next) => {
+router.get('/profileId/:id', authRequired, adminRequired, (req, res, next) => {
   Application.getTicketById(req.params.id)
     .then((applicationList) => {
       res.status(200).json(applicationList);

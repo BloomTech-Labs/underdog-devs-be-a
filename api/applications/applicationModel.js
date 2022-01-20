@@ -6,7 +6,7 @@ async function add(id, newApplication) {
   return ticket;
 }
 
-function getTicketById(application_id) {
+function getTicketById(profile_id) {
   return db('application_tickets as a')
     .join('profiles as p', 'a.profile_id', 'p.profile_id')
     .join('roles as r', 'r.role_id', 'p.role_id')
@@ -18,7 +18,7 @@ function getTicketById(application_id) {
       'a.created_at',
       'a.application_id'
     )
-    .where('application_id', application_id)
+    .where('p.profile_id', profile_id)
     .first();
 }
 
