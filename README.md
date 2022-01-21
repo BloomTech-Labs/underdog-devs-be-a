@@ -201,13 +201,13 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
         "deductible_donation": true
     }
 
-| Method | Endpoint                  | Required Request Body                  | Returns                                    | User Auth |
-| ------ | ------------------------- | -------------------------------------- | ------------------------------------------ | --------- |
-| GET    | `/resources`              | -                                      | `get all resources`                        |           |
-| GET    | `/resources/:resource_id` | -                                      | `get a resource by resource_id`            |           |
-| POST   | `/resources`              | `resource_name`,`category`,`condition` | `add a new resource to the db`             | `Admin`   |
-| PUT    | `/resources/:resource_id` | `resource_name`,`category`,`condition` | `update a resource by resource_id,`        | `Admin`   |
-| DELETE | `/resources/:resource_id` | -                                      | `delete a resource by resource_id from db` | `Admin`   |
+| Method | Endpoint                  | Required Request Body                  | Returns                                    | User Auth                  |
+| ------ | ------------------------- | -------------------------------------- | ------------------------------------------ | -------------------------- |
+| GET    | `/resources`              | -                                      | `get all resources`                        | Any, but must be logged in |
+| GET    | `/resources/:resource_id` | -                                      | `get a resource by resource_id`            | Any, but must be logged in |
+| POST   | `/resources`              | `resource_name`,`category`,`condition` | `add a new resource to the db`             | `Admin`                    |
+| PUT    | `/resources/:resource_id` | `resource_name`,`category`,`condition` | `update a resource by resource_id,`        | `Admin`                    |
+| DELETE | `/resources/:resource_id` | -                                      | `delete a resource by resource_id from db` | `Admin`                    |
 
 ## Resource Tickets
 
