@@ -12,6 +12,7 @@ const config_result = dotenv.config();
 if (process.env.NODE_ENV != 'production' && config_result.error) {
   throw config_result.error;
 }
+const handleError = require('./middleware/handleError');
 
 const swaggerSpec = swaggerJSDoc(jsdocConfig);
 const swaggerUIOptions = {
@@ -74,25 +75,6 @@ app.use(function (req, res, next) {
 });
 
 // error handler
-app.use(function (err, req, res, next) {
-  if (err instanceof createError.HttpError) {
-    res.locals.message = err.message;
-    res.locals.status = err.statusCode;
-    if (process.env.NODE_ENV === 'development') {
-      res.locals.error = err;
-    }
-  }
-  console.error(err);
-  if (process.env.NODE_ENV === 'production' && !res.locals.message) {
-    res.locals.message = 'ApplicationError';
-    res.locals.status = 500;
-  }
-  if (res.locals.status) {
-    res.status(res.locals.status || 500);
-    const errObject = { error: res.locals.error, message: res.locals.message };
-    return res.json(errObject);
-  }
-  next(err);
-});
+app.use(handleError);
 
 module.exports = app;
