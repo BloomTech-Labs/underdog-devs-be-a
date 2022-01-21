@@ -9,7 +9,7 @@ async function validateResource(req, res, next) {
   } catch (err) {
     return next({
       status: 400,
-      message: err.error[0],
+      message: err.errors[0],
     });
   }
 }
