@@ -3,6 +3,7 @@ const router = express.Router();
 const Resources = require('./resourcesModel');
 const authRequired = require('../middleware/authRequired');
 const { adminRequired } = require('../middleware/permissionsRequired');
+const { validateResource } = require('../middleware/resourcesMiddleware');
 
 //get all resources
 
@@ -38,15 +39,19 @@ router.get('/:resource_id', authRequired, (req, res) => {
 router.post(
   '/',
   authRequired,
-  validNewResource,
   adminRequired,
-  (req, res, next) => {
-    const resource = req.body;
-    Resources.Create(resource)
-      .then(() => {
-        res.status(201).json({ message: 'success', resource });
-      })
-      .catch(next);
+  validateResource,
+  async (req, res, next) => {
+    try {
+      const resourceInput = req._resource;
+      const postResponse = await Resources.Create(resourceInput);
+      res.status(201).json({
+        message: 'new resource created, successfully!',
+        resource: postResponse,
+      });
+    } catch (err) {
+      return next(err);
+    }
   }
 );
 
@@ -55,8 +60,8 @@ router.post(
 router.put(
   '/:resource_id',
   authRequired,
-  validNewResource,
   adminRequired,
+  validateResource,
   (req, res, next) => {
     const id = req.params.resource_id;
     const changes = req.body;
@@ -95,30 +100,4 @@ router.delete(
   }
 );
 
-///////////////////////////MIDDLEWARE///////////////////////////////
-
-// validate a new resource
-
-function validNewResource(req, res, next) {
-  const resource = req.body;
-  if (!resource) {
-    res.status(400).json({
-      message: 'missing resource Data',
-    });
-  } else if (!resource.resource_name) {
-    res.status(400).json({
-      message: 'missing resource_name field',
-    });
-  } else if (!resource.category) {
-    res.status(400).json({
-      message: 'missing category field',
-    });
-  } else if (!resource.condition) {
-    res.status(400).json({
-      message: 'missing condition field',
-    });
-  } else {
-    next();
-  }
-}
 module.exports = router;
