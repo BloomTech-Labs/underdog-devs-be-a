@@ -5,7 +5,7 @@ const Profile = require('../profile/profileModel');
 const router = express.Router();
 const jwt = require('jwt-decode');
 const { adminRequired } = require('../middleware/permissionsRequired.js');
-const { checkRole } = require('./applicationMiddleware');
+const { validateProfile, checkRole } = require('./applicationMiddleware');
 
 /**
  * @swagger
@@ -62,15 +62,9 @@ router.get('/:role', authRequired, adminRequired, (req, res, next) => {
 
 // get application by profile id
 
-router.get(
-  '/profileId/:id',
-  authRequired,
-  adminRequired,
-  checkRole,
-  (req, res) => {
-    res.status(200).json(req.body);
-  }
-);
+router.get('/profileId/:id', validateProfile, checkRole, (req, res) => {
+  res.status(200).json(req.body);
+});
 
 // post a new application for the current logged in user
 
