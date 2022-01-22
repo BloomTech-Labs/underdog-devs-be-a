@@ -201,6 +201,7 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
         "deductible_donation": true
     }
 
+
 | Method | Endpoint                  | URL Parameters                                          | Required Request Body                  | Returns                                    | User Auth |
 | ------ | ------------------------- | ------------------------------------------------------- | -------------------------------------- | ------------------------------------------ | --------- |
 | GET    | `/resources`              | Allows Querying (i.e. `/resources?condition=Excellent`) | -                                      | `get all resources`                        |           |
@@ -208,6 +209,7 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 | POST   | `/resources`              |                                                         | `resource_name`,`category`,`condition` | `add a new resource to the db`             | `Admin`   |
 | PUT    | `/resources/:resource_id` | `resource_id` (required) must be an integer value       | `resource_name`,`category`,`condition` | `update a resource by resource_id,`        | `Admin`   |
 | DELETE | `/resources/:resource_id` | `resource_id` (required) must be an integer value       | -                                      | `delete a resource by resource_id from db` | `Admin`   |
+
 
 ## Resource Tickets
 
