@@ -6,22 +6,6 @@ async function add(id, newApplication) {
   return ticket;
 }
 
-function getTicketById(profile_id) {
-  return db('application_tickets as a')
-    .join('profiles as p', 'a.profile_id', 'p.profile_id')
-    .join('roles as r', 'r.role_id', 'p.role_id')
-    .select(
-      'p.profile_id',
-      'p.first_name',
-      'p.last_name',
-      'r.role_name',
-      'a.created_at',
-      'a.application_id'
-    )
-    .where('p.profile_id', profile_id)
-    .first();
-}
-
 function getPendingTickets() {
   return db('application_tickets as a')
     .join('profiles as p', 'a.profile_id', 'p.profile_id')
@@ -53,6 +37,67 @@ function getPendingTicketsByRole(role_name) {
     .where('r.role_name', role_name);
 }
 
+function getTicketById(profile_id) {
+  return db('application_tickets as a')
+    .join('profiles as p', 'a.profile_id', 'p.profile_id')
+    .join('roles as r', 'r.role_id', 'p.role_id')
+    .select(
+      'p.profile_id',
+      'p.first_name',
+      'p.last_name',
+      'r.role_name',
+      'a.created_at',
+      'a.application_id'
+    )
+    .where('p.profile_id', profile_id)
+    .first();
+}
+
+function getMentorIntake(profile_id) {
+  return db('application_tickets as a')
+    .join('profiles as p', 'a.profile_id', 'p.profile_id')
+    .join('mentor_intake as m', 'a.profile_id', 'm.profile_id')
+    .join('roles as r', 'p.role_id', 'r.role_id')
+    .select(
+      'm.profile_id',
+      'm.name',
+      'm.email',
+      'm.location',
+      'm.current_comp',
+      'm.tech_stack',
+      'm.can_commit',
+      'm.how_commit',
+      'm.other_info',
+      'r.role_name',
+      'a.approved'
+    )
+    .where('p.profile_id', profile_id)
+    .first();
+}
+
+function getMenteeIntake(profile_id) {
+  return db('application_tickets as a')
+    .join('profiles as p', 'a.profile_id', 'p.profile_id')
+    .join('mentee_intake as m', 'a.profile_id', 'm.profile_id')
+    .join('roles as r', 'p.role_id', 'r.role_id')
+    .select(
+      'm.profile_id',
+      'm.name',
+      'm.email',
+      'm.location',
+      'm.lives_in_us',
+      'm.formerly_incarcerated',
+      'm.list_convictions',
+      'm.tech_stack',
+      'm.experience_level',
+      'm.your_hope',
+      'm.other_info',
+      'r.role_name',
+      'a.approved'
+    )
+    .where('p.profile_id', profile_id);
+}
+
 async function insertMenteeIntake(id, newMenteeIntake) {
   newMenteeIntake.profile_id = id;
   const form = await db('mentee_intake').insert(newMenteeIntake);
@@ -77,6 +122,8 @@ module.exports = {
   updateTicket,
   getPendingTickets,
   getPendingTicketsByRole,
+  getMentorIntake,
+  getMenteeIntake,
   insertMenteeIntake,
   insertMentorIntake,
   getTicketById,
