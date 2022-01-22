@@ -40,39 +40,6 @@ const { checkRole } = require('./applicationMiddleware');
  *        created_at: "2021-11-01T17:59:02.023Z"
  */
 
-/**
- * @swagger
- * components:
- *  schemas:
- *    Application:
- *      type: object
- *      required:
- *        - position
- *        - profile_id
- *      properties:
- *        application_id:
- *          type: integer
- *          description: Unique primary key referencing the application's numeric ID
- *        position:
- *          type: integer
- *          description: Foreign key referencing a numeric role ID for an applicant's desired position
- *        profile_id:
- *          type: string
- *          description: Foreign key referencing the applicant's profile ID
- *        approved:
- *          type: boolean
- *          description: Status of whether or not an application has been approved - defaults to false
- *        created_at:
- *          type: timestamp
- *          description: Record of an application's creation time
- *      example:
- *        application_id: 1
- *        position: 4
- *        profile_id: '10'
- *        approved: false
- *        created_at: "2021-11-01T17:59:02.023Z"
- */
-
 // get all pending application tickets
 
 router.get('/', authRequired, adminRequired, (req, res, next) => {
