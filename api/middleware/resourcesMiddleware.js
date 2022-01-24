@@ -1,4 +1,4 @@
-const resourceSchema = require('../schemas/resourceSchema');
+const resourceSchema = require('../../data/schemas/resourceSchema');
 
 async function validateResource(req, res, next) {
   try {
