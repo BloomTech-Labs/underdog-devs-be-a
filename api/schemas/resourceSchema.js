@@ -19,14 +19,8 @@ const resourceSchema = yup.object().shape({
   category: yup.string().trim().required("'category' is required"),
   condition: yup.string().trim().required("'condition' is required"),
   assigned: yup.boolean(),
-  current_assignee: yup
-    .string()
-    .trim()
-    .required("'current_assignee' ID is required"),
-  previous_assignee: yup
-    .string()
-    .trim()
-    .required("'previous_assignee' ID is required"),
+  current_assignee: yup.string().trim(),
+  previous_assignee: yup.string().trim(),
   monetary_value: yup.string().trim(),
   deductible_donation: yup.boolean(),
 });
