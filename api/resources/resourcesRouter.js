@@ -395,17 +395,17 @@ router.delete(
   '/:resource_id',
   authRequired,
   adminRequired,
-  (req, res, next) => {
-    const id = req.params.resource_id;
-    Resources.Delete(id)
-      .then((resources) => {
-        if (resources) {
-          res.status(200).json({
-            message: 'Resource deleted',
-          });
-        }
-      })
-      .catch(next);
+  checkResourceIdExists,
+  async (req, res, next) => {
+    try {
+      const { resource_id } = req.params;
+      await Resources.Delete(resource_id);
+      return res.status(200).json({
+        message: `Resource #${resource_id} deleted, successfully!`,
+      });
+    } catch (err) {
+      return next(err);
+    }
   }
 );
 
