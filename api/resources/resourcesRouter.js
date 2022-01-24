@@ -121,7 +121,6 @@ const { validateResource } = require('../middleware/resourcesMiddleware');
  *      '403':
  *        $ref: '#/components/responses/UnauthorizedError'
  */
-
 router.get('/', authRequired, async (req, res, next) => {
   try {
     const filters = req.query;
@@ -147,7 +146,7 @@ router.get('/', authRequired, async (req, res, next) => {
     return next(err);
   }
 });
-    
+
 /**
  * @swagger
  * /resources/{resource_id}:
