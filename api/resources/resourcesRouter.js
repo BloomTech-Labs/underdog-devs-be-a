@@ -18,13 +18,13 @@ const { validateResource } = require('../middleware/resourcesMiddleware');
  *      properties:
  *        resource_id:
  *          type: integer
- *          description: Unique primary key referencing a resource's auto-assigned ID
+ *          description: Unique primary key referencing a resource's auto-assigned ID - must not be provided in request bodies
  *        created_at:
  *          type: timestamp
- *          description: Automatic date-time string from a resource's creation in the database
+ *          description: Automatic date-time string from a resource's creation in the database - must not be provided in request bodies
  *        updated_at:
  *          type: timestamp
- *          description: Automatic date-time string from a resource's last update in the database
+ *          description: Automatic date-time string from a resource's last update in the database - must not be provided in request bodies
  *        resource_name:
  *          type: string
  *          description: The name of a resource
@@ -73,6 +73,12 @@ const { validateResource } = require('../middleware/resourcesMiddleware');
  *      - resource
  *    security:
  *      - okta: []
+ *    parameters:
+ *      - in: query
+ *        name: resource property
+ *        schema:
+ *          type: string
+ *        description: A resource property key to query for - accepts partial matching
  *    responses:
  *      '200':
  *        description: An array of resource objects
@@ -186,6 +192,7 @@ router.get('/', authRequired, async (req, res, next) => {
  *                  description: Error message returned by the API
  *                  example: 'Resource not found, check the ID'
  */
+
 router.get('/:resource_id', authRequired, (req, res) => {
   const id = req.params.resource_id;
   Resources.findByResourceId(id)
@@ -243,6 +250,7 @@ router.get('/:resource_id', authRequired, (req, res) => {
  *      '403':
  *        $ref: '#/components/responses/UnauthorizedError'
  */
+
 router.post(
   '/',
   authRequired,
@@ -319,6 +327,7 @@ router.post(
  *      '403':
  *        $ref: '#/components/responses/UnauthorizedError'
  */
+
 router.put(
   '/:resource_id',
   authRequired,
@@ -377,6 +386,7 @@ router.put(
  *      '403':
  *        $ref: '#/components/responses/UnauthorizedError'
  */
+
 router.delete(
   '/:resource_id',
   authRequired,
