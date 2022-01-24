@@ -9,7 +9,21 @@ const findByResourceId = async (resource_id) => {
 };
 
 const Create = async (newResource) => {
-  const resource = await db('resources').insert(newResource);
+  const [resource] = await db('resources')
+    .insert(newResource)
+    .returning([
+      'resource_id',
+      'resource_name',
+      'category',
+      'condition',
+      'created_at',
+      'updated_at',
+      'assigned',
+      'current_assignee',
+      'previous_assignee',
+      'monetary_value',
+      'deductible_donation',
+    ]);
   return resource;
 };
 
