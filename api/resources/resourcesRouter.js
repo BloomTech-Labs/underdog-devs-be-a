@@ -335,22 +335,23 @@ router.put(
   '/:resource_id',
   authRequired,
   adminRequired,
+  checkResourceIdExists,
   validateResource,
-  (req, res, next) => {
-    const id = req.params.resource_id;
-    const changes = req.body;
-    Resources.Update(id, changes)
-      .then((change) => {
-        if (change) {
-          Resources.findByResourceId(id).then((success) => {
-            res.status(200).json({
-              message: `Resource '${success.resource_id}' updated`,
-              success,
-            });
-          });
-        }
-      })
-      .catch(next);
+  async (req, res, next) => {
+    try {
+      const { resource_id } = req.params;
+      const resourceInput = req._resource;
+      const updatedResource = await Resources.Update(
+        resource_id,
+        resourceInput
+      );
+      return res.status(200).json({
+        message: `Resource #${resource_id} updated, successfully!`,
+        resource: updatedResource,
+      });
+    } catch (err) {
+      return next(err);
+    }
   }
 );
 
