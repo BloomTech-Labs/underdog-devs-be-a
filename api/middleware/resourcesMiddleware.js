@@ -3,14 +3,19 @@ const resourceSchema = require('../../data/schemas/resourceSchema');
 
 async function checkResourceIdExists(req, res, next) {
   const { resource_id } = req.params;
+  const badIdErr = {
+    status: 404,
+    message: `resource with ID ${resource_id} not found`,
+  };
   try {
-    await Resource.findByResourceId(resource_id);
+    const resource = await Resource.findByResourceId(resource_id);
+    if (!resource) {
+      return next(badIdErr);
+    }
+    req._resource = resource;
     return next();
   } catch (err) {
-    return next({
-      status: 404,
-      message: `resource with ID ${resource_id} not found`,
-    });
+    return next(badIdErr);
   }
 }
 
