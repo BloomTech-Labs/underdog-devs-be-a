@@ -3,7 +3,10 @@ const router = express.Router();
 const Resources = require('./resourcesModel');
 const authRequired = require('../middleware/authRequired');
 const { adminRequired } = require('../middleware/permissionsRequired');
-const { validateResource } = require('../middleware/resourcesMiddleware');
+const {
+  checkResourceIdExists,
+  validateResource,
+} = require('../middleware/resourcesMiddleware');
 
 /**
  * @swagger
@@ -127,6 +130,7 @@ const { validateResource } = require('../middleware/resourcesMiddleware');
  *      '403':
  *        $ref: '#/components/responses/UnauthorizedError'
  */
+
 router.get('/', authRequired, async (req, res, next) => {
   try {
     const filters = req.query;
@@ -193,20 +197,19 @@ router.get('/', authRequired, async (req, res, next) => {
  *                  example: 'Resource not found, check the ID'
  */
 
-router.get('/:resource_id', authRequired, (req, res) => {
-  const id = req.params.resource_id;
-  Resources.findByResourceId(id)
-    .then((resource) => {
-      if (resource) {
-        res.status(200).json(resource);
-      } else {
-        res.status(404).json({ error: 'Resource not found, check the ID' });
-      }
-    })
-    .catch((err) => {
-      res.status(500).json({ error: err.message });
-    });
-});
+router.get(
+  '/:resource_id',
+  authRequired,
+  checkResourceIdExists,
+  (req, res, next) => {
+    try {
+      const resource = req._resource;
+      res.status(200).json(resource);
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
 
 /**
  * @swagger
