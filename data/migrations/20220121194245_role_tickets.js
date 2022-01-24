@@ -1,35 +1,30 @@
-/**
- * @param { import("knex").Knex } knex
- * @returns { Promise<void> }
- */
-
- exports.up = (knex) => {
-    return knex.schema
+exports.up = (knex) => {
+  return knex.schema
     .raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"')
     .createTable('role_tickets', function (table) {
-    table.increments('role_ticket_id').notNullable().unique().primary();
-    table
+      table.increments('role_ticket_id').notNullable().unique().primary();
+      table
         .string('submitted_by')
         .notNullable()
         .references('profile_id')
         .inTable('profiles')
         .onDelete('RESTRICT')
         .onUpdate('RESTRICT');
-    table
+      table
         .string('subject_id')
         .notNullable()
         .references('profile_id')
         .inTable('profiles')
         .onDelete('RESTRICT')
         .onUpdate('RESTRICT');
-    table
+      table
         .integer('requested_role')
         .notNullable()
         .references('role_id')
         .inTable('roles')
         .onDelete('RESTRICT')
         .onUpdate('RESTRICT');
-    table
+      table
         .string('approved_by')
         .notNullable()
         .references('profile_id')
@@ -40,9 +35,9 @@
       table.boolean('pending').defaultTo(true);
       table.boolean('resolved').defaultTo(false);
       table.timestamps(true, true);
-      });
-  };
+    });
+};
   
-  exports.down = (knex) => {
-    return knex.schema.dropTableIfExists('role_tickets');
-  };
+exports.down = (knex) => {
+  return knex.schema.dropTableIfExists('role_tickets');
+};
