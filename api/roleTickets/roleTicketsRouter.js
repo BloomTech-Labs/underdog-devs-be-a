@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const RoleTickets = require('./rolesTicketsModel');
+const RoleTickets = require('./roleTicketsModel');
 
 const authRequired = require('../middleware/authRequired');
 const { adminRequired } = require('../middleware/permissionsRequired');
@@ -15,3 +15,4 @@ router.get('/', authRequired, adminRequired, (req, res) => {
       res.status(500).json({ message: err.message });
     });
 });
+module.exports = router;
