@@ -17,7 +17,6 @@ const dummyData = [
     pending: true,
     resolved: false,
   },
- 
 ];
 
 exports.seed = function (knex) {
@@ -27,5 +26,3 @@ exports.seed = function (knex) {
       return knex('role_tickets').insert(dummyData);
     });
 };
-
-  
