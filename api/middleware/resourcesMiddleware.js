@@ -5,7 +5,7 @@ async function checkResourceIdExists(req, res, next) {
   const { resource_id } = req.params;
   const badIdErr = {
     status: 404,
-    message: `resource with ID ${resource_id} not found`,
+    message: `Resource with ID ${resource_id} not found!`,
   };
   try {
     const resource = await Resource.findByResourceId(resource_id);
