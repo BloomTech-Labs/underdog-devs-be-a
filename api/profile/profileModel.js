@@ -51,12 +51,21 @@ const findOrCreateProfile = async (profileObj) => {
   }
 };
 
-function mentorApplicationData(profile_id) {
-  return db('mentor_intake as m').where('m.profile_id', profile_id);
+async function mentorApplicationData(profile_id) {
+  const [person] = await db('mentor_intake as m').where(
+    'm.profile_id',
+    profile_id
+  );
+
+  return person;
 }
 
-function menteeApplicationData(profile_id) {
-  return db('mentee_intake as m').where('m.profile_id', profile_id);
+async function menteeApplicationData(profile_id) {
+  const [person] = await db('mentee_intake as m').where(
+    'm.profile_id',
+    profile_id
+  );
+  return person;
 }
 
 module.exports = {
