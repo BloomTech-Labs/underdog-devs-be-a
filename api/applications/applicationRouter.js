@@ -7,6 +7,14 @@ const jwt = require('jwt-decode');
 const { adminRequired } = require('../middleware/permissionsRequired.js');
 const { validateProfile, checkRole } = require('./applicationMiddleware');
 
+const okta = require('@okta/okta-sdk-nodejs');
+
+const client = new okta.Client({
+  orgUrl: 'https://dev-1234.oktapreview.com/',
+  token: 'xYzabc',
+  //token is innacurate. procure registration token from okta.
+});
+
 /**
  * @swagger
  * components:
@@ -123,6 +131,15 @@ router.post('/new-mentor', authRequired, function (req, res, next) {
       res.status(201).json({ message: 'Information has been submitted' });
     })
     .catch(next);
+});
+
+// update applicants status and attach intake data to createUser method
+
+router.put('/update-status', (req) => {
+  const newUser = req.body;
+  client.createUser(newUser).then((user) => {
+    console.log('Created user', user);
+  });
 });
 
 module.exports = router;
