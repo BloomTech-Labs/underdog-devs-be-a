@@ -11,16 +11,16 @@ validateUser;
 
 router.get('/current_user_profile', async (req, res) => {
   try {
-    if (req.headers.role_id == 4) {
-      const resp = await Profiles.menteeApplicationData('00ulthapbErVUwVJy4x6');
-      res.status(200).json(resp);
-    } else {
-      const resp = await Profiles.mentorApplicationData('00ulthapbErVUwVJy4x6');
-      res.status(200).json(resp);
-    }
+    // if (req.headers.role_id == 4) {
+    const resp = await Profiles.menteeApplicationData('00u13oned0U8XP8Mb4x7');
+    res.status(200).json(resp);
+    // } else {
+    //   const resp = await Profiles.mentorApplicationData('00u13oned0U8XP8Mb4x7');
+    //   res.status(200).json(resp);
+    // }
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: error.message });
+    // res.status(500).json({ message: error.message });
   }
 });
 
