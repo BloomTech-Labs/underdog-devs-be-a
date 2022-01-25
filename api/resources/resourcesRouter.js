@@ -127,8 +127,6 @@ const {
  *                  deductible_donation: true
  *      '401':
  *        $ref: '#/components/responses/UnauthorizedError'
- *      '403':
- *        $ref: '#/components/responses/UnauthorizedError'
  */
 
 router.get('/', authRequired, async (req, res, next) => {
@@ -182,8 +180,6 @@ router.get('/', authRequired, async (req, res, next) => {
  *              $ref: '#/components/schemas/Resource'
  *      '401':
  *        $ref: '#/components/responses/UnauthorizedError'
- *      '403':
- *        $ref: '#/components/responses/UnauthorizedError'
  *      '404':
  *        description: Resource with the given ID could not be found
  *        content:
@@ -194,7 +190,7 @@ router.get('/', authRequired, async (req, res, next) => {
  *                message:
  *                  type: string
  *                  description: Error message returned by the API
- *                  example: 'Resource not found, check the ID'
+ *                  example: 'Resource with ID 1 not found!'
  */
 
 router.get(
@@ -204,7 +200,7 @@ router.get(
   (req, res, next) => {
     try {
       const resource = req._resource;
-      res.status(200).json(resource);
+      return res.status(200).json(resource);
     } catch (err) {
       return next(err);
     }
@@ -250,8 +246,17 @@ router.get(
  *                  condition: 'New'
  *      '401':
  *        $ref: '#/components/responses/UnauthorizedError'
- *      '403':
- *        $ref: '#/components/responses/UnauthorizedError'
+ *      '404':
+ *        description: Resource with the given ID could not be found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: Error message returned by the API
+ *                  example: 'Resource with ID 1 not found!'
  */
 
 router.post(
@@ -263,7 +268,7 @@ router.post(
     try {
       const resourceInput = req._resource;
       const postResponse = await Resources.Create(resourceInput);
-      res.status(201).json({
+      return res.status(201).json({
         message: 'new resource created, successfully!',
         resource: postResponse,
       });
@@ -278,7 +283,7 @@ router.post(
  * /resources/{resource_id}:
  *  put:
  *    summary: Updates resource details
- *    description: Allows you to edit information about a resource. Requires resource_name, category, and condition fields. Only information included in the request body will be altered about the resource in question (i.e. empty fields will be ignored). If the ID provided by the resource_id URL parameter is invalid, the request will time out (this needs to be addressed in the future).
+ *    description: Allows you to edit information about a resource. Requires resource_name, category, and condition fields. Only information included in the request body will be altered about the resource in question (i.e. empty fields will be ignored).
  *    tags:
  *      - resource
  *    security:
@@ -312,8 +317,8 @@ router.post(
  *                  type: object
  *                  description: Object containing all information pertaining to the newly updated resource
  *              example:
- *                message: "Resource '108' updated"
- *                success:
+ *                message: "Resource #108 updated, successfully!"
+ *                resource:
  *                  resource_id: 108
  *                  created_at: "2022-01-18T22:00:08.001Z"
  *                  updated_at: "2022-02-18T22:00:09.001Z"
@@ -326,8 +331,6 @@ router.post(
  *                  monetary_value: $35
  *                  deductible_donation: true
  *      '401':
- *        $ref: '#/components/responses/UnauthorizedError'
- *      '403':
  *        $ref: '#/components/responses/UnauthorizedError'
  */
 
@@ -360,7 +363,7 @@ router.put(
  * /resources/{resource_id}:
  *  delete:
  *    summary: Deletes a resource from the database
- *    description: If a resource with the ID provided as a URL parameter for this request exists, it will be deleted from the database. If the ID is invalid, the request will time out (this needs to be addressed in the future).
+ *    description: If a resource with the ID provided as a URL parameter for this request exists, it will be deleted from the database.
  *    tags:
  *      - resource
  *    security:
@@ -384,10 +387,8 @@ router.put(
  *                  type: string
  *                  description: Message relaying a resource's successful deletion
  *              example:
- *                message: 'Resource deleted'
+ *                message: 'Resource #1 deleted, successfully!'
  *      '401':
- *        $ref: '#/components/responses/UnauthorizedError'
- *      '403':
  *        $ref: '#/components/responses/UnauthorizedError'
  */
 
