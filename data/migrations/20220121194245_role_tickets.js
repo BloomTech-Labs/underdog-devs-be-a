@@ -26,7 +26,6 @@ exports.up = (knex) => {
         .onUpdate('RESTRICT');
       table
         .string('approved_by')
-        .notNullable()
         .references('profile_id')
         .inTable('profiles')
         .onDelete('RESTRICT')
