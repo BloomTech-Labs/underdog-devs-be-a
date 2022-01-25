@@ -5,7 +5,10 @@ const Profile = require('../profile/profileModel');
 const router = express.Router();
 const jwt = require('jwt-decode');
 const { adminRequired } = require('../middleware/permissionsRequired.js');
-const { validateProfile, checkRole } = require('./applicationMiddleware');
+const {
+  validateProfile,
+  checkRole,
+} = require('../middleware/applicationMiddleware');
 
 /**
  * @swagger
