@@ -51,6 +51,51 @@ const findOrCreateProfile = async (profileObj) => {
   }
 };
 
+function mentorApplicationData(profile_id) {
+  return db('application_tickets as a')
+    .join('profiles as p', 'a.profile_id', 'p.profile_id')
+    .join('mentor_intake as m', 'a.profile_id', 'm.profile_id')
+    .join('roles as r', 'p.role_id', 'r.role_id')
+    .select(
+      'm.profile_id',
+      'm.name',
+      'm.email',
+      'm.location',
+      'm.current_comp',
+      'm.tech_stack',
+      'm.can_commit',
+      'm.how_commit',
+      'm.other_info',
+      'r.role_name',
+      'a.approved'
+    )
+    .where('p.profile_id', profile_id)
+    .first();
+}
+
+function menteeApplicationData(profile_id) {
+  return db('application_tickets as a')
+    .join('profiles as p', 'a.profile_id', 'p.profile_id')
+    .join('mentee_intake as m', 'a.profile_id', 'm.profile_id')
+    .join('roles as r', 'p.role_id', 'r.role_id')
+    .select(
+      'm.profile_id',
+      'm.name',
+      'm.email',
+      'm.location',
+      'm.lives_in_us',
+      'm.formerly_incarcerated',
+      'm.list_convictions',
+      'm.tech_stack',
+      'm.experience_level',
+      'm.your_hope',
+      'm.other_info',
+      'r.role_name',
+      'a.approved'
+    )
+    .where('p.profile_id', profile_id);
+}
+
 module.exports = {
   findAll,
   findBy,
@@ -60,4 +105,6 @@ module.exports = {
   remove,
   findOrCreateProfile,
   updateIsActive,
+  mentorApplicationData,
+  menteeApplicationData,
 };

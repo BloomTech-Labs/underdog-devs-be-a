@@ -9,6 +9,21 @@ const {
 const { validateUser } = require('../middleware/generalMiddleware');
 validateUser;
 
+router.get('/current_user_profile', async (req, res) => {
+  try {
+    if (req.headers.role_id == 4) {
+      const resp = await Profiles.menteeApplicationData('00ulthapbErVUwVJy4x6');
+      res.status(200).json(resp);
+    } else {
+      const resp = await Profiles.mentorApplicationData('00ulthapbErVUwVJy4x6');
+      res.status(200).json(resp);
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
 /**
  * @swagger
  * components:
