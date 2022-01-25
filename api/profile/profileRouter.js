@@ -7,20 +7,23 @@ const {
   superAdminRequired,
 } = require('../middleware/permissionsRequired');
 const { validateUser } = require('../middleware/generalMiddleware');
-validateUser;
+// validateUser;
 
-router.get('/current_user_profile', async (req, res) => {
+router.get('/current_user_profile/', authRequired, async (req, res) => {
   try {
-    // if (req.headers.role_id == 4) {
-    const resp = await Profiles.menteeApplicationData('00u13oned0U8XP8Mb4x7');
-    res.status(200).json(resp);
-    // } else {
-    //   const resp = await Profiles.mentorApplicationData('00u13oned0U8XP8Mb4x7');
-    //   res.status(200).json(resp);
-    // }
+    console.log('req.profile: ', req.profile.profile_id);
+    if (req.headers.role_id == 4) {
+      const resp = await Profiles.menteeApplicationData(req.profile.profile_id);
+      console.log(`mentee resp: ${resp}`);
+      res.status(200).json(resp);
+    } else {
+      const resp = await Profiles.mentorApplicationData(req.profile.profile_id);
+      console.log(`resp: ${resp}`);
+      res.status(200).json(resp);
+    }
   } catch (error) {
     console.log(error);
-    // res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 });
 
