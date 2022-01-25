@@ -2,7 +2,7 @@ const {
   getTicketById,
   getMentorIntake,
   getMenteeIntake,
-} = require('./applicationModel');
+} = require('../applications/applicationModel');
 
 const validateProfile = (req, res, next) => {
   getTicketById(req.params.id).then((profile) => {
