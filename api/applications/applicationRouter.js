@@ -145,6 +145,7 @@ router.put('/update-status/:id', validateProfile, (req, res, next) => {
     });
   });
   // okta registration flow starts here
+  const tempPassword = Math.random().toString(36).slice(-8);
   const newUser = {
     profile: {
       firstName: req.body.first_name,
@@ -154,10 +155,11 @@ router.put('/update-status/:id', validateProfile, (req, res, next) => {
     },
     credentials: {
       password: {
-        value: 'generate this temp password',
+        value: tempPassword,
       },
     },
   };
+  console.log(newUser);
   client.createUser(newUser).then((user) => {
     console.log('Created user', user);
     next();
