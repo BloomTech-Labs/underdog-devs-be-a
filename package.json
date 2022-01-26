@@ -7,6 +7,7 @@
   "scripts": {
     "start": "node server.js",
     "watch:dev": "nodemon",
+    "test": "cross-env NODE_ENV=test jest --verbose --watchAll",
     "lint": "npx eslint .",
     "lint:fix": "npx eslint --fix .",
     "format": "npx prettier --write \"**/*.+(js|jsx|json|yml|yaml|css|md)\"",
@@ -14,7 +15,6 @@
     "migrate": "npx knex --knexfile config/knexfile.js migrate:latest",
     "rollback": "npx knex --knexfile config/knexfile.js migrate:rollback",
     "seed": "npx knex --knexfile config/knexfile.js seed:run",
-    "tests": "npx jest",
     "coverage": "CI=true npx jest --coverage --detectOpenHandles --forceExit",
     "dev": "nodemon",
     "up": "npx knex --knexfile config/knexfile.js migrate:up",
