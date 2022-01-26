@@ -5,25 +5,68 @@ const Profile = require('../profile/profileModel');
 const router = express.Router();
 const jwt = require('jwt-decode');
 const { adminRequired } = require('../middleware/permissionsRequired.js');
+const {
+  validateProfile,
+  checkRole,
+} = require('../middleware/applicationMiddleware');
 
-// get all pending mentee applications
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    Application:
+ *      type: object
+ *      required:
+ *        - position
+ *        - profile_id
+ *      properties:
+ *        application_id:
+ *          type: integer
+ *          description: Unique primary key referencing the application's numeric ID
+ *        position:
+ *          type: integer
+ *          description: Foreign key referencing a numeric role ID for an applicant's desired position
+ *        profile_id:
+ *          type: string
+ *          description: Foreign key referencing the applicant's profile ID
+ *        approved:
+ *          type: boolean
+ *          description: Status of whether or not an application has been approved - defaults to false
+ *        created_at:
+ *          type: timestamp
+ *          description: Record of an application's creation time
+ *      example:
+ *        application_id: 1
+ *        position: 4
+ *        profile_id: '10'
+ *        approved: false
+ *        created_at: "2021-11-01T17:59:02.023Z"
+ */
 
-router.get('/mentee', authRequired, adminRequired, (req, res, next) => {
-  Application.getPendingMenteeTickets()
+// get all pending application tickets
+
+router.get('/', authRequired, adminRequired, (req, res, next) => {
+  Application.getPendingTickets()
     .then((applicationList) => {
       res.status(200).json(applicationList);
     })
     .catch(next);
 });
 
-// get all pending mentor application
+// get pending application tickets by role
 
-router.get('/mentor', authRequired, adminRequired, (req, res, next) => {
-  Application.getPendingMentorTickets()
+router.get('/:role', authRequired, adminRequired, (req, res, next) => {
+  Application.getPendingTicketsByRole(req.params.role)
     .then((applicationList) => {
       res.status(200).json(applicationList);
     })
     .catch(next);
+});
+
+// get application by profile id
+
+router.get('/profileId/:id', validateProfile, checkRole, (req, res) => {
+  res.status(200).json(req.body);
 });
 
 // post a new application for the current logged in user
@@ -78,7 +121,7 @@ router.post('/new-mentor', authRequired, function (req, res, next) {
   const token = req.headers.authorization;
   const User = jwt(token);
   const newMentorIntake = req.body;
-  Application.insertMenteeIntake(User.sub, newMentorIntake)
+  Application.insertMentorIntake(User.sub, newMentorIntake)
     .then(() => {
       res.status(201).json({ message: 'Information has been submitted' });
     })
