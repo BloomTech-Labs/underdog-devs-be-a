@@ -6,13 +6,13 @@ const authRequired = require('../middleware/authRequired');
 const { adminRequired } = require('../middleware/permissionsRequired');
 
 // Responds with all available role ticket requests
-router.get('/', authRequired, adminRequired, (req, res) => {
+router.get('/', authRequired, adminRequired, (req, res, next) => {
   RoleTickets.findAllRoleTickets()
     .then((roleTickets) => {
       res.status(200).json(roleTickets);
     })
     .catch((err) => {
-      res.status(500).json({ message: err.message });
+      next(err);
     });
 });
 module.exports = router;
