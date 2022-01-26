@@ -5,19 +5,14 @@ const Profile = require('../profile/profileModel');
 const router = express.Router();
 const jwt = require('jwt-decode');
 const { adminRequired } = require('../middleware/permissionsRequired.js');
-const {
-  validateProfile,
-  validateApplication,
-  checkRole,
-  checkRoleType,
-} = require('./applicationMiddleware');
+const { validateProfile, checkRole } = require('./applicationMiddleware');
 
 const okta = require('@okta/okta-sdk-nodejs');
 
 const client = new okta.Client({
   orgUrl: 'https://dev-1234.oktapreview.com/',
   token: 'xYzabc',
-  //token is innacurate. procure registration token from okta.
+  // Token is innacurate. Obtain from developer dashboard // process.ENV.REGISTRATION_TOKEN || 'kYid3874'
 });
 
 /**
@@ -140,16 +135,33 @@ router.post('/new-mentor', authRequired, function (req, res, next) {
 
 // update applicants status and attach intake data to createUser method
 
-router.put(
-  '/update-status/:appId',
-  validateApplication,
-  checkRoleType,
-  (req) => {
-    const newUser = req.body;
-    client.createUser(newUser).then((user) => {
-      console.log('Created user', user);
+router.put('/update-status/:id', validateProfile, (req, res, next) => {
+  // application 'approved' boolean toggles
+  const application_id = req.body.application_id;
+  Application.updateTicket(application_id, { approved: true }).then(() => {
+    res.status(202).json({
+      message:
+        'This application has been approved and registration process is under way..',
     });
-  }
-);
+  });
+  // okta registration flow starts here
+  const newUser = {
+    profile: {
+      firstName: req.body.first_name,
+      lastName: req.body.last_name,
+      email: req.body.email,
+      login: req.body.email,
+    },
+    credentials: {
+      password: {
+        value: 'generate this temp password',
+      },
+    },
+  };
+  client.createUser(newUser).then((user) => {
+    console.log('Created user', user);
+    next();
+  });
+});
 
 module.exports = router;
