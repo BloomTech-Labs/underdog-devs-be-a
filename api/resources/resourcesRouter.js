@@ -246,17 +246,6 @@ router.get(
  *                  condition: 'New'
  *      '401':
  *        $ref: '#/components/responses/UnauthorizedError'
- *      '404':
- *        description: Resource with the given ID could not be found
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  description: Error message returned by the API
- *                  example: 'Resource with ID 1 not found!'
  */
 
 router.post(
@@ -332,8 +321,17 @@ router.post(
  *                  deductible_donation: true
  *      '401':
  *        $ref: '#/components/responses/UnauthorizedError'
- *      '403':
- *        $ref: '#/components/responses/UnauthorizedError'
+ *      '404':
+ *        description: Resource with the given ID could not be found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: Error message returned by the API
+ *                  example: 'Resource with ID 1 not found!'
  */
 
 router.put(
@@ -392,6 +390,17 @@ router.put(
  *                message: 'Resource #1 deleted, successfully!'
  *      '401':
  *        $ref: '#/components/responses/UnauthorizedError'
+ *      '404':
+ *        description: Resource with the given ID could not be found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: Error message returned by the API
+ *                  example: 'Resource with ID 1 not found!'
  */
 
 router.delete(
