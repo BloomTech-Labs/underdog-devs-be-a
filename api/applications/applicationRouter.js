@@ -6,13 +6,14 @@ const router = express.Router();
 const jwt = require('jwt-decode');
 const { adminRequired } = require('../middleware/permissionsRequired.js');
 const { validateProfile, checkRole } = require('./applicationMiddleware');
+const dotenv = require('dotenv');
+dotenv.config({ path: '../../.env' });
 
 const okta = require('@okta/okta-sdk-nodejs');
 
 const client = new okta.Client({
-  orgUrl: 'https://dev-1234.oktapreview.com/',
-  token: 'xYzabc',
-  // Token is innacurate. Obtain from developer dashboard // process.ENV.REGISTRATION_TOKEN || 'kYid3874'
+  orgUrl: process.env.OKTA_REGISTRATION_URL,
+  token: process.env.OKTA_REGISTRATION_TOKEN,
 });
 
 /**
@@ -133,9 +134,9 @@ router.post('/new-mentor', authRequired, function (req, res, next) {
     .catch(next);
 });
 
-// update applicants status and attach intake data to createUser method
+// update applicants status and register user with okta
 
-router.put('/update-status/:id', validateProfile, (req, res, next) => {
+router.put('/register/:id', validateProfile, (req, res, next) => {
   // application 'approved' boolean toggles
   const application_id = req.body.application_id;
   Application.updateTicket(application_id, { approved: true }).then(() => {
@@ -159,7 +160,6 @@ router.put('/update-status/:id', validateProfile, (req, res, next) => {
       },
     },
   };
-  console.log(newUser);
   client.createUser(newUser).then((user) => {
     console.log('Created user', user);
     next();
