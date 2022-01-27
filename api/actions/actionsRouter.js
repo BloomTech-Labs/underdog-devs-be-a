@@ -1,8 +1,116 @@
 const express = require('express');
-const { validateSubjectBody } = require('./actionsMiddleware');
-const Actions = require('./actionsModel');
 const router = express.Router();
+const Actions = require('./actionsModel');
+const { validateSubjectBody } = require('./actionsMiddleware');
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    Actions:
+ *      type: object
+ *      required:
+ *        - submitted_by
+ *        - subject_id
+ *        - issue
+ *      properties:
+ *        action_ticket_id:
+ *          type: integer
+ *          description: Unique primary key referencing an action ticket
+ *        submitted_by:
+ *          type: integer
+ *          description: Unique primary key referencing a profile's auto-assigned ID
+ *        subject_id:
+ *          type: integer
+ *          description: Unique primary key referencing a profile's auto-assigned ID
+ *        issue:
+ *          type: string
+ *          description: A string describing issue at hand
+ *        comments:
+ *          type: string
+ *          description: Any additional comments
+ *        pending:
+ *          type: boolean
+ *          description: Pending case set to true from start
+ *        resolved:
+ *          type: boolean
+ *          description: Resolved case set to false from start
+ *        strike:
+ *          type: boolean
+ *          description: Need more clarification on this will update soon
+ *        created_at:
+ *          type: timestamp
+ *          description: Automatic date-time string from a action's creation in the database
+ *        updated_at:
+ *          type: timestamp
+ *          description: Automatic date-time string from a action's last update in the database
+ *      example:
+ *        action_ticket_id: 1
+ *        submitted_by: 7
+ *        subject_id: 10
+ *        issue: "Spencer missed his 2nd weekly session, may be dropped?"
+ *        comments: null
+ *        pending: true
+ *        resolved: false
+ *        strike: true
+ *        created_at: "2022-01-26 15:33:34.945832-07"
+ *        updated_at: "2022-01-26 15:33:34.945832-07"
+ */
 
+/**
+ * @swagger
+ * /actions:
+ *  get:
+ *    summary: Get the list of all action tickets
+ *    description: Provides a JSON array of action tickets (as objects)
+ *    tags:
+ *      - action
+ *    security:
+ *      - okta: []
+ *    responses:
+ *      '200':
+ *        description: An array of action objects
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                $ref: '#/components/schemas/Actions'
+ *              example:
+ *                - action_ticket_id: 1
+ *                  submitted_by: 7
+ *                  subject_id: 10
+ *                  issue: "Spencer missed his 2nd weekly session, may be dropped?"
+ *                  comments: null
+ *                  pending: true
+ *                  resolved: false
+ *                  strike: true
+ *                  created_at: "2022-01-26 15:33:34.945832-07"
+ *                  updated_at: "2022-01-26 15:33:34.945832-07"
+ *                - action_ticket_id: 1
+ *                  submitted_by: 7
+ *                  subject_id: 10
+ *                  issue: "Spencer missed his 2nd weekly session, may be dropped?"
+ *                  comments: null
+ *                  pending: true
+ *                  resolved: false
+ *                  strike: true
+ *                  created_at: "2022-01-26 15:33:34.945832-07"
+ *                  updated_at: "2022-01-26 15:33:34.945832-07"
+ *                - action_ticket_id: 1
+ *                  submitted_by: 7
+ *                  subject_id: 10
+ *                  issue: "Spencer missed his 2nd weekly session, may be dropped?"
+ *                  comments: null
+ *                  pending: true
+ *                  resolved: false
+ *                  strike: true
+ *                  created_at: "2022-01-26 15:33:34.945832-07"
+ *                  updated_at: "2022-01-26 15:33:34.945832-07"
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *      '403':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ */
 router.get('/', function (req, res) {
   Actions.findAll()
     .then((actions) => {
