@@ -15,4 +15,5 @@ router.get('/', authRequired, adminRequired, (req, res, next) => {
       next(err);
     });
 });
+
 module.exports = router;
