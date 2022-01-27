@@ -6,15 +6,16 @@ const router = express.Router();
 const jwt = require('jwt-decode');
 const { adminRequired } = require('../middleware/permissionsRequired.js');
 const { validateProfile, checkRole } = require('./applicationMiddleware');
-const dotenv = require('dotenv');
-dotenv.config({ path: '../../.env' });
+const { registerOktaUser } = require('../middleware/oktaAuth');
+// const dotenv = require('dotenv');
+// dotenv.config({ path: '../../.env' });
 
-const okta = require('@okta/okta-sdk-nodejs');
+// const okta = require('@okta/okta-sdk-nodejs');
 
-const client = new okta.Client({
-  orgUrl: process.env.OKTA_REGISTRATION_URL,
-  token: process.env.OKTA_REGISTRATION_TOKEN,
-});
+// const client = new okta.Client({
+//   orgUrl: process.env.OKTA_REGISTRATION_URL,
+//   token: process.env.OKTA_REGISTRATION_TOKEN,
+// });
 
 /**
  * @swagger
@@ -134,35 +135,15 @@ router.post('/new-mentor', authRequired, function (req, res, next) {
     .catch(next);
 });
 
-// update applicants status and register user with okta
+// update applicants approved status and creates new user with okta
 
-router.put('/register/:id', validateProfile, (req, res, next) => {
-  // application 'approved' boolean toggles
+router.put('/register/:id', validateProfile, registerOktaUser, (req, res) => {
   const application_id = req.body.application_id;
   Application.updateTicket(application_id, { approved: true }).then(() => {
     res.status(202).json({
       message:
         'This application has been approved and registration process is under way..',
     });
-  });
-  // okta registration flow starts here
-  const tempPassword = Math.random().toString(36).slice(-8);
-  const newUser = {
-    profile: {
-      firstName: req.body.first_name,
-      lastName: req.body.last_name,
-      email: req.body.email,
-      login: req.body.email,
-    },
-    credentials: {
-      password: {
-        value: tempPassword,
-      },
-    },
-  };
-  client.createUser(newUser).then((user) => {
-    console.log('Created user', user);
-    next();
   });
 });
 
