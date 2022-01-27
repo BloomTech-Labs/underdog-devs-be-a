@@ -7,16 +7,13 @@ const {
   superAdminRequired,
 } = require('../middleware/permissionsRequired');
 const { validateUser } = require('../middleware/generalMiddleware');
-// validateUser;
+validateUser;
 
 router.get('/current_user_profile/', authRequired, async (req, res) => {
   try {
-    console.log('req.profile: ', req.profile.profile_id);
     const resp = await Profiles.mentorApplicationData(req.profile.profile_id);
-    console.log(resp);
     res.status(200).json(resp);
   } catch (error) {
-    console.log(error);
     res.status(500).json({ message: error.message });
   }
 });
