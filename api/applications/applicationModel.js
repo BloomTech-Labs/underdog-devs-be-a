@@ -52,6 +52,12 @@ function getTicketById(profile_id) {
     .where('p.profile_id', profile_id)
     .first();
 }
+function getTicketByAppId(application_id) {
+  return db('application_tickets as a')
+    .select('*')
+    .where('a.application_id', application_id)
+    .first();
+}
 
 function getMentorIntake(profile_id) {
   return db('application_tickets as a')
@@ -98,6 +104,12 @@ function getMenteeIntake(profile_id) {
     .where('p.profile_id', profile_id);
 }
 
+function getMenteeIntakeByAppId(application_id) {
+  return db('application_tickets as a')
+    .select('*')
+    .where('a.profile_id', application_id);
+}
+
 async function insertMenteeIntake(id, newMenteeIntake) {
   newMenteeIntake.profile_id = id;
   const form = await db('mentee_intake').insert(newMenteeIntake);
@@ -120,11 +132,13 @@ function updateTicket(application_id, changes) {
 module.exports = {
   add,
   updateTicket,
+  getTicketById,
+  getTicketByAppId,
   getPendingTickets,
   getPendingTicketsByRole,
   getMentorIntake,
   getMenteeIntake,
+  getMenteeIntakeByAppId,
   insertMenteeIntake,
   insertMentorIntake,
-  getTicketById,
 };

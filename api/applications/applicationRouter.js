@@ -7,7 +7,9 @@ const jwt = require('jwt-decode');
 const { adminRequired } = require('../middleware/permissionsRequired.js');
 const {
   validateProfile,
+  validateApplication,
   checkRole,
+  checkRoleType,
 } = require('../middleware/applicationMiddleware');
 
 const okta = require('@okta/okta-sdk-nodejs');
@@ -138,11 +140,16 @@ router.post('/new-mentor', authRequired, function (req, res, next) {
 
 // update applicants status and attach intake data to createUser method
 
-router.put('/update-status', (req) => {
-  const newUser = req.body;
-  client.createUser(newUser).then((user) => {
-    console.log('Created user', user);
-  });
-});
+router.put(
+  '/update-status/:appId',
+  validateApplication,
+  checkRoleType,
+  (req) => {
+    const newUser = req.body;
+    client.createUser(newUser).then((user) => {
+      console.log('Created user', user);
+    });
+  }
+);
 
 module.exports = router;
