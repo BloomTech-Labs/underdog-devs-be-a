@@ -1,16 +1,23 @@
 const request = require('supertest');
 const express = require('express');
-const Application = require('../../api/applications/applicationModel');
+const db = require('../../data/db-config');
+const authRequired = require('../../api/middleware/authRequired');
+const handleError = require('../../api/middleware/handleError');
 const applicationRouter = require('../../api/applications/applicationRouter');
-const server = express();
 
-server.use(express.json());
+// Reset Test Database Before/After Tests
 
-test('sanity test environment', () => {
-  expect(process.env.NODE_ENV).toBe('test');
+beforeAll(async () => {
+  await db.migrate.rollback();
+  await db.migrate.latest();
 });
+beforeEach(async () => await db.seed.run());
 
-jest.mock('../../api/applications/applicationModel');
+afterAll(async () => await db.destroy());
+
+afterEach(() => jest.clearAllMocks());
+
+// Bypass Auth/Permissions Middleware
 
 jest.mock('../../api/middleware/authRequired', () =>
   jest.fn((req, res, next) => next())
@@ -21,66 +28,132 @@ jest.mock('../../api/middleware/permissionsRequired', () => ({
   superAdminRequired: jest.fn((req, res, next) => next()),
 }));
 
-describe('application router endpoints', () => {
-  beforeAll(() => {
-    server.use('/application', applicationRouter);
-    jest.clearAllMocks();
+// Instantiate Test API
+
+const app = express();
+app.use(express.json());
+app.use('/application', applicationRouter);
+app.use(handleError);
+
+// Declare Tests
+
+describe('Sanity Checks', () => {
+  test('matchers are working', () => {
+    expect(true).toBe(true);
+    expect(20 - 5).toBe(15);
+    expect(9 + 10).not.toEqual(21);
   });
 
-  describe('GET /application', () => {
-    test('returns 200 OK', async () => {
-      Application.getPendingTickets.mockResolvedValue([]);
-      const res = await request(server).get('/application');
+  test('test environment is being used', () => {
+    expect(process.env.NODE_ENV).toBe('test');
+  });
+});
 
-      expect(res.status).toBe(200);
-      expect(res.body.length).toBe(0);
-      expect(Application.getPendingTickets.mock.calls.length).toBe(1);
+describe('Application Router', () => {
+  describe('[GET] /application', () => {
+    let res;
+    beforeAll(async () => {
+      res = await request(app).get('/application');
+
+      expect(authRequired).toBeCalled();
+    });
+
+    it('responds with status 200', async () => {
+      const expected = 200;
+      const actual = res.status;
+
+      expect(actual).toBe(expected);
     });
   });
 
   describe('GET /application/:role', () => {
-    Application.getPendingTicketsByRole.mockResolvedValue({
-      profile_id: '00ulzfj6nX79gu0Nh5d6',
-      first_name: 'User',
-      last_name: '6',
-      role_name: 'mentor',
-      created_at: '2022-01-13T20:44:31.827Z',
-      application_id: 5,
-    });
-    test('returns 200 OK', async () => {
-      const res = await request(server).get('/application/mentor');
+    describe('success', () => {
+      describe('mentor role', () => {
+        let res;
+        beforeAll(async () => {
+          res = await request(app).get('/application/mentor');
 
-      expect(res.status).toBe(200);
-    });
-    test('application with requested role is returned', async () => {
-      const res = await request(server).get('/application/mentor');
+          expect(authRequired).toBeCalled();
+        });
 
-      expect(res.body.role_name).toBe('mentor');
+        it('responds with status 200', () => {
+          const expected = 200;
+          const actual = res.status;
+
+          expect(actual).toBe(expected);
+        });
+
+        it('returns list of mentor applications', () => {
+          const expected = [
+            {
+              application_id: 5,
+              first_name: 'User',
+              last_name: '6',
+              profile_id: '00u13omswyZM1xVya4x7',
+              role_name: 'mentor',
+            },
+          ];
+          const actual = res.body;
+
+          expect(actual).toMatchObject(expected);
+        });
+      });
+
+      describe('mentee role', () => {
+        let res;
+        beforeAll(async () => {
+          res = await request(app).get('/application/mentee');
+
+          expect(authRequired).toBeCalled();
+        });
+
+        it('responds with status 200', () => {
+          const expected = 200;
+          const actual = res.status;
+
+          expect(actual).toBe(expected);
+        });
+
+        it('returns list of mentee applications', () => {
+          const expected = [
+            {
+              application_id: 2,
+              first_name: 'User',
+              last_name: '8',
+              profile_id: '00u13oned0U8XP8Mb4x7',
+              role_name: 'mentee',
+            },
+            {
+              application_id: 6,
+              first_name: 'User',
+              last_name: '10',
+              profile_id: '10',
+              role_name: 'mentee',
+            },
+          ];
+          const actual = res.body;
+
+          expect(actual).toMatchObject(expected);
+        });
+      });
     });
   });
 
   describe('GET /application/profileId/:id', () => {
-    Application.getTicketById.mockResolvedValue({
-      profile_id: '00u13oned0U8XP8Mb4x7',
-      first_name: 'User',
-      last_name: '8',
-      role_name: 'mentee',
-      created_at: '2022-01-13T20:44:31.827Z',
-      application_id: 2,
-    });
-    test('returns 200 OK', async () => {
-      const res = await request(server).get(
-        '/application/profileId/00u13oned0U8XP8Mb4x7'
-      );
+    describe('success', () => {
+      let res;
+      beforeAll(async () => {
+        res = await request(app).get('/application/profileId/10');
 
-      expect(res.status).toBe(200);
-    });
-    test('application with appropriate profile_id is returned', async () => {
-      const res = await request(server).get(
-        '/application/profileId/00u13oned0U8XP8Mb4x7'
-      );
+        expect(authRequired).toBeCalled();
+      });
 
-      expect(res.body.profile_id).toBe('00u13oned0U8XP8Mb4x7');
+      it('responds with status 200', async () => {
+        const expected = 200;
+        const actual = res.status;
+
+        expect(actual).toBe(expected);
+      });
     });
   });
 });
