@@ -74,8 +74,12 @@ router.get('/profileId/:id', validateProfile, checkRole, (req, res) => {
 // create a new application for user upon completion of /mentor, /mentee signup form
 
 router.post('/new/:role', cacheSignUpData, (req, res, next) => {
-  const newApplication = req.body;
-  Application.add(newApplication.profile_id, newApplication)
+  const applicationTicket = {
+    profile_id: req.body.profile_id,
+    position: req.body.position,
+  };
+  console.log('attempting to create new application...!');
+  Application.add(applicationTicket.profile_id, applicationTicket)
     .then(() => {
       res.status(201).json({ message: 'Application has been submitted' });
     })
