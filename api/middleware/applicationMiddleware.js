@@ -61,7 +61,7 @@ const cacheSignUpData = async (req, res, next) => {
   }
 };
 
-const validateProfile = async (req, res, next) => {
+const checkApplicationExists = async (req, res, next) => {
   const profile = await getTicketById(req.params.id);
   try {
     if (profile) {
@@ -71,7 +71,7 @@ const validateProfile = async (req, res, next) => {
   } catch (err) {
     return next({
       status: 404,
-      message: `profile_id ${req.params.id} not found`,
+      message: `no applications with profile_id: ${req.params.id} were found`,
     });
   }
 };
@@ -111,6 +111,6 @@ const checkRole = async (req, res, next) => {
 
 module.exports = {
   cacheSignUpData,
-  validateProfile,
+  checkApplicationExists,
   checkRole,
 };

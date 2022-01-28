@@ -118,10 +118,9 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 | GET    | `/application/`                | -                                                                                                                  | `gets all pending applications`                                | `Admin`   |
 | GET    | `/application/:role`           | -`mentor or mentee (req.param)`                                                                                    | `gets all pending applications filtered by role`               | `Admin`   |
 | GET    | `/application/profileId/:id`   | -`profile id (req.param)`                                                                                          | `gets pending application by profile id`                       | `Admin`   |
-| POST   | `/application/new-application` | -`position (role_id)`                                                                                              | `create and application for the current user`                  | `Okta`    |
-| POST   | `/application/new-mentee`      | -`email`, `location`, `name`, `lives_in_us`, `formerly_incarcerated`,`tech_stack`, `experience_level`, `your_hope` | `create a mentee intake for the current user`                  | `Okta`    |
-| POST   | `/application/new-mentor`      | -`email`, `location`, `name`, `can_commit`, `tech_stack`,                                                          | `create a mentor intake for the current user`                  | `Okta`    |
+| POST   | `/application/new/:role`       | -`mentor or mentee (req.param)`, `sign-up form data(mentor/mentee intake)`                                         | `stores intake data & creates new pending application`         |           |
 | PUT    | `/application/update-role`     | -`position (role_id)`, `application_id`, `profile_id`,                                                             | `update profile role and update application to approved: true` | `Admin`   |
+| PUT    | `/application/register/:id`    | -`profile_id (req.param)`                                                                                          | `registers user to okta & updates application to approved: true`| `Admin`  |
 
 ## Application - Matching Mentors and Mentees
 

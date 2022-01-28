@@ -7,7 +7,7 @@ const jwt = require('jwt-decode');
 const { adminRequired } = require('../middleware/permissionsRequired.js');
 const {
   cacheSignUpData,
-  validateProfile,
+  checkApplicationExists,
   checkRole,
 } = require('../middleware/applicationMiddleware');
 
@@ -68,7 +68,7 @@ router.get('/:role', authRequired, adminRequired, (req, res, next) => {
 
 // get application by profile id
 
-router.get('/profileId/:id', validateProfile, checkRole, (req, res) => {
+router.get('/profileId/:id', checkApplicationExists, checkRole, (req, res) => {
   res.status(200).json(req.body);
 });
 
@@ -119,24 +119,11 @@ router.post('/new-mentee', authRequired, function (req, res, next) {
     .catch(next);
 });
 
-// post the information for the mentor intake for the currently logged in user
-
-router.post('/new-mentor', authRequired, function (req, res, next) {
-  const token = req.headers.authorization;
-  const User = jwt(token);
-  const newMentorIntake = req.body;
-  Application.insertMentorIntake(User.sub, newMentorIntake)
-    .then(() => {
-      res.status(201).json({ message: 'Information has been submitted' });
-    })
-    .catch(next);
-});
-
 // update applicants approved status and creates new user with okta
 
 router.put(
   '/register/:id',
-  validateProfile,
+  checkApplicationExists,
   checkRole,
   registerOktaUser,
   (req, res) => {
