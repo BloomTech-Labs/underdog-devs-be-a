@@ -9,7 +9,8 @@ const {
   cacheSignUpData,
   validateProfile,
   checkRole,
-} = require('./applicationMiddleware');
+} = require('../middleware/applicationMiddleware');
+
 const { registerOktaUser } = require('../middleware/oktaAuth');
 
 /**

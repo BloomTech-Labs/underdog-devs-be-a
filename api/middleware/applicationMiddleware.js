@@ -4,7 +4,7 @@ const {
   getMenteeIntake,
   insertMentorIntake,
   insertMenteeIntake,
-} = require('./applicationModel');
+} = require('../applications/applicationModel');
 
 const cacheSignUpData = async (req, res, next) => {
   const role = req.params.role;
