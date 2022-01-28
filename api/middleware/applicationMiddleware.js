@@ -61,15 +61,6 @@ const cacheSignUpData = async (req, res, next) => {
   }
 };
 
-// const createNewApplication = async (req, res, next) => {
-//   const newApplication = req.body;
-//   await add(newApplication.profile_id, newApplication)
-//     .then(() => {
-//       res.status(201).json({ message: 'Application has been submitted' });
-//     })
-//     .catch(next);
-// }
-
 const validateProfile = async (req, res, next) => {
   const profile = await getTicketById(req.params.id);
   try {
