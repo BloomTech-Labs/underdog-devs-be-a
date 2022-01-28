@@ -6,10 +6,11 @@ const router = express.Router();
 const jwt = require('jwt-decode');
 const { adminRequired } = require('../middleware/permissionsRequired.js');
 const {
-  cacheSignUpData,
   validateProfile,
   checkRole,
-} = require('./applicationMiddleware');
+  cacheSignUpData,
+} = require('../middleware/applicationMiddleware');
+
 const { registerOktaUser } = require('../middleware/oktaAuth');
 
 /**

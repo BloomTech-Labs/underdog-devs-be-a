@@ -3,6 +3,10 @@ const router = express.Router();
 const Resources = require('./resourcesModel');
 const authRequired = require('../middleware/authRequired');
 const { adminRequired } = require('../middleware/permissionsRequired');
+const {
+  checkResourceIdExists,
+  validateResource,
+} = require('../middleware/resourcesMiddleware');
 
 /**
  * @swagger
@@ -17,13 +21,13 @@ const { adminRequired } = require('../middleware/permissionsRequired');
  *      properties:
  *        resource_id:
  *          type: integer
- *          description: Unique primary key referencing a resource's auto-assigned ID
+ *          description: Unique primary key referencing a resource's auto-assigned ID - must not be provided in request bodies
  *        created_at:
  *          type: timestamp
- *          description: Automatic date-time string from a resource's creation in the database
+ *          description: Automatic date-time string from a resource's creation in the database - must not be provided in request bodies
  *        updated_at:
  *          type: timestamp
- *          description: Automatic date-time string from a resource's last update in the database
+ *          description: Automatic date-time string from a resource's last update in the database - must not be provided in request bodies
  *        resource_name:
  *          type: string
  *          description: The name of a resource
@@ -72,6 +76,12 @@ const { adminRequired } = require('../middleware/permissionsRequired');
  *      - resource
  *    security:
  *      - okta: []
+ *    parameters:
+ *      - in: query
+ *        name: resource property
+ *        schema:
+ *          type: string
+ *        description: A resource property key to query for - accepts partial matching
  *    responses:
  *      '200':
  *        description: An array of resource objects
@@ -117,8 +127,6 @@ const { adminRequired } = require('../middleware/permissionsRequired');
  *                  deductible_donation: true
  *      '401':
  *        $ref: '#/components/responses/UnauthorizedError'
- *      '403':
- *        $ref: '#/components/responses/UnauthorizedError'
  */
 
 router.get('/', authRequired, async (req, res, next) => {
@@ -146,7 +154,7 @@ router.get('/', authRequired, async (req, res, next) => {
     return next(err);
   }
 });
-    
+
 /**
  * @swagger
  * /resources/{resource_id}:
@@ -172,8 +180,6 @@ router.get('/', authRequired, async (req, res, next) => {
  *              $ref: '#/components/schemas/Resource'
  *      '401':
  *        $ref: '#/components/responses/UnauthorizedError'
- *      '403':
- *        $ref: '#/components/responses/UnauthorizedError'
  *      '404':
  *        description: Resource with the given ID could not be found
  *        content:
@@ -184,22 +190,22 @@ router.get('/', authRequired, async (req, res, next) => {
  *                message:
  *                  type: string
  *                  description: Error message returned by the API
- *                  example: 'Resource not found, check the ID'
+ *                  example: 'Resource with ID 1 not found!'
  */
-router.get('/:resource_id', authRequired, (req, res) => {
-  const id = req.params.resource_id;
-  Resources.findByResourceId(id)
-    .then((resource) => {
-      if (resource) {
-        res.status(200).json(resource);
-      } else {
-        res.status(404).json({ error: 'Resource not found, check the ID' });
-      }
-    })
-    .catch((err) => {
-      res.status(500).json({ error: err.message });
-    });
-});
+
+router.get(
+  '/:resource_id',
+  authRequired,
+  checkResourceIdExists,
+  (req, res, next) => {
+    try {
+      const resource = req._resource;
+      return res.status(200).json(resource);
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
 
 /**
  * @swagger
@@ -240,21 +246,24 @@ router.get('/:resource_id', authRequired, (req, res) => {
  *                  condition: 'New'
  *      '401':
  *        $ref: '#/components/responses/UnauthorizedError'
- *      '403':
- *        $ref: '#/components/responses/UnauthorizedError'
  */
+
 router.post(
   '/',
   authRequired,
-  validNewResource,
   adminRequired,
-  (req, res, next) => {
-    const resource = req.body;
-    Resources.Create(resource)
-      .then(() => {
-        res.status(201).json({ message: 'success', resource });
-      })
-      .catch(next);
+  validateResource,
+  async (req, res, next) => {
+    try {
+      const resourceInput = req._resource;
+      const postResponse = await Resources.Create(resourceInput);
+      return res.status(201).json({
+        message: 'new resource created, successfully!',
+        resource: postResponse,
+      });
+    } catch (err) {
+      return next(err);
+    }
   }
 );
 
@@ -297,8 +306,8 @@ router.post(
  *                  type: object
  *                  description: Object containing all information pertaining to the newly updated resource
  *              example:
- *                message: "Resource '108' updated"
- *                success:
+ *                message: "Resource #108 updated, successfully!"
+ *                resource:
  *                  resource_id: 108
  *                  created_at: "2022-01-18T22:00:08.001Z"
  *                  updated_at: "2022-02-18T22:00:09.001Z"
@@ -312,29 +321,40 @@ router.post(
  *                  deductible_donation: true
  *      '401':
  *        $ref: '#/components/responses/UnauthorizedError'
- *      '403':
- *        $ref: '#/components/responses/UnauthorizedError'
+ *      '404':
+ *        description: Resource with the given ID could not be found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: Error message returned by the API
+ *                  example: 'Resource with ID 1 not found!'
  */
+
 router.put(
   '/:resource_id',
   authRequired,
-  validNewResource,
   adminRequired,
-  (req, res, next) => {
-    const id = req.params.resource_id;
-    const changes = req.body;
-    Resources.Update(id, changes)
-      .then((change) => {
-        if (change) {
-          Resources.findByResourceId(id).then((success) => {
-            res.status(200).json({
-              message: `Resource '${success.resource_id}' updated`,
-              success,
-            });
-          });
-        }
-      })
-      .catch(next);
+  checkResourceIdExists,
+  validateResource,
+  async (req, res, next) => {
+    try {
+      const { resource_id } = req.params;
+      const resourceInput = req._resource;
+      const updatedResource = await Resources.Update(
+        resource_id,
+        resourceInput
+      );
+      return res.status(200).json({
+        message: `Resource #${resource_id} updated, successfully!`,
+        resource: updatedResource,
+      });
+    } catch (err) {
+      return next(err);
+    }
   }
 );
 
@@ -343,7 +363,7 @@ router.put(
  * /resources/{resource_id}:
  *  delete:
  *    summary: Deletes a resource from the database
- *    description: If a resource with the ID provided as a URL parameter for this request exists, it will be deleted from the database. If the ID is invalid, the request will time out (this needs to be addressed in the future).
+ *    description: If a resource with the ID provided as a URL parameter for this request exists, it will be deleted from the database.
  *    tags:
  *      - resource
  *    security:
@@ -367,54 +387,38 @@ router.put(
  *                  type: string
  *                  description: Message relaying a resource's successful deletion
  *              example:
- *                message: 'Resource deleted'
+ *                message: 'Resource #1 deleted, successfully!'
  *      '401':
  *        $ref: '#/components/responses/UnauthorizedError'
- *      '403':
- *        $ref: '#/components/responses/UnauthorizedError'
+ *      '404':
+ *        description: Resource with the given ID could not be found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: Error message returned by the API
+ *                  example: 'Resource with ID 1 not found!'
  */
+
 router.delete(
   '/:resource_id',
   authRequired,
   adminRequired,
-  (req, res, next) => {
-    const id = req.params.resource_id;
-    Resources.Delete(id)
-      .then((resources) => {
-        if (resources) {
-          res.status(200).json({
-            message: 'Resource deleted',
-          });
-        }
-      })
-      .catch(next);
+  checkResourceIdExists,
+  async (req, res, next) => {
+    try {
+      const { resource_id } = req.params;
+      await Resources.Delete(resource_id);
+      return res.status(200).json({
+        message: `Resource #${resource_id} deleted, successfully!`,
+      });
+    } catch (err) {
+      return next(err);
+    }
   }
 );
 
-///////////////////////////MIDDLEWARE///////////////////////////////
-
-// validate a new resource
-
-function validNewResource(req, res, next) {
-  const resource = req.body;
-  if (!resource) {
-    res.status(400).json({
-      message: 'missing resource Data',
-    });
-  } else if (!resource.resource_name) {
-    res.status(400).json({
-      message: 'missing resource_name field',
-    });
-  } else if (!resource.category) {
-    res.status(400).json({
-      message: 'missing category field',
-    });
-  } else if (!resource.condition) {
-    res.status(400).json({
-      message: 'missing condition field',
-    });
-  } else {
-    next();
-  }
-}
 module.exports = router;
