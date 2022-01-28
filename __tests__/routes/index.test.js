@@ -6,7 +6,7 @@ const handleError = require('../../api/middleware/handleError');
 // Instantiate Test API
 
 const app = express();
-app.use(indexRouter);
+app.use('/', indexRouter);
 app.use(handleError);
 
 // Declare Tests
