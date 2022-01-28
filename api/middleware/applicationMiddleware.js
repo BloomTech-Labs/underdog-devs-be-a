@@ -90,14 +90,28 @@ const checkRole = async (req, res, next) => {
   try {
     if (profile.position === 3) {
       const mentorData = await getMentorIntake(profile.profile_id);
-      req.body = mentorData;
-      next();
+      if (!mentorData) {
+        return next({
+          status: 400,
+          message: `form data for ${profile.profile_id} not found`,
+        });
+      } else {
+        req.body = mentorData;
+        mentorData.application_id = profile.application_id;
+        next();
+      }
     } else if (profile.position === 4) {
       const menteeData = await getMenteeIntake(profile.profile_id);
-      req.body = menteeData;
-      next();
-    } else {
-      next(profile);
+      if (!menteeData) {
+        return next({
+          status: 400,
+          message: `form data for ${profile.profile_id} not found`,
+        });
+      } else {
+        req.body = menteeData;
+        menteeData.application_id = profile.application_id;
+        next();
+      }
     }
   } catch (err) {
     next(err);
