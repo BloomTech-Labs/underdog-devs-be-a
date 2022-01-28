@@ -12,13 +12,11 @@ beforeAll(async () => {
   await db.migrate.latest();
 });
 
-beforeEach(async () => {
-  await db.seed.run();
-});
+beforeEach(async () => await db.seed.run());
 
-afterAll(async () => {
-  await db.destroy();
-});
+afterAll(async () => await db.destroy());
+
+afterEach(() => jest.clearAllMocks());
 
 // Declare Mocks Upfront
 
