@@ -78,8 +78,7 @@ router.post('/new/:role', cacheSignUpData, (req, res, next) => {
     profile_id: req.body.profile_id,
     position: req.body.position,
   };
-  console.log('attempting to create new application...!');
-  Application.add(applicationTicket.profile_id, applicationTicket)
+  Application.add(applicationTicket)
     .then(() => {
       res.status(201).json({ message: 'Application has been submitted' });
     })
@@ -134,14 +133,20 @@ router.post('/new-mentor', authRequired, function (req, res, next) {
 
 // update applicants approved status and creates new user with okta
 
-router.put('/register/:id', validateProfile, registerOktaUser, (req, res) => {
-  const application_id = req.body.application_id;
-  Application.updateTicket(application_id, { approved: true }).then(() => {
-    res.status(202).json({
-      message:
-        'This application has been approved and registration process is under way..',
+router.put(
+  '/register/:id',
+  validateProfile,
+  checkRole,
+  registerOktaUser,
+  (req, res) => {
+    const application_id = req.body.application_id;
+    Application.updateTicket(application_id, { approved: true }).then(() => {
+      res.status(202).json({
+        message:
+          'This application has been approved and registration process is under way..',
+      });
     });
-  });
-});
+  }
+);
 
 module.exports = router;

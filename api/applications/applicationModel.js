@@ -1,7 +1,6 @@
 const db = require('../../data/db-config');
 
-async function add(id, newApplication) {
-  newApplication.profile_id = id;
+async function add(newApplication) {
   const ticket = await db('application_tickets').insert(newApplication);
   return ticket;
 }
@@ -39,32 +38,15 @@ function getPendingTicketsByRole(role_name) {
 
 function getTicketById(profile_id) {
   return db('application_tickets as a')
-    .join('profiles as p', 'a.profile_id', 'p.profile_id')
-    .join('roles as r', 'r.role_id', 'p.role_id')
     .select('*')
-    .where('p.profile_id', profile_id)
+    .where('a.profile_id', profile_id)
     .first();
 }
 
 function getMentorIntake(profile_id) {
-  return db('application_tickets as a')
-    .join('profiles as p', 'a.profile_id', 'p.profile_id')
-    .join('mentor_intake as m', 'a.profile_id', 'm.profile_id')
-    .join('roles as r', 'p.role_id', 'r.role_id')
-    .select(
-      'm.profile_id',
-      'm.name',
-      'm.email',
-      'm.location',
-      'm.current_comp',
-      'm.tech_stack',
-      'm.can_commit',
-      'm.how_commit',
-      'm.other_info',
-      'r.role_name',
-      'a.approved'
-    )
-    .where('p.profile_id', profile_id)
+  return db('mentor_intake as m')
+    .select('*')
+    .where('m.profile_id', profile_id)
     .first();
 }
 
