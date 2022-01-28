@@ -7,8 +7,19 @@ const client = new okta.Client({
   token: process.env.OKTA_REGISTRATION_TOKEN,
 });
 
+function passGenerator() {
+  var password = '';
+  var str =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ' + 'abcdefghijklmnopqrstuvwxyz0123456789@#$';
+  for (let i = 1; i <= 8; i++) {
+    var char = Math.floor(Math.random() * str.length + 1);
+    password += str.charAt(char);
+  }
+  return password;
+}
+
 const registerOktaUser = async (req, res, next) => {
-  const tempPassword = Math.random().toString(36).slice(-8);
+  const tempPassword = passGenerator();
   const newUser = {
     profile: {
       firstName: req.body.first_name,
