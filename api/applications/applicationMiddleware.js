@@ -10,7 +10,8 @@ const cacheSignUpData = async (req, res, next) => {
   const role = req.params.role;
   const formData = req.body;
   const newApplication = {
-    name: formData.name,
+    first_name: formData.first_name,
+    last_name: formData.last_name,
     email: formData.email,
     location: formData.location,
     current_comp: formData.current_comp,
@@ -22,10 +23,12 @@ const cacheSignUpData = async (req, res, next) => {
   const tempProfileId = Math.random().toString(36).slice(-8);
   try {
     if (role === 'mentor') {
-      console.log('mentee pipeline hit');
+      console.log('mentor pipeline hit');
       // implement yup please
-      if (!newApplication.name) {
-        next({ status: 400, message: 'name required' });
+      if (!newApplication.first_name) {
+        next({ status: 400, message: 'first_name required' });
+      } else if (!newApplication.last_name) {
+        next({ status: 400, message: 'last_name required' });
       } else if (!newApplication.email) {
         next({ status: 400, message: 'email required' });
       } else if (!newApplication.location) {
@@ -85,11 +88,11 @@ const validateProfile = async (req, res, next) => {
 const checkRole = async (req, res, next) => {
   const profile = req.body;
   try {
-    if (profile.role_id === 3) {
+    if (profile.position === 3) {
       const mentorData = await getMentorIntake(profile.profile_id);
       req.body = mentorData;
       next();
-    } else if (req.body.role_id === 4) {
+    } else if (profile.position === 4) {
       const menteeData = await getMenteeIntake(profile.profile_id);
       req.body = menteeData;
       next();

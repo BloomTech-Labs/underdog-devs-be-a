@@ -6,7 +6,8 @@ exports.up = function (knex) {
       table.string('profile_id').notNullable();
       table.string('email').notNullable();
       table.string('location').notNullable();
-      table.string('name').notNullable();
+      table.string('first_name').notNullable();
+      table.string('last_name').notNullable();
       table.string('current_comp');
       table.string('tech_stack').notNullable();
       table.boolean('can_commit').notNullable();
