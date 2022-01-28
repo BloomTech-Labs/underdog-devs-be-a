@@ -13,7 +13,8 @@ exports.up = function (knex) {
         .onUpdate('RESTRICT');
       table.string('email').notNullable();
       table.string('location').notNullable();
-      table.string('name').notNullable();
+      table.string('first_name').notNullable();
+      table.string('last_name').notNullable();
       table.boolean('lives_in_us').notNullable();
       table.boolean('formerly_incarcerated').notNullable();
       table.string('list_convictions');
