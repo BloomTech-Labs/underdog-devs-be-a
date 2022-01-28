@@ -5,17 +5,12 @@ const Profile = require('../profile/profileModel');
 const router = express.Router();
 const jwt = require('jwt-decode');
 const { adminRequired } = require('../middleware/permissionsRequired.js');
-const { validateProfile, checkRole } = require('./applicationMiddleware');
+const {
+  cacheSignUpData,
+  validateProfile,
+  checkRole,
+} = require('./applicationMiddleware');
 const { registerOktaUser } = require('../middleware/oktaAuth');
-// const dotenv = require('dotenv');
-// dotenv.config({ path: '../../.env' });
-
-// const okta = require('@okta/okta-sdk-nodejs');
-
-// const client = new okta.Client({
-//   orgUrl: process.env.OKTA_REGISTRATION_URL,
-//   token: process.env.OKTA_REGISTRATION_TOKEN,
-// });
 
 /**
  * @swagger
@@ -76,13 +71,11 @@ router.get('/profileId/:id', validateProfile, checkRole, (req, res) => {
   res.status(200).json(req.body);
 });
 
-// post a new application for the current logged in user
+// create a new application for user upon completion of /mentor, /mentee signup form
 
-router.post('/new-application', authRequired, function (req, res, next) {
-  const token = req.headers.authorization;
-  const User = jwt(token);
+router.post('/new/:role', cacheSignUpData, (req, res, next) => {
   const newApplication = req.body;
-  Application.add(User.sub, newApplication)
+  Application.add(newApplication.profile_id, newApplication)
     .then(() => {
       res.status(201).json({ message: 'Application has been submitted' });
     })
