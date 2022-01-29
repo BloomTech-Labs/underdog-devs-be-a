@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node server.js",
     "watch:dev": "nodemon",
-    "test": "cross-env NODE_ENV=test jest --silent --runInBand --watch",
+    "test": "cross-env NODE_ENV=test jest --runInBand --watch",
     "lint": "npx eslint .",
     "lint:fix": "npx eslint --fix .",
     "format": "npx prettier --write \"**/*.+(js|jsx|json|yml|yaml|css|md)\"",
