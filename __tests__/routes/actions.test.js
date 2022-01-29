@@ -1,108 +1,227 @@
 const request = require('supertest');
 const express = require('express');
-const actionsModel = require('../../api/actions/actionsModel');
+const db = require('../../data/db-config');
 const actionsRouter = require('../../api/actions/actionsRouter');
-const server = express();
-//You will get two 500 errors, this is not failed tests this was intentional
-const sinon = require('sinon');
-const app = require('../../api/app');
+const handleError = require('../../api/middleware/handleError');
 
-server.use(express.json());
+// Reset Test Database Before/After Tests
 
-test('sanity test environment', () => {
-  expect(process.env.NODE_ENV).toBe('test');
+beforeAll(async () => {
+  await db.migrate.rollback();
+  await db.migrate.latest();
 });
 
-jest.mock('../../api/actions/actionsModel');
-jest.mock('../../api/actions/actionsMiddleware', () => ({
-  validateSubjectBody: jest.fn((req, res, next) => next()),
-}));
+beforeEach(async () => await db.seed.run());
 
-describe('actions router endpoints', () => {
-  beforeAll(() => {
-    server.use('/actions', actionsRouter);
-    jest.clearAllMocks();
+afterAll(async () => await db.destroy());
+
+// Declare Test API
+
+const app = express();
+app.use(express.json());
+app.use('/actions', actionsRouter);
+app.use(handleError);
+
+// Declare Tests
+
+describe('Sanity Checks', () => {
+  test('matchers are working', () => {
+    expect(true).toBe(true);
+    expect(20 - 5).toBe(15);
+    expect(9 + 10).not.toEqual(21);
   });
 
-  describe('GET /actions', () => {
-    it('should return 200', async () => {
-      actionsModel.findAll.mockResolvedValue([]);
+  test('test environment is being used', () => {
+    expect(process.env.NODE_ENV).toBe('test');
+  });
+});
 
-      try {
-        const res = await request(server).get('/actions');
-        console.log('WE NEED YOU TO WORK', res.status);
-        expect(res.status).toBe(200);
-        expect(res.body.length).toBe(0);
-        expect(actionsModel.findAll.mock.calls.length).toBe(1);
-      } catch (err) {
-        console.log('catch error', err);
-      }
+describe('Actions Router', () => {
+  describe('[GET] /actions', () => {
+    let res;
+    beforeAll(async () => {
+      res = await request(app).get('/actions');
     });
 
-    it('should return 500 when encountering an unexpected condition', async () => {
-      sinon.stub(actionsModel, 'findAll').throws(Error('query failed'));
-      await request(app) //passes Express app to supertest
-        .get('/actions')
-        .expect(500);
+    it('responds with status 200', () => {
+      const expected = 200;
+      const actual = res.status;
+
+      expect(actual).toBe(expected);
+    });
+
+    it('returns list of action tickets', () => {
+      const expected = [
+        {
+          action_ticket_id: 1,
+          comments: null,
+          issue: 'Spencer missed his 2nd weekly session, may be dropped?',
+          pending: true,
+          resolved: false,
+          strike: true,
+          subject_id: '10',
+          submitted_by: '7',
+        },
+        {
+          action_ticket_id: 2,
+          comments: null,
+          issue:
+            "My mentor isn't really helping me learn, could I seek reassignment?",
+          pending: true,
+          resolved: false,
+          strike: false,
+          subject_id: '00u13oned0U8XP8Mb4x7',
+          submitted_by: '11',
+        },
+        {
+          action_ticket_id: 3,
+          comments: null,
+          issue:
+            'Mentee and I have not been getting along, I suggest a reassignment for best outcome.',
+          pending: true,
+          resolved: false,
+          strike: false,
+          subject_id: '11',
+          submitted_by: '00u13oned0U8XP8Mb4x7',
+        },
+        {
+          action_ticket_id: 4,
+          comments: null,
+          issue: 'Has not turned in their assignments.',
+          pending: true,
+          resolved: false,
+          strike: true,
+          subject_id: '12',
+          submitted_by: '9',
+        },
+      ];
+      const actual = res.body;
+
+      expect(actual).toMatchObject(expected);
     });
   });
 
-  describe('GET /actions/:id', () => {
-    it('should return 200 when profile found', async () => {
-      actionsModel.findById.mockResolvedValue({
-        id: 'd376de0577681ca93614',
+  describe('[GET] /actions/:id', () => {
+    describe('success', () => {
+      let res;
+      beforeAll(async () => {
+        res = await request(app).get('/actions/1');
       });
-      const res = await request(server).get('/actions/d376de0577681ca93614');
 
-      expect(res.status).toBe(200);
-      expect(actionsModel.findById.mock.calls.length).toBe(1);
+      it('responds with status 200', () => {
+        const expected = 200;
+        const actual = res.status;
+
+        expect(actual).toBe(expected);
+      });
+
+      it('returns action ticket', () => {
+        const expected = {
+          action_ticket_id: 1,
+          comments: null,
+          issue: 'Spencer missed his 2nd weekly session, may be dropped?',
+          pending: true,
+          resolved: false,
+          strike: true,
+          subject_id: '10',
+          submitted_by: '7',
+        };
+        const actual = res.body;
+
+        expect(actual).toMatchObject(expected);
+      });
     });
-    it('should return 500 when encountering an unexpected condition', async () => {
-      sinon.stub(actionsModel, 'findById').throws(Error('query failed'));
-      await request(app) //passes Express app to supertest
-        .get('/actions/:id')
-        .expect(500);
+
+    describe('failure', () => {
+      describe('invalid id', () => {
+        let res;
+        beforeAll(async () => {
+          res = await request(app).get('/actions/not-real');
+        });
+
+        it('responds with status 404', () => {
+          const expected = 404;
+          const actual = res.status;
+
+          expect(actual).toBe(expected);
+        });
+
+        it('returns message "action ticket id not found"', () => {
+          const expected = /action ticket id not found/i;
+          const actual = res.body.message;
+
+          expect(actual).toMatch(expected);
+        });
+      });
     });
   });
 
-  describe('POST /actions', () => {
-    it('should return 200 when action is created', async () => {
-      const action = {
-        submitted_by: 'char_varying',
-        subject_id: 'char_varying',
+  describe('[POST] /actions', () => {
+    describe('success', () => {
+      const validNewAction = {
+        submitted_by: '7',
+        subject_id: '10',
         issue: 'Test Issue',
       };
-      actionsModel.findById.mockResolvedValue(undefined);
-      actionsModel.create.mockResolvedValue([
-        Object.assign({ action_ticket_id: '7' }, action),
-      ]);
-      const res = await request(server).post('/actions').send(action);
+      let res;
 
-      expect(res.status).toBe(201);
-      expect(res.body.action.issue).toBe('Test Issue');
-      expect(actionsModel.create.mock.calls.length).toBe(1);
+      beforeAll(async () => {
+        res = await request(app)
+          .post('/actions')
+          .send({ ...validNewAction });
+      });
+
+      it('responds with status 201', () => {
+        const expected = 201;
+        const actual = res.status;
+
+        expect(actual).toBe(expected);
+      });
+
+      it('returns success message', () => {
+        const expected = /success/i;
+        const actual = res.body.message;
+
+        expect(actual).toMatch(expected);
+      });
+
+      it('returns newly created action ticket', () => {
+        const expected = { ...validNewAction };
+        const actual = res.body.action;
+
+        expect(actual).toMatchObject(expected);
+      });
     });
   });
 
-  describe('PUT /actions', () => {
-    it('should return 200 when actions is updated', async () => {
-      const action = {
-        action_ticket_id: 1,
-        issue: 'Test Issue changed',
+  describe('[PUT] /actions', () => {
+    describe('success', () => {
+      const validActionUpdate = {
+        issue: 'Updated Test Issue',
+        pending: false,
+        resolved: true,
       };
-      actionsModel.update.mockResolvedValue([{ issue: 'Test Issue changed' }]);
-      actionsModel.findById.mockResolvedValue([action.action_ticket_id]);
-      try {
-        const res = await request(server)
-          .put(`/actions/${action.id}`)
-          .send(action);
+      let res;
 
-        expect(res.status).toBe(200);
-        expect(res.body.action.issue).toBe('Test Issue changed');
-        expect(actionsModel.update.mock.calls.length).toBe(1);
-      } catch (err) {
-        console.log('catch error', err);
-      }
+      beforeAll(async () => {
+        res = await request(app)
+          .put('/actions/4')
+          .send({ ...validActionUpdate });
+      });
+
+      it('responds with status 200', () => {
+        const expected = 200;
+        const actual = res.status;
+
+        expect(actual).toBe(expected);
+      });
+
+      it('returns requested edits', () => {
+        const expected = { ...validActionUpdate };
+        const actual = res.body.changes;
+
+        expect(actual).toMatchObject(expected);
+      });
     });
   });
 });
