@@ -79,7 +79,7 @@ describe('Roles Router', () => {
     });
   });
 
-  describe('GET /roles/:profile_id', () => {
+  describe('[GET] /roles/:profile_id', () => {
     describe('success', () => {
       const validProfileID = 10;
       let res;
@@ -127,7 +127,7 @@ describe('Roles Router', () => {
     });
   });
 
-  describe('PUT /roles/:profile_id', () => {
+  describe('[PUT] /roles/:profile_id', () => {
     describe('success', () => {
       const validReqBody = {
         role_id: '5',

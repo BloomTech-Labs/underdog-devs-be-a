@@ -68,7 +68,7 @@ describe('Application Router', () => {
     });
   });
 
-  describe('GET /application/:role', () => {
+  describe('[GET] /application/:role', () => {
     describe('success', () => {
       describe('mentor role', () => {
         let res;
@@ -137,7 +137,7 @@ describe('Application Router', () => {
     });
   });
 
-  describe('GET /application/profileId/:id', () => {
+  describe('[GET] /application/profileId/:id', () => {
     describe('success', () => {
       let res;
       beforeAll(async () => {

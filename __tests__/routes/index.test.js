@@ -12,7 +12,7 @@ app.use(handleError);
 // Declare Tests
 
 describe('index router endpoints', () => {
-  describe('GET /', () => {
+  describe('[GET] /', () => {
     let res;
     beforeAll(async () => {
       res = await request(app).get('/');
