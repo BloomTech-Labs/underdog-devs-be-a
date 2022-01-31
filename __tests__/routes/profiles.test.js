@@ -60,7 +60,9 @@ describe('Profile Router', () => {
     let res;
     beforeAll(async () => {
       res = await request(app).get('/profiles');
+    });
 
+    it('requires authentication', () => {
       expect(authRequired).toBeCalled();
     });
 
@@ -84,7 +86,9 @@ describe('Profile Router', () => {
       let res;
       beforeAll(async () => {
         res = await request(app).get('/profile/00ultwew80Onb2vOT4x6');
+      });
 
+      it('requires authentication', () => {
         expect(authRequired).toBeCalled();
       });
 
@@ -110,7 +114,9 @@ describe('Profile Router', () => {
         let res;
         beforeAll(async () => {
           res = await request(app).get(`/profiles/${badID}`);
+        });
 
+        it('requires authentication', () => {
           expect(authRequired).toBeCalled();
         });
 
@@ -143,7 +149,9 @@ describe('Profile Router', () => {
           role_id: 5,
         };
         res = await request(app).post('/profile').send(validReqBody);
+      });
 
+      it('requires authentication', () => {
         expect(authRequired).toBeCalled();
       });
 
@@ -188,7 +196,9 @@ describe('Profile Router', () => {
           email: 'super-update@maildrop.cc',
         };
         res = await request(app).put('/profile').send(validReqBody);
+      });
 
+      it('requires authentication', () => {
         expect(authRequired).toBeCalled();
       });
 

@@ -54,7 +54,9 @@ describe('Application Router', () => {
     let res;
     beforeAll(async () => {
       res = await request(app).get('/application');
+    });
 
+    it('requires authentication', () => {
       expect(authRequired).toBeCalled();
     });
 
@@ -72,8 +74,6 @@ describe('Application Router', () => {
         let res;
         beforeAll(async () => {
           res = await request(app).get('/application/mentor');
-
-          expect(authRequired).toBeCalled();
         });
 
         it('responds with status 200', () => {
@@ -103,8 +103,6 @@ describe('Application Router', () => {
         let res;
         beforeAll(async () => {
           res = await request(app).get('/application/mentee');
-
-          expect(authRequired).toBeCalled();
         });
 
         it('responds with status 200', () => {
@@ -144,8 +142,6 @@ describe('Application Router', () => {
       let res;
       beforeAll(async () => {
         res = await request(app).get('/application/profileId/10');
-
-        expect(authRequired).toBeCalled();
       });
 
       it('responds with status 200', async () => {
