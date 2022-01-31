@@ -136,7 +136,7 @@ describe('Actions Router', () => {
       describe('invalid id', () => {
         let res;
         beforeAll(async () => {
-          res = await request(app).get('/actions/not-real');
+          res = await request(app).get('/actions/987654321');
         });
 
         it('responds with status 404', () => {
