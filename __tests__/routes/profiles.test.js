@@ -3,6 +3,7 @@ const express = require('express');
 const db = require('../../data/db-config');
 const authRequired = require('../../api/middleware/authRequired');
 const profileRouter = require('../../api/profile/profileRouter');
+const handleError = require('../../api/middleware/handleError');
 const { profileList } = require('../../data/seeds/002-profiles');
 
 // Reset the test database before and after running tests
@@ -34,12 +35,7 @@ jest.mock('../../api/middleware/permissionsRequired', () => ({
 const app = express();
 app.use(express.json());
 app.use(['/profile', '/profiles'], profileRouter);
-// eslint-disable-next-line
-app.use((err, req, res, next) => {
-  res.status(err.status || 500).json({
-    message: err.message || 'Internal Server Error',
-  });
-});
+app.use(handleError);
 
 // Declare Tests
 
