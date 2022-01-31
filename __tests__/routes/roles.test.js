@@ -1,77 +1,167 @@
 const request = require('supertest');
 const express = require('express');
-const Roles = require('../../api/roles/rolesModel');
+const db = require('../../data/db-config');
+const authRequired = require('../../api/middleware/authRequired');
 const rolesRouter = require('../../api/roles/rolesRouter');
-const server = express();
-server.use(express.json());
+const handleError = require('../../api/middleware/handleError');
+const { roles } = require('../../data/seeds/001-roles');
 
-test('sanity check', () => {
-  expect(process.env.NODE_ENV).toBe('test');
+// Reset the test database before and after running tests
+
+beforeAll(async () => {
+  await db.migrate.rollback();
+  await db.migrate.latest();
 });
 
-jest.mock('../../api/roles/rolesModel');
+beforeEach(async () => await db.seed.run());
+
+afterAll(async () => await db.destroy());
+
+afterEach(() => jest.clearAllMocks());
+
+// Mock Authentication Middleware
+
 jest.mock('../../api/middleware/authRequired', () =>
   jest.fn((req, res, next) => next())
 );
+
 jest.mock('../../api/middleware/permissionsRequired', () => ({
   adminRequired: jest.fn((req, res, next) => next()),
   superAdminRequired: jest.fn((req, res, next) => next()),
 }));
-jest.mock('../../api/middleware/generalMiddleware', () => ({
-  validateUser: jest.fn((req, res, next) => next()),
-}));
 
-describe('roles router endpoints', () => {
-  beforeAll(() => {
-    // This is the module/route being tested
-    server.use('/roles', rolesRouter);
-    jest.clearAllMocks();
+// Declare Test API
+
+const app = express();
+app.use(express.json());
+app.use('/roles', rolesRouter);
+app.use(handleError);
+
+// Declare Tests
+
+describe('Sanity Checks', () => {
+  test('matchers are working', () => {
+    expect(true).toBe(true);
+    expect(20 - 5).toBe(15);
+    expect(9 + 10).not.toEqual(21);
   });
 
-  describe('GET /roles', () => {
-    it('should return 200', async () => {
-      Roles.findAllRoles.mockResolvedValue([]);
-      const res = await request(server).get('/roles');
-
-      expect(res.status).toBe(200);
-      expect(res.body.length).toBe(0);
-      expect(Roles.findAllRoles.mock.calls.length).toBe(1);
-    });
+  test('test environment is being used', () => {
+    expect(process.env.NODE_ENV).toBe('test');
   });
+});
 
-  describe('GET /roles/:id', () => {
-    it('should return 200 when role is found', async () => {
-      Roles.findByProfileId.mockResolvedValue({
-        id: 'd376de0577681ca93614',
-        role_id: 2,
+describe('Roles Router', () => {
+  describe('[GET] /roles', () => {
+    describe('success', () => {
+      let res;
+      beforeAll(async () => {
+        res = await request(app).get('/roles');
       });
-      const res = await request(server).get('/roles/d376de0577681ca93614');
 
-      expect(res.status).toBe(200);
-      expect(res.body.role_id).toBe(2);
-    });
+      it('requires authentication', () => {
+        expect(authRequired).toBeCalled();
+      });
 
-    it('should return 404 when profile does not exist', async () => {
-      Roles.findByProfileId.mockResolvedValue();
+      it('responds with status 200', () => {
+        const expected = 200;
+        const actual = res.status;
 
-      const res = await request(server).get('/roles/94');
+        expect(actual).toBe(expected);
+      });
 
-      expect(res.status).toBe(404);
+      it('returns list of roles', () => {
+        const expected = [...roles];
+        const actual = res.body;
+
+        expect(actual).toMatchObject(expected);
+      });
     });
   });
 
-  describe('PUT /roles/:id', () => {
-    it('should return 200 when when role updated successfully', async () => {
-      const roleBody = { role_id: '4', id: 'd376de0577681ca93614' };
-      Roles.updateProfileRoleId.mockResolvedValue(
-        roleBody.id,
-        roleBody.role_id
-      );
-      const res = await request(server)
-        .put(`/roles/${roleBody.id}`)
-        .send(roleBody.role_id);
+  describe('GET /roles/:profile_id', () => {
+    describe('success', () => {
+      const validProfileID = 10;
+      let res;
+      beforeAll(async () => {
+        res = await request(app).get(`/roles/${validProfileID}`);
+      });
 
-      expect(res.status).toBe(200);
+      it('responds with status 200', () => {
+        const expected = 200;
+        const actual = res.status;
+
+        expect(actual).toBe(expected);
+      });
+
+      it('returns object with role id of profile being checked', () => {
+        const expected = { role_id: 4 };
+        const actual = res.body;
+
+        expect(actual).toMatchObject(expected);
+      });
+    });
+
+    describe('failure', () => {
+      describe('invalid profile id', () => {
+        const invalidProfileID = 10000;
+        let res;
+        beforeAll(async () => {
+          res = await request(app).get(`/roles/${invalidProfileID}`);
+        });
+
+        it('responds with status 404', () => {
+          const expected = 404;
+          const actual = res.status;
+
+          expect(actual).toBe(expected);
+        });
+
+        it('returns error message', () => {
+          const expected = /user not found/i;
+          const actual = res.body.message;
+
+          expect(actual).toMatch(expected);
+        });
+      });
+    });
+  });
+
+  describe('PUT /roles/:profile_id', () => {
+    describe('success', () => {
+      const validReqBody = {
+        role_id: '5',
+        id: 'd376de0577681ca93614',
+      };
+      let res;
+      beforeAll(async () => {
+        res = await request(app).put('/roles/10').send(validReqBody);
+      });
+
+      it('requires authentication', () => {
+        expect(authRequired).toBeCalled();
+      });
+
+      it('responds with status 200', () => {
+        const expected = 200;
+        const actual = res.status;
+
+        expect(actual).toBe(expected);
+      });
+
+      it('returns success message', () => {
+        const expected = /role has been successfully updated/i;
+        const actual = res.body.message;
+
+        expect(actual).toMatch(expected);
+      });
+
+      it('returns the updated information', () => {
+        const expected = 5;
+        const actual = res.body.role_id;
+
+        expect(actual).toBe(expected);
+      });
     });
   });
 });
