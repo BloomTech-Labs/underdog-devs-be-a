@@ -11,7 +11,15 @@ exports.up = function (knex) {
         .inTable('roles')
         .onDelete('RESTRICT')
         .onUpdate('RESTRICT');
-      table.string('profile_id').notNullable();
+      table
+        .string('profile_id')
+        .notNullable()
+        .unsigned()
+        .notNullable()
+        .references('profile_id')
+        .inTable('profiles')
+        .onDelete('RESTRICT')
+        .onUpdate('RESTRICT');
       table.boolean('approved').notNullable().defaultTo(false);
       table.timestamps(true, true);
     });

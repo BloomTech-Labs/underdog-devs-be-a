@@ -10,6 +10,7 @@ const cacheSignUpData = async (req, res, next) => {
   const role = req.params.role;
   const formData = req.body;
   const newApplication = {
+    profile_id: formData.profile_id,
     first_name: formData.first_name,
     last_name: formData.last_name,
     email: formData.email,
@@ -20,7 +21,6 @@ const cacheSignUpData = async (req, res, next) => {
     how_commit: formData.how_commit,
     other_info: formData.other_info,
   };
-  const tempProfileId = Math.random().toString(36).slice(-8);
   try {
     if (role === 'mentor') {
       console.log('mentor pipeline hit');
@@ -38,9 +38,8 @@ const cacheSignUpData = async (req, res, next) => {
       } else if (!newApplication.tech_stack) {
         next({ status: 400, message: 'tech_stack required' });
       } else {
-        req.body.profile_id = tempProfileId;
         req.body.position = 3;
-        insertMentorIntake(tempProfileId, newApplication)
+        insertMentorIntake(newApplication)
           .then(() => {
             next();
           })
@@ -50,7 +49,7 @@ const cacheSignUpData = async (req, res, next) => {
       console.log('mentee pipeline hit');
       // validation
       req.body.position = 4;
-      insertMenteeIntake(tempProfileId, newApplication);
+      insertMenteeIntake(newApplication);
       next();
     }
   } catch (err) {

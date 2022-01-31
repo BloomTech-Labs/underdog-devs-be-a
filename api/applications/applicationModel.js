@@ -45,6 +45,9 @@ function getTicketById(profile_id) {
 
 function getMentorIntake(profile_id) {
   return db('mentor_intake as m')
+    .join('profiles as p', 'a.profile_id', 'p.profile_id')
+    .join('mentee_intake as m', 'a.profile_id', 'm.profile_id')
+    .join('roles as r', 'p.role_id', 'r.role_id')
     .select('*')
     .where('m.profile_id', profile_id)
     .first();
@@ -79,9 +82,8 @@ async function insertMenteeIntake(id, newMenteeIntake) {
   return form;
 }
 
-async function insertMentorIntake(id, newMentorIntake) {
-  newMentorIntake.profile_id = id;
-  const form = await db('mentor_intake').insert(newMentorIntake);
+async function insertMentorIntake(newMentorIntake) {
+  const form = await db('mentor_intake as m').insert(newMentorIntake);
   return form;
 }
 

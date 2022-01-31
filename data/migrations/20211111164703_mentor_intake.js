@@ -3,7 +3,15 @@ exports.up = function (knex) {
     .raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"')
     .createTable('mentor_intake', function (table) {
       table.increments('mentor_intake_id').notNullable().unique().primary();
-      table.string('profile_id').notNullable();
+      table
+        .string('profile_id')
+        .notNullable()
+        .unsigned()
+        .notNullable()
+        .references('profile_id')
+        .inTable('profiles')
+        .onDelete('RESTRICT')
+        .onUpdate('RESTRICT');
       table.string('email').notNullable();
       table.string('location').notNullable();
       table.string('first_name').notNullable();

@@ -10,6 +10,7 @@ const {
   checkApplicationExists,
   checkRole,
 } = require('../middleware/applicationMiddleware');
+const { createProfile } = require('../middleware/profilesMiddleware');
 
 const { registerOktaUser } = require('../middleware/oktaAuth');
 
@@ -74,7 +75,7 @@ router.get('/profileId/:id', checkApplicationExists, checkRole, (req, res) => {
 
 // create a new application for user upon completion of /mentor, /mentee signup form
 
-router.post('/new/:role', cacheSignUpData, (req, res, next) => {
+router.post('/new/:role', createProfile, cacheSignUpData, (req, res, next) => {
   const applicationTicket = {
     profile_id: req.body.profile_id,
     position: req.body.position,
@@ -123,17 +124,20 @@ router.post('/new-mentee', authRequired, function (req, res, next) {
 
 router.put(
   '/register/:id',
+  //authRequired
   checkApplicationExists,
   checkRole,
   registerOktaUser,
-  (req, res) => {
+  (req, res, next) => {
     const application_id = req.body.application_id;
-    Application.updateTicket(application_id, { approved: true }).then(() => {
-      res.status(202).json({
-        message:
-          'This application has been approved and registration process is under way..',
-      });
-    });
+    Application.updateTicket(application_id, { approved: true })
+      .then(() => {
+        res.status(202).json({
+          message:
+            'This application has been approved and registration process is under way..',
+        });
+      })
+      .catch(next);
   }
 );
 
