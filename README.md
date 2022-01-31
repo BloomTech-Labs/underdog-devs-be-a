@@ -284,6 +284,25 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 | GET    | `/roles/:profile_id` | -                     | `get a specific profile's role_id` | -         |
 | PUT    | `/roles/:profile_id` | `role_id`             | `update a profile's role`          | `admin`   |
 
+###### Role Ticket Schema:
+
+    {
+        "role_ticket_id": 1,
+        "submitted_by": "00ulthapbErVUwVJy4x6",
+        "subject_id": "00ulthapbErVUwVJy4x6",
+        "requested_role": 1,
+        "approved_by": "00ulthapbErVUwVJy4x6",
+        "comments": "This is my 1st dummy data comment",
+        "pending": true,
+        "resolved": false,
+        "created_at": "2022-01-25T20:33:26.119Z",
+        "updated_at": "2022-01-25T20:33:26.119Z"
+    }
+
+| Method | Endpoint        | Required Request Body | Returns                            | User Auth |
+| ------ | --------------- | --------------------- | ---------------------------------- | --------- |
+| GET    | `/role-tickets` | -                     | `details on a role request ticket` | `admin`   |
+
 ###### Progress schema:
 
     {
