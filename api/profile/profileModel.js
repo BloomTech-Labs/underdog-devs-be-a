@@ -51,6 +51,23 @@ const findOrCreateProfile = async (profileObj) => {
   }
 };
 
+async function mentorApplicationData(profile_id) {
+  const [person] = await db('mentor_intake as m').where(
+    'm.profile_id',
+    profile_id
+  );
+
+  return person;
+}
+
+async function menteeApplicationData(profile_id) {
+  const [person] = await db('mentee_intake as m').where(
+    'm.profile_id',
+    profile_id
+  );
+  return person;
+}
+
 module.exports = {
   findAll,
   findBy,
@@ -60,4 +77,6 @@ module.exports = {
   remove,
   findOrCreateProfile,
   updateIsActive,
+  mentorApplicationData,
+  menteeApplicationData,
 };
