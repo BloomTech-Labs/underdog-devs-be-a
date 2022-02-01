@@ -23,7 +23,10 @@ const roleTicketSchema = yup.object().shape({
     .integer()
     .positive()
     .required("a valid 'requested_role' is required"),
-  comments: yup.string().trim()
+    approved_by: yup.string().trim(),
+    comments: yup.string().trim(),
+    pending: yup.boolean(),
+    resolved: yup.boolean()
 });
 
 module.exports = roleTicketSchema;
