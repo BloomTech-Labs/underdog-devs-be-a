@@ -1,4 +1,5 @@
 const RoleTicket = require('../roleTickets/roleTicketsModel');
+const roleTicketSchema = require('../../data/schemas/roleTicketSchema');
 
 async function checkRoleTicketIdExists(req, res, next) {
   const { role_ticket_id } = req.params;
@@ -18,4 +19,18 @@ async function checkRoleTicketIdExists(req, res, next) {
   }
 }
 
-module.exports = { checkRoleTicketIdExists };
+async function validateRoleTicket(req, res, next) {
+  try {
+    const payload = req.body;
+    const validatedRoleTicket = await roleTicketSchema.validate(payload);
+    req.roleTicket = validatedRoleTicket;
+    return next();
+  } catch (err) {
+    return next({
+      status: 400,
+      message: err.errors[0],
+    });
+  }
+}
+
+module.exports = { checkRoleTicketIdExists, validateRoleTicket };
