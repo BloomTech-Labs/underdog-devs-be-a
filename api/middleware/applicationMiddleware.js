@@ -3,6 +3,11 @@ const {
   getMentorIntake,
   getMenteeIntake,
 } = require('../applications/applicationModel');
+const {
+  mentorApplicationSchema,
+  menteeApplicationSchema,
+  applicationTicketSchema,
+} = require('../../data/schemas/applicationSchema');
 
 const validateProfile = (req, res, next) => {
   getTicketById(req.params.id).then((profile) => {
@@ -31,4 +36,49 @@ const checkRole = async (req, res, next) => {
   }
 };
 
-module.exports = { validateProfile, checkRole };
+const validateApplicationTicket = async (req, res, next) => {
+  const payload = req.body;
+  try {
+    await applicationTicketSchema.validate(payload);
+    return next();
+  } catch (err) {
+    return next({
+      status: 400,
+      message: err.errors[0],
+    });
+  }
+};
+
+const validateMenteeIntakeData = async (req, res, next) => {
+  const payload = req.body;
+  try {
+    await menteeApplicationSchema.validate(payload);
+    return next();
+  } catch (err) {
+    return next({
+      status: 400,
+      message: err.errors[0],
+    });
+  }
+};
+
+const validateMentorIntakeData = async (req, res, next) => {
+  const payload = req.body;
+  try {
+    await mentorApplicationSchema.validate(payload);
+    return next();
+  } catch (err) {
+    return next({
+      status: 400,
+      message: err.errors[0],
+    });
+  }
+};
+
+module.exports = {
+  validateProfile,
+  checkRole,
+  validateApplicationTicket,
+  validateMenteeIntakeData,
+  validateMentorIntakeData,
+};
