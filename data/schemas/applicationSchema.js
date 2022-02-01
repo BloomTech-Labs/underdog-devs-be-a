@@ -46,7 +46,22 @@ const menteeApplicationSchema = yup.object().shape({
   your_hope: yup.string().trim().required('"your_hope" is required'),
 });
 
+const applicationTicketSchema = yup.object().shape({
+  application_id: yup
+    .mixed()
+    .oneOf([undefined], '"action_ticket_id" must not be provided'),
+  position: yup
+    .mixed()
+    .required('"position" is required')
+    .oneOf([3, 4], '"position" must either 3 or 4'),
+  profile_id: yup.string().trim().required('"profile_id" is required'),
+  approved: yup.boolean(),
+  created_at: yup.oneOf([undefined], '"created_at" must not be provided'),
+  updated_at: yup.oneOf([undefined], '"updated_at" must not be provided'),
+});
+
 module.exports = {
   mentorApplicationSchema,
   menteeApplicationSchema,
+  applicationTicketSchema,
 };
