@@ -6,7 +6,7 @@ const { validateSubjectBody } = require('./actionsMiddleware');
  * @swagger
  * components:
  *  schemas:
- *    Actions:
+ *    Action:
  *      type: object
  *      required:
  *        - submitted_by
@@ -18,10 +18,10 @@ const { validateSubjectBody } = require('./actionsMiddleware');
  *          description: Unique primary key referencing an action ticket
  *        submitted_by:
  *          type: integer
- *          description: Unique primary key referencing a profile's auto-assigned ID
+ *          description: Unique primary key referencing a profile's auto-assigned ID of the user who submitted action
  *        subject_id:
  *          type: integer
- *          description: Unique primary key referencing a profile's auto-assigned ID
+ *          description: Unique primary key referencing a profile's auto-assigned ID of the subject of the action
  *        issue:
  *          type: string
  *          description: A string describing issue at hand
@@ -106,10 +106,6 @@ const { validateSubjectBody } = require('./actionsMiddleware');
  *                  strike: true
  *                  created_at: "2022-01-26 15:33:34.945832-07"
  *                  updated_at: "2022-01-26 15:33:34.945832-07"
- *      '401':
- *        $ref: '#/components/responses/UnauthorizedError'
- *      '403':
- *        $ref: '#/components/responses/UnauthorizedError'
  */
 router.get('/', function (req, res) {
   Actions.findAll()
