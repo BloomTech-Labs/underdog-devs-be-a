@@ -23,8 +23,6 @@ const cacheSignUpData = async (req, res, next) => {
   };
   try {
     if (role === 'mentor') {
-      console.log('mentor pipeline hit');
-      // implement yup please
       if (!newApplication.first_name) {
         next({ status: 400, message: 'first_name required' });
       } else if (!newApplication.last_name) {
@@ -46,16 +44,14 @@ const cacheSignUpData = async (req, res, next) => {
           .catch(next);
       }
     } else if (role === 'mentee') {
-      console.log('mentee pipeline hit');
-      // validation
       req.body.position = 4;
-      insertMenteeIntake(newApplication);
+      await insertMenteeIntake(newApplication);
       next();
     }
   } catch (err) {
     return next({
-      status: 404,
-      message: `something went wrong in applicationMiddleware`,
+      status: 422,
+      message: `There was a problem caching application intake data`,
     });
   }
 };
