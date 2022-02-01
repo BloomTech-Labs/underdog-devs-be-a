@@ -37,11 +37,8 @@ const cacheSignUpData = async (req, res, next) => {
         next({ status: 400, message: 'tech_stack required' });
       } else {
         req.body.position = 3;
-        insertMentorIntake(newApplication)
-          .then(() => {
-            next();
-          })
-          .catch(next);
+        await insertMentorIntake(newApplication);
+        next();
       }
     } else if (role === 'mentee') {
       req.body.position = 4;
