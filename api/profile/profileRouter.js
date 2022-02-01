@@ -9,6 +9,15 @@ const {
 const { validateUser } = require('../middleware/generalMiddleware');
 validateUser;
 
+router.get('/current_user_profile/', authRequired, async (req, res) => {
+  try {
+    const resp = await Profiles.mentorApplicationData(req.profile.profile_id);
+    res.status(200).json(resp);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 /**
  * @swagger
  * components:
