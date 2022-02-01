@@ -4,4 +4,12 @@ const findAllRoleTickets = async () => {
   return await db('role_tickets');
 };
 
-module.exports = { findAllRoleTickets };
+const findByRoleTicketById = async (roleTicketId) => {
+  return db
+    .select('*')
+    .from('role_tickets')
+    .where('role_ticket_id', roleTicketId)
+    .first();
+};
+
+module.exports = { findAllRoleTickets, findByRoleTicketById };
