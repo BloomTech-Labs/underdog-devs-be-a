@@ -48,7 +48,31 @@ router.post(
       const postResponse = await RoleTickets.Create(roleTicketInput);
       return res.status(201).json({
         message: 'new role ticket created, successfully!',
-        resource: postResponse,
+        roleTicket: postResponse,
+      });
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
+router.put(
+  '/:role_ticket_id',
+  authRequired,
+  adminRequired,
+  checkRoleTicketIdExists,
+  validateRoleTicket,
+  async (req, res, next) => {
+    try {
+      const { role_ticket_id } = req.params;
+      const roleTicketInput = req.roleTicket;
+      const updatedRoleTicket = await RoleTickets.Update(
+        role_ticket_id,
+        roleTicketInput
+      );
+      return res.status(200).json({
+        message: `Role ticket #${role_ticket_id} updated, succesfully!`,
+        roleTicket: updatedRoleTicket,
       });
     } catch (err) {
       return next(err);
