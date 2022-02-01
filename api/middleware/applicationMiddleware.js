@@ -54,8 +54,8 @@ const cacheSignUpData = async (req, res, next) => {
 };
 
 const checkApplicationExists = async (req, res, next) => {
-  const profile = await getTicketById(req.params.id);
   try {
+    const profile = await getTicketById(req.params.id);
     if (profile) {
       req.body = profile;
       next();
