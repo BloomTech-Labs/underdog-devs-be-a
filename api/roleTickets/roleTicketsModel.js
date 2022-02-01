@@ -49,4 +49,14 @@ const Update = async (roleTicketId, changes) => {
   return roleTicket;
 };
 
-module.exports = { findAllRoleTickets, findByRoleTicketById, Create, Update };
+const Delete = async (roleTicketId) => {
+  return db('role_tickets').where('role_ticket_id', roleTicketId).del();
+};
+
+module.exports = {
+  findAllRoleTickets,
+  findByRoleTicketById,
+  Create,
+  Update,
+  Delete,
+};

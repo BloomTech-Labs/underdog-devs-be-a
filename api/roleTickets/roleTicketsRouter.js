@@ -80,4 +80,22 @@ router.put(
   }
 );
 
+router.delete(
+  '/:role_ticket_id',
+  authRequired,
+  adminRequired,
+  checkRoleTicketIdExists,
+  async (req, res, next) => {
+    try {
+      const { role_ticket_id } = req.params;
+      await RoleTickets.Delete(role_ticket_id);
+      return res.status(200).json({
+        message: `Role Ticket #${role_ticket_id} deleted, succesfully!`,
+      });
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
 module.exports = router;
