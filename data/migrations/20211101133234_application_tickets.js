@@ -14,8 +14,6 @@ exports.up = function (knex) {
       table
         .string('profile_id')
         .notNullable()
-        .unsigned()
-        .notNullable()
         .references('profile_id')
         .inTable('profiles')
         .onDelete('RESTRICT')
