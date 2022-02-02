@@ -298,9 +298,13 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
         "updated_at": "2022-01-25T20:33:26.119Z"
     }
 
-| Method | Endpoint        | Required Request Body | Returns                            | User Auth |
-| ------ | --------------- | --------------------- | ---------------------------------- | --------- |
-| GET    | `/role-tickets` | -                     | `details on a role request ticket` | `admin`   |
+| Method | Endpoint                        | Required Request Body                          | Returns                            | User Auth |
+| ------ | ------------------------------- | ---------------------------------------------- | ---------------------------------- | --------- |
+| GET    | `/role-tickets`                 | -                                              | `get all role tickets`             | `admin`   |
+| GET    | `/role-tickets/:role_ticket_id` | -                                              | `get a specific role ticket`       | `admin`   |
+| POST   | `/role-tickets`                 | `submitted_by`, `subject_id`, `requested_role` | `create a new role ticket`         |           |
+| PUT    | `/role-tickets/:role_ticket_id` | -                                              | `updates a role ticket by id`      |           |
+| DELETE | `/role-tickets/:role_ticket_id` | -                                              | `delete a role ticket by id`       |           |
 
 ###### Progress schema:
 
