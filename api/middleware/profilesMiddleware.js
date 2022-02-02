@@ -12,13 +12,10 @@ const createProfile = async (req, res, next) => {
   };
   try {
     const profile = await create(newProfile);
-    if (!profile) {
-      res.status(404).json({ message: 'Unable to make profile' });
-    } else {
-      next();
-    }
-  } catch (err) {
+    req.profile = profile;
     next();
+  } catch (err) {
+    return next(err);
   }
 };
 

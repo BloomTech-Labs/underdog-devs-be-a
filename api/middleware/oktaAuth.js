@@ -36,10 +36,13 @@ const registerOktaUser = async (req, res, next) => {
     },
   };
 
-  await client.createUser(newUser).then((user) => {
-    console.log('Created user', user);
+  try {
+    const oktaUser = await client.createUser(newUser);
+    req.user = oktaUser;
     next();
-  });
+  } catch (err) {
+    return next(err);
+  }
 };
 
 module.exports = { registerOktaUser };
