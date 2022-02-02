@@ -9,6 +9,61 @@ const {
   validateRoleTicket,
 } = require('../middleware/roleTicketsMiddleware');
 
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    Role Ticket:
+ *      type: object
+ *      required:
+ *        - submitted_by
+ *        - subject_id
+ *        - requested_role
+ *      properties:
+ *        role_ticket_id:
+ *          type: integer
+ *          description: Unique primary key referencing a role ticket's auto-assigned ID - must not be provided in request bodies
+ *        submitted_by:
+ *          type: string
+ *          description: Foreign key referencing the profile_id of the submitter
+ *        subject_id:
+ *          type: string
+ *          description: Foreign key referencing the profile_id of the profile whose role will be changed
+ *        requested_role:
+ *          type: integer
+ *          description: Foreign key referencing the requested role_id
+ *        approved_by:
+ *          type: string
+ *          description: Foreign key referencing the profile_id of the approving profile
+ *        comments:
+ *          type: string
+ *          description: Comments about the role ticket
+ *        pending:
+ *          type: boolean
+ *          description: State of whether or not a ticket is pending - defaults to true
+ *        resolved:
+ *          type: boolean
+ *          description: State of whether or not a ticket is resolved or not - defaults to false
+ *        created_at:
+ *          type: timestamp
+ *          description: Automatic date-time string from a ticket's creation in the database - must not be provided in request bodies
+ *        updated_at:
+ *          type: timestamp
+ *          description: Automatic date-time string from a ticket's last update in the database - must not be provided in request bodies
+ *
+ *      example:
+ *        role_ticket_id: 1
+ *        submitted_by: "9"
+ *        subject_id: "7"
+ *        requested_role: 1
+ *        approved_by: "5"
+ *        comments: This is a comment
+ *        pending: true
+ *        resolved: false
+ *        created_at: 2022-01-28T16:07:34.344Z
+ *        updated_at: 2022-01-28T16:07:34.344Z
+ */
+
 // Responds with all available role ticket requests
 router.get('/', authRequired, adminRequired, (req, res, next) => {
   RoleTickets.findAllRoleTickets()
