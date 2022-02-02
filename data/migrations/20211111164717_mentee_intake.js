@@ -11,7 +11,7 @@ exports.up = function (knex) {
         .inTable('profiles')
         .onDelete('RESTRICT')
         .onUpdate('RESTRICT');
-      table.string('email').notNullable();
+      table.string('email').notNullable().unique();
       table.string('location').notNullable();
       table.string('first_name').notNullable();
       table.string('last_name').notNullable();
