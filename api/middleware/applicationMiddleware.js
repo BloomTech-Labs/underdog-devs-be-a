@@ -75,11 +75,11 @@ const checkRole = async (req, res, next) => {
       const mentorData = await getMentorIntake(profile.profile_id);
       if (!mentorData) {
         return next({
-          status: 400,
+          status: 404,
           message: `form data for ${profile.profile_id} not found`,
         });
       } else {
-        req.body = mentorData;
+        req.intakeData = mentorData;
         mentorData.application_id = profile.application_id;
         next();
       }
@@ -87,11 +87,11 @@ const checkRole = async (req, res, next) => {
       const menteeData = await getMenteeIntake(profile.profile_id);
       if (!menteeData) {
         return next({
-          status: 400,
+          status: 404,
           message: `form data for ${profile.profile_id} not found`,
         });
       } else {
-        req.body = menteeData;
+        req.intakeData = menteeData;
         menteeData.application_id = profile.application_id;
         next();
       }

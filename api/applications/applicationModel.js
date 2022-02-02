@@ -44,9 +44,9 @@ function getTicketById(profile_id) {
 }
 
 function getMentorIntake(profile_id) {
-  return db('mentor_intake as m')
+  return db('application_tickets as a')
     .join('profiles as p', 'a.profile_id', 'p.profile_id')
-    .join('mentee_intake as m', 'a.profile_id', 'm.profile_id')
+    .join('mentor_intake as m', 'a.profile_id', 'm.profile_id')
     .join('roles as r', 'p.role_id', 'r.role_id')
     .select('*')
     .where('m.profile_id', profile_id)

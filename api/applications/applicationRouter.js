@@ -70,7 +70,7 @@ router.get('/:role', authRequired, adminRequired, (req, res, next) => {
 // get application by profile id
 
 router.get('/profileId/:id', checkApplicationExists, checkRole, (req, res) => {
-  res.status(200).json(req.body);
+  res.status(200).json(req.intakeData);
 });
 
 // create a new application for user upon completion of /mentor, /mentee signup form
