@@ -3,7 +3,7 @@ const authRequired = require('../middleware/authRequired');
 const Application = require('./applicationModel');
 const Profile = require('../profile/profileModel');
 const router = express.Router();
-const jwt = require('jwt-decode');
+// const jwt = require('jwt-decode');
 const { adminRequired } = require('../middleware/permissionsRequired.js');
 const {
   cacheSignUpData,
@@ -107,24 +107,11 @@ router.put('/update-role', authRequired, adminRequired, (req, res, next) => {
     .catch(next);
 });
 
-// post the information for the mentee intake for the currently logged in user
-
-router.post('/new-mentee', authRequired, function (req, res, next) {
-  const token = req.headers.authorization;
-  const User = jwt(token);
-  const newMenteeIntake = req.body;
-  Application.insertMenteeIntake(User.sub, newMenteeIntake)
-    .then(() => {
-      res.status(201).json({ message: 'Information has been submitted' });
-    })
-    .catch(next);
-});
-
 // update applicants approved status and creates new user with okta
 
 router.put(
   '/register/:id',
-  //authRequired
+  authRequired,
   checkApplicationExists,
   checkRole,
   registerOktaUser,

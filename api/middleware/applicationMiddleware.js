@@ -9,40 +9,54 @@ const {
 const cacheSignUpData = async (req, res, next) => {
   const role = req.params.role;
   const formData = req.body;
-  const newApplication = {
+  const sharedFields = {
     profile_id: formData.profile_id,
     first_name: formData.first_name,
     last_name: formData.last_name,
     email: formData.email,
     location: formData.location,
+    other_info: formData.other_info,
+  };
+  const newMentorApplication = {
+    ...sharedFields,
     current_comp: formData.current_comp,
     tech_stack: formData.tech_stack,
     can_commit: formData.can_commit,
     how_commit: formData.how_commit,
     other_info: formData.other_info,
   };
+  const newMenteeApplication = {
+    ...sharedFields,
+    lives_in_us: formData.lives_in_us,
+    formerly_incarcerated: formData.formerly_incarcerated,
+    list_convictions: formData.list_convictions,
+    tech_stack: formData.tech_stack,
+    experience_level: formData.experience_level,
+    your_hope: formData.your_hope,
+  };
+
   try {
     if (role === 'mentor') {
-      if (!newApplication.first_name) {
+      if (!newMentorApplication.first_name) {
         next({ status: 400, message: 'first_name required' });
-      } else if (!newApplication.last_name) {
+      } else if (!newMentorApplication.last_name) {
         next({ status: 400, message: 'last_name required' });
-      } else if (!newApplication.email) {
+      } else if (!newMentorApplication.email) {
         next({ status: 400, message: 'email required' });
-      } else if (!newApplication.location) {
+      } else if (!newMentorApplication.location) {
         next({ status: 400, message: 'location required' });
-      } else if (!newApplication.can_commit) {
+      } else if (!newMentorApplication.can_commit) {
         next({ status: 400, message: 'can_commit required' });
-      } else if (!newApplication.tech_stack) {
+      } else if (!newMentorApplication.tech_stack) {
         next({ status: 400, message: 'tech_stack required' });
       } else {
         req.body.position = 3;
-        await insertMentorIntake(newApplication);
+        await insertMentorIntake(newMentorApplication);
         next();
       }
     } else if (role === 'mentee') {
       req.body.position = 4;
-      await insertMenteeIntake(newApplication);
+      await insertMenteeIntake(newMenteeApplication);
       next();
     }
   } catch (err) {

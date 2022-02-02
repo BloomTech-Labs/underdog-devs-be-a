@@ -76,14 +76,13 @@ function getMenteeIntake(profile_id) {
     .where('p.profile_id', profile_id);
 }
 
-async function insertMenteeIntake(id, newMenteeIntake) {
-  newMenteeIntake.profile_id = id;
+async function insertMenteeIntake(newMenteeIntake) {
   const form = await db('mentee_intake').insert(newMenteeIntake);
   return form;
 }
 
 async function insertMentorIntake(newMentorIntake) {
-  const form = await db('mentor_intake as m').insert(newMentorIntake);
+  const form = await db('mentor_intake').insert(newMentorIntake);
   return form;
 }
 
