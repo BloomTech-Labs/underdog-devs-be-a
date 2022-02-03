@@ -51,12 +51,12 @@ const { registerOktaUser } = require('../middleware/oktaAuth');
  * @swagger
  * /application:
  *  get:
- *    summary: Get the list of all pending tickets from the application_tickets table
- *    description: Provides a JSON array of applications (as objects) currently pending for clients
+ *    summary: Get the list of all pending applications
+ *    description: Provides a JSON array of applications (as objects) where 'approved' key is falsy
  *    tags:
  *      - application
  *    security:
- *      - okta: []
+ *      - okta: [authRequired]
  *    parameters:
  *      - in: query
  *        name: application property
@@ -98,6 +98,42 @@ router.get('/', authRequired, adminRequired, (req, res, next) => {
     })
     .catch(next);
 });
+
+/**
+ * @swagger
+ * /application/{role}:
+ *  get:
+ *    summary: Get the list of pending applicants by role name
+ *    description: Provides a JSON array of applications (as objects) where 'approved' key is falsy
+ *    tags:
+ *      - application
+ *    security:
+ *      - okta: [authRequired]
+ *    parameters:
+ *      - in: param
+ *        name: role name
+ *        schema:
+ *          type: string
+ *        description: A request parameter that accepts 'mentor' or 'mentee'
+ *    responses:
+ *      '200':
+ *        description: An array of application objects
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                $ref: '#/components/schemas/Application'
+ *              example:
+ *                - profile_id: "00u13omswyZM1xVya4x7"
+ *                  first_name: "User"
+ *                  last_name: "6"
+ *                  role_name: "mentor"
+ *                  created_at: "2022-02-02T18:43:53.607Z"
+ *                  application_id: 5
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ */
 
 // get pending application tickets by role
 
