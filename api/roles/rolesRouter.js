@@ -34,8 +34,6 @@ router.get('/:profile_id', validateUser, (req, res) => {
     });
 });
 
-module.exports = router;
-
 // allows an admin to change a profile's role_id to any role but super admin
 router.put(
   '/:profile_id',
@@ -56,3 +54,5 @@ router.put(
     }
   }
 );
+
+module.exports = router;

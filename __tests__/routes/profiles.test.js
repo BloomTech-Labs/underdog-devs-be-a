@@ -1,16 +1,26 @@
 const request = require('supertest');
 const express = require('express');
-const Profiles = require('../../api/profile/profileModel');
+const db = require('../../data/db-config');
+const authRequired = require('../../api/middleware/authRequired');
 const profileRouter = require('../../api/profile/profileRouter');
-const server = express();
-server.use(express.json());
+const handleError = require('../../api/middleware/handleError');
+const { profileList } = require('../../data/seeds/002-profiles');
 
-test('sanity test environment', () => {
-  expect(process.env.NODE_ENV).toBe('test');
+// Reset the test database before and after running tests
+
+beforeAll(async () => {
+  await db.migrate.rollback();
+  await db.migrate.latest();
 });
 
-jest.mock('../../api/profile/profileModel');
-// mock the auth middleware completely
+beforeEach(async () => await db.seed.run());
+
+afterAll(async () => await db.destroy());
+
+afterEach(() => jest.clearAllMocks());
+
+// Declare Mocks Upfront
+
 jest.mock('../../api/middleware/authRequired', () =>
   jest.fn((req, res, next) => next())
 );
@@ -20,83 +30,180 @@ jest.mock('../../api/middleware/permissionsRequired', () => ({
   superAdminRequired: jest.fn((req, res, next) => next()),
 }));
 
-describe('profiles router endpoints', () => {
-  beforeAll(() => {
-    // This is the module/route being tested
-    server.use(['/profile', '/profiles'], profileRouter);
-    jest.clearAllMocks();
+// Declare Test API
+
+const app = express();
+app.use(express.json());
+app.use(['/profile', '/profiles'], profileRouter);
+app.use(handleError);
+
+// Declare Tests
+
+describe('Sanity Checks', () => {
+  test('matchers are working', () => {
+    expect(true).toBe(true);
+    expect(20 - 5).toBe(15);
+    expect(9 + 10).not.toEqual(21);
   });
 
-  describe('GET /profiles', () => {
-    it('should return 200', async () => {
-      Profiles.findAll.mockResolvedValue([]);
-      const res = await request(server).get('/profiles');
+  test('test environment is being used', () => {
+    expect(process.env.NODE_ENV).toBe('test');
+  });
+});
 
-      expect(res.status).toBe(200);
-      expect(res.body.length).toBe(0);
-      expect(Profiles.findAll.mock.calls.length).toBe(1);
+describe('Profile Router', () => {
+  describe('[GET] /profiles', () => {
+    let res;
+    beforeAll(async () => {
+      res = await request(app).get('/profiles');
+    });
+
+    it('requires authentication', () => {
+      expect(authRequired).toBeCalled();
+    });
+
+    it('responds with status 200', () => {
+      const expected = 200;
+      const actual = res.status;
+
+      expect(actual).toBe(expected);
+    });
+
+    it('returns a list of profiles', () => {
+      const expected = [...profileList];
+      const actual = res.body;
+
+      expect(actual).toMatchObject(expected);
     });
   });
 
-  describe('GET /profiles/:id', () => {
-    it('should return 200 when profile found', async () => {
-      Profiles.findById.mockResolvedValue({
-        id: 'd376de0577681ca93614',
-        name: 'Bob Smith',
-        email: 'bob@example.com',
+  describe('[GET] /profile/:id', () => {
+    describe('success', () => {
+      let res;
+      beforeAll(async () => {
+        res = await request(app).get('/profile/00ultwew80Onb2vOT4x6');
       });
-      const res = await request(server).get('/profiles/d376de0577681ca93614');
 
-      expect(res.status).toBe(200);
-      expect(res.body.name).toBe('Bob Smith');
-      expect(Profiles.findById.mock.calls.length).toBe(1);
+      it('requires authentication', () => {
+        expect(authRequired).toBeCalled();
+      });
+
+      it('responds with status 200', async () => {
+        const expected = 200;
+        const actual = res.status;
+
+        expect(actual).toBe(expected);
+      });
+
+      it('returns a profile object', () => {
+        const expected = profileList[1];
+        const actual = res.body;
+
+        expect(actual).toMatchObject(expected);
+      });
     });
 
-    it('should return 404 when no user found', async () => {
-      Profiles.findById.mockResolvedValue();
-      const res = await request(server).get('/profiles/d376de0577681ca93614');
+    describe('failure', () => {
+      describe('invalid profile ID', () => {
+        const badID = 'bad-id';
 
-      expect(res.status).toBe(404);
-      expect(res.body.error).toBe('ProfileNotFound');
+        let res;
+        beforeAll(async () => {
+          res = await request(app).get(`/profiles/${badID}`);
+        });
+
+        it('requires authentication', () => {
+          expect(authRequired).toBeCalled();
+        });
+
+        it('responds with status 404', async () => {
+          const expected = 404;
+          const actual = res.status;
+
+          expect(actual).toBe(expected);
+        });
+
+        it(`returns message "ProfileNotFound"`, () => {
+          const expected = /ProfileNotFound/i;
+          const actual = res.body.error;
+
+          expect(actual).toMatch(expected);
+        });
+      });
     });
   });
 
-  describe('POST /profile', () => {
-    it('should return 200 when profile is created', async () => {
-      const profile = {
-        name: 'Louie Smith',
-        email: 'louie@example.com',
-        avatarUrl:
-          'https://s3.amazonaws.com/uifaces/faces/twitter/hermanobrother/128.jpg',
-      };
-      Profiles.findById.mockResolvedValue(undefined);
-      Profiles.create.mockResolvedValue([
-        Object.assign({ id: 'd376de0577681ca93614' }, profile),
-      ]);
-      const res = await request(server).post('/profile').send(profile);
+  describe('[POST] /profile', () => {
+    describe('success', () => {
+      let res;
+      beforeAll(async () => {
+        const validReqBody = {
+          profile_id: 'bradbowman',
+          first_name: 'Brad',
+          last_name: 'Bowman',
+          email: 'brad.bowman@maildrop.cc',
+          role_id: 5,
+        };
+        res = await request(app).post('/profile').send(validReqBody);
+      });
 
-      expect(res.status).toBe(200);
-      expect(res.body.profile.id).toBe('d376de0577681ca93614');
-      expect(Profiles.create.mock.calls.length).toBe(1);
+      it('requires authentication', () => {
+        expect(authRequired).toBeCalled();
+      });
+
+      it('responds with status 200', async () => {
+        const expected = 200;
+        const actual = res.status;
+
+        expect(actual).toBe(expected);
+      });
+
+      it('returns success message', () => {
+        const expected = /profile created/i;
+        const actual = res.body.message;
+
+        expect(actual).toMatch(expected);
+      });
+
+      it('returns newly created profile', () => {
+        const expected = {
+          email: 'brad.bowman@maildrop.cc',
+          first_name: 'Brad',
+          is_active: null,
+          last_name: 'Bowman',
+          profile_id: 'bradbowman',
+          progress_id: null,
+          progress_status: null,
+          role_id: 5,
+        };
+        const actual = res.body.profile;
+
+        expect(actual).toMatchObject(expected);
+      });
     });
   });
 
-  describe('PUT /profile', () => {
-    it('should return 200 when profile is created', async () => {
-      const profile = {
-        id: 'd376de0577681ca93614',
-        name: 'Louie Smith',
-        email: 'louie@example.com',
-        avatarUrl:
-          'https://s3.amazonaws.com/uifaces/faces/twitter/hermanobrother/128.jpg',
-      };
-      Profiles.findById.mockResolvedValue(profile);
-      Profiles.update.mockResolvedValue([profile]);
+  describe('[PUT] /profile', () => {
+    describe('success', () => {
+      let res;
+      beforeAll(async () => {
+        const validReqBody = {
+          profile_id: 'super-update',
+          email: 'super-update@maildrop.cc',
+        };
+        res = await request(app).put('/profile').send(validReqBody);
+      });
 
-      const res = await request(server).put('/profile/').send(profile);
-      expect(res.status).toBe(200);
-      expect(res.body.profile.name).toBe('Louie Smith');
-      expect(Profiles.update.mock.calls.length).toBe(1);
+      it('requires authentication', () => {
+        expect(authRequired).toBeCalled();
+      });
+
+      it('responds with status 200', () => {
+        const expected = 200;
+        const actual = res.status;
+
+        expect(actual).toBe(expected);
+      });
     });
   });
 });

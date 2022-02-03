@@ -6,10 +6,12 @@ const roles = [
   { role_name: 'pending' },
 ];
 
-exports.seed = function (knex) {
+const seed = (knex) => {
   return knex('roles')
     .del()
     .then(function () {
       return knex('roles').insert(roles);
     });
 };
+
+module.exports = { seed, roles };

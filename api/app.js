@@ -31,6 +31,7 @@ const resourcesRouter = require('./resources/resourcesRouter');
 const resourceTicketRouter = require('./resources/resourceTicketsRouter');
 const rolesRouter = require('./roles/rolesRouter');
 const progressionRouter = require('./progession/progressionRouter');
+const roleTicketsRouter = require('./roleTickets/roleTicketsRouter');
 
 const app = express();
 
@@ -68,6 +69,7 @@ app.use('/resources', resourcesRouter);
 app.use('/resource-tickets', resourceTicketRouter);
 app.use('/roles', rolesRouter);
 app.use('/progress', progressionRouter);
+app.use('/role-tickets', roleTicketsRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
