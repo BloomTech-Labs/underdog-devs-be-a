@@ -5,18 +5,19 @@ exports.up = function (knex) {
       table.increments('mentor_intake_id').notNullable().unique().primary();
       table
         .string('profile_id')
-        .unsigned()
         .notNullable()
+        .unsigned()
         .references('profile_id')
         .inTable('profiles')
         .onDelete('RESTRICT')
         .onUpdate('RESTRICT');
       table.string('email').notNullable();
       table.string('location').notNullable();
-      table.string('name').notNullable();
+      table.string('first_name').notNullable();
+      table.string('last_name').notNullable();
       table.string('current_comp');
       table.string('tech_stack').notNullable();
-      table.boolean('can_commit').notNullable();
+      table.string('can_commit').notNullable();
       table.string('how_commit', 255);
       table.string('other_info', 255);
     });

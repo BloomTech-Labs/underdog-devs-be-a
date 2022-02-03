@@ -3,12 +3,16 @@ const authRequired = require('../middleware/authRequired');
 const Application = require('./applicationModel');
 const Profile = require('../profile/profileModel');
 const router = express.Router();
-const jwt = require('jwt-decode');
+// const jwt = require('jwt-decode');
 const { adminRequired } = require('../middleware/permissionsRequired.js');
 const {
-  validateProfile,
+  cacheSignUpData,
+  checkApplicationExists,
   checkRole,
 } = require('../middleware/applicationMiddleware');
+const { createProfile } = require('../middleware/profilesMiddleware');
+
+const { registerOktaUser } = require('../middleware/oktaAuth');
 
 /**
  * @swagger
@@ -65,17 +69,18 @@ router.get('/:role', authRequired, adminRequired, (req, res, next) => {
 
 // get application by profile id
 
-router.get('/profileId/:id', validateProfile, checkRole, (req, res) => {
-  res.status(200).json(req.body);
+router.get('/profileId/:id', checkApplicationExists, checkRole, (req, res) => {
+  res.status(200).json(req.intakeData);
 });
 
-// post a new application for the current logged in user
+// create a new application for user upon completion of /mentor, /mentee signup form
 
-router.post('/new-application', authRequired, function (req, res, next) {
-  const token = req.headers.authorization;
-  const User = jwt(token);
-  const newApplication = req.body;
-  Application.add(User.sub, newApplication)
+router.post('/new/:role', createProfile, cacheSignUpData, (req, res, next) => {
+  const applicationTicket = {
+    profile_id: req.body.profile_id,
+    position: req.body.position,
+  };
+  Application.add(applicationTicket)
     .then(() => {
       res.status(201).json({ message: 'Application has been submitted' });
     })
@@ -102,30 +107,25 @@ router.put('/update-role', authRequired, adminRequired, (req, res, next) => {
     .catch(next);
 });
 
-// post the information for the mentee intake for the currently logged in user
+// update applicants approved status and creates new user with okta
 
-router.post('/new-mentee', authRequired, function (req, res, next) {
-  const token = req.headers.authorization;
-  const User = jwt(token);
-  const newMenteeIntake = req.body;
-  Application.insertMenteeIntake(User.sub, newMenteeIntake)
-    .then(() => {
-      res.status(201).json({ message: 'Information has been submitted' });
-    })
-    .catch(next);
-});
-
-// post the information for the mentor intake for the currently logged in user
-
-router.post('/new-mentor', authRequired, function (req, res, next) {
-  const token = req.headers.authorization;
-  const User = jwt(token);
-  const newMentorIntake = req.body;
-  Application.insertMentorIntake(User.sub, newMentorIntake)
-    .then(() => {
-      res.status(201).json({ message: 'Information has been submitted' });
-    })
-    .catch(next);
-});
+router.put(
+  '/register/:id',
+  authRequired,
+  checkApplicationExists,
+  checkRole,
+  registerOktaUser,
+  (req, res, next) => {
+    const application_id = req.body.application_id;
+    Application.updateTicket(application_id, { approved: true })
+      .then(() => {
+        res.status(202).json({
+          message:
+            'This application has been approved and registration process is under way..',
+        });
+      })
+      .catch(next);
+  }
+);
 
 module.exports = router;

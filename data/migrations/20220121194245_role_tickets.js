@@ -36,7 +36,7 @@ exports.up = (knex) => {
       table.timestamps(true, true);
     });
 };
-  
+
 exports.down = (knex) => {
   return knex.schema.dropTableIfExists('role_tickets');
 };

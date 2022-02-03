@@ -1,7 +1,6 @@
 const db = require('../../data/db-config');
 
-async function add(id, newApplication) {
-  newApplication.profile_id = id;
+async function add(newApplication) {
   const ticket = await db('application_tickets').insert(newApplication);
   return ticket;
 }
@@ -39,17 +38,8 @@ function getPendingTicketsByRole(role_name) {
 
 function getTicketById(profile_id) {
   return db('application_tickets as a')
-    .join('profiles as p', 'a.profile_id', 'p.profile_id')
-    .join('roles as r', 'r.role_id', 'p.role_id')
-    .select(
-      'p.profile_id',
-      'p.first_name',
-      'p.last_name',
-      'r.role_name',
-      'a.created_at',
-      'a.application_id'
-    )
-    .where('p.profile_id', profile_id)
+    .select('*')
+    .where('a.profile_id', profile_id)
     .first();
 }
 
@@ -58,20 +48,8 @@ function getMentorIntake(profile_id) {
     .join('profiles as p', 'a.profile_id', 'p.profile_id')
     .join('mentor_intake as m', 'a.profile_id', 'm.profile_id')
     .join('roles as r', 'p.role_id', 'r.role_id')
-    .select(
-      'm.profile_id',
-      'm.name',
-      'm.email',
-      'm.location',
-      'm.current_comp',
-      'm.tech_stack',
-      'm.can_commit',
-      'm.how_commit',
-      'm.other_info',
-      'r.role_name',
-      'a.approved'
-    )
-    .where('p.profile_id', profile_id)
+    .select('*')
+    .where('m.profile_id', profile_id)
     .first();
 }
 
@@ -98,14 +76,12 @@ function getMenteeIntake(profile_id) {
     .where('p.profile_id', profile_id);
 }
 
-async function insertMenteeIntake(id, newMenteeIntake) {
-  newMenteeIntake.profile_id = id;
+async function insertMenteeIntake(newMenteeIntake) {
   const form = await db('mentee_intake').insert(newMenteeIntake);
   return form;
 }
 
-async function insertMentorIntake(id, newMentorIntake) {
-  newMentorIntake.profile_id = id;
+async function insertMentorIntake(newMentorIntake) {
   const form = await db('mentor_intake').insert(newMentorIntake);
   return form;
 }
@@ -120,11 +96,11 @@ function updateTicket(application_id, changes) {
 module.exports = {
   add,
   updateTicket,
+  getTicketById,
   getPendingTickets,
   getPendingTicketsByRole,
   getMentorIntake,
   getMenteeIntake,
   insertMenteeIntake,
   insertMentorIntake,
-  getTicketById,
 };
