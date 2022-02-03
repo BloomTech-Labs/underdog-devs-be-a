@@ -14,6 +14,7 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
    1. Create an environment file (.env) and populate the environment variables (Migrate/Seed your local database)
    1. Make sure the `.env` is in your `.gitignore`
    1. Follow the [Lambda instructions](https://docs.labs.lambdaschool.com/api/#setup-postgres) to set up the local PostgreSQL database
+      - In addition, create a 'test' database (for use in integration testing), and set the `TESTING_DATABASE_URL` environment variable, following the format of the `DATABASE_URL` variable, inside of your `.env` file to configure your connection to it. For reference this format is: `postgresql://USERNAME:PASSWORD@localhost:8080/DATABASE_NAME`
    1. Download the server dependencies by running `npm install`
    1. Migrate your tables by running `npm run knex migrate:latest`
    1. Seed your tables by running `npm run knex seed:run`
@@ -215,7 +216,6 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
         "deductible_donation": true
     }
 
-
 | Method | Endpoint                  | URL Parameters                                          | Required Request Body                  | Returns                                    | User Auth |
 | ------ | ------------------------- | ------------------------------------------------------- | -------------------------------------- | ------------------------------------------ | --------- |
 | GET    | `/resources`              | Allows Querying (i.e. `/resources?condition=Excellent`) | -                                      | `get all resources`                        |           |
@@ -223,7 +223,6 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 | POST   | `/resources`              |                                                         | `resource_name`,`category`,`condition` | `add a new resource to the db`             | `Admin`   |
 | PUT    | `/resources/:resource_id` | `resource_id` (required) must be an integer value       | `resource_name`,`category`,`condition` | `update a resource by resource_id,`        | `Admin`   |
 | DELETE | `/resources/:resource_id` | `resource_id` (required) must be an integer value       | -                                      | `delete a resource by resource_id from db` | `Admin`   |
-
 
 ## Resource Tickets
 

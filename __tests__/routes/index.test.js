@@ -1,23 +1,42 @@
 const request = require('supertest');
-// Full app so we can test the 404
-const server = require('../../api/app.js');
+const express = require('express');
+const indexRouter = require('../../api/index/indexRouter');
+const handleError = require('../../api/middleware/handleError');
+
+// Instantiate Test API
+
+const app = express();
+app.use('/', indexRouter);
+app.use(handleError);
+
+// Declare Tests
 
 describe('index router endpoints', () => {
-  beforeAll(() => {});
-
-  describe('GET /', () => {
-    it('should return json with api:up', async () => {
-      const res = await request(server).get('/');
-
-      expect(res.status).toBe(200);
-      expect(res.body.api).toBe('up');
+  describe('[GET] /', () => {
+    let res;
+    beforeAll(async () => {
+      res = await request(app).get('/');
     });
 
-    it('should return 404 for /ping', async () => {
-      jest.spyOn(global.console, 'error').mockImplementation(() => {});
-      const res = await request(server).get('/ping');
+    it('responds with status 200', async () => {
+      const expected = 200;
+      const actual = res.status;
 
-      expect(res.status).toBe(404);
+      expect(actual).toBe(expected);
+    });
+
+    it('returns "api up" notice', async () => {
+      const expected = /up/i;
+      const actual = res.body.api;
+
+      expect(actual).toMatch(expected);
+    });
+
+    it('returns timestamp', async () => {
+      const expected = 'timestamp';
+      const actual = res.body;
+
+      expect(actual).toHaveProperty(expected);
     });
   });
 });
