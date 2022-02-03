@@ -291,6 +291,41 @@ router.put('/update-role', authRequired, adminRequired, (req, res, next) => {
     .catch(next);
 });
 
+/**
+ * @swagger
+ * /application/{register/:id}:
+ *  post:
+ *    summary: Registers profile with okta, updates application ticket
+ *    description: If a pending application with this profile ID exists, middlware fetches data from mentor/mentee intake tables. This object is passed along into registerOktaUser where its shaped and sent to Oktas API using their clients createUser method.
+ *    tags:
+ *      - application
+ *    security:
+ *      - okta: [authRequired, adminRequired]
+ *    parameters:
+ *      - in: param
+ *        name: profile id
+ *        schema:
+ *          type: string
+ *        description: Profile ID of pending applicant
+ *    responses:
+ *      '200':
+ *        description: Response from successful post
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  description: Status of the request as a message
+ *                  type: string
+ *              items:
+ *                $ref: '#/components/schemas/Application'
+ *              example:
+ *                message: 'This application has been approved and registration process is under way..'
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ */
+
 // update applicants approved status and creates new user with okta
 
 router.put(
