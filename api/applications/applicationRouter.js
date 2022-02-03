@@ -154,13 +154,13 @@ router.get('/:role', authRequired, adminRequired, (req, res, next) => {
  *    tags:
  *      - application
  *    security:
- *      - okta: [authRequired]
+ *      - okta: [authRequired, adminRequired]
  *    parameters:
  *      - in: param
- *        name: role name
+ *        name: profile ID
  *        schema:
  *          type: string
- *        description: A request parameter that accepts 'mentor' or 'mentee'
+ *        description: A request parameter that accepts profile ID
  *    responses:
  *      '200':
  *        description: An array of application objects
@@ -189,20 +189,20 @@ router.get('/profileId/:id', checkApplicationExists, checkRole, (req, res) => {
 
 /**
  * @swagger
- * /application/{profileId/:id}:
- *  get:
- *    summary: Get the list of pending applicants by profile ID
+ * /application/{new/:role}:
+ *  post:
+ *    summary: Post the list of pending applicants by profile ID
  *    description: Provides a JSON array of applications (as objects) where 'approved' key is falsy
  *    tags:
  *      - application
  *    security:
- *      - okta: [authRequired]
+ *      - okta: [authRequired, adminRequired]
  *    parameters:
  *      - in: param
  *        name: role name
  *        schema:
  *          type: string
- *        description: A request parameter that accepts 'mentor' or 'mentee'
+ *        description: A request parameter that accepts role name
  *    responses:
  *      '200':
  *        description: An array of application objects
