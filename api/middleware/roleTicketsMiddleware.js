@@ -10,7 +10,7 @@ async function checkRoleTicketIdExists(req, res, next) {
   try {
     const roleTicket = await RoleTicket.findByRoleTicketById(role_ticket_id);
     if (!roleTicket) {
-      next(badIdErr);
+      return next(badIdErr);
     }
     req.roleTicket = roleTicket;
     next();
@@ -23,7 +23,7 @@ async function validateRoleTicket(req, res, next) {
   try {
     const payload = req.body;
     const validatedRoleTicket = await roleTicketSchema.validate(payload);
-    req.roleTicket = validatedRoleTicket;
+    req.roleTicketInput = validatedRoleTicket;
     return next();
   } catch (err) {
     return next({

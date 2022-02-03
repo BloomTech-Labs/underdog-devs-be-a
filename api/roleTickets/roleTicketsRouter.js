@@ -160,14 +160,12 @@ router.get(
   adminRequired,
   checkRoleTicketIdExists,
   (req, res, next) => {
-    const id = req.params.role_ticket_id;
-    RoleTickets.findByRoleTicketById(id)
-      .then((roleTicket) => {
-        res.status(200).json(roleTicket);
-      })
-      .catch((err) => {
-        next(err);
-      });
+    try {
+      const roleTicket = req.roleTicket;
+      return res.status(200).json(roleTicket);
+    } catch (err) {
+      return next(err);
+    }
   }
 );
 
@@ -226,7 +224,7 @@ router.post(
   validateRoleTicket,
   async (req, res, next) => {
     try {
-      const roleTicketInput = req.roleTicket;
+      const roleTicketInput = req.roleTicketInput;
       const postResponse = await RoleTickets.Create(roleTicketInput);
       return res.status(201).json({
         message: 'new role ticket created, successfully!',
