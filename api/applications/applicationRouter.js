@@ -56,7 +56,7 @@ const { registerOktaUser } = require('../middleware/oktaAuth');
  *    tags:
  *      - application
  *    security:
- *      - okta: [authRequired]
+ *      - okta: [authRequired, adminRequired]
  *    parameters:
  *      - in: query
  *        name: application property
@@ -108,7 +108,7 @@ router.get('/', authRequired, adminRequired, (req, res, next) => {
  *    tags:
  *      - application
  *    security:
- *      - okta: [authRequired]
+ *      - okta: [authRequired, adminRequired]
  *    parameters:
  *      - in: param
  *        name: role name
@@ -145,13 +145,85 @@ router.get('/:role', authRequired, adminRequired, (req, res, next) => {
     .catch(next);
 });
 
+/**
+ * @swagger
+ * /application/{profileId/:id}:
+ *  get:
+ *    summary: Get the list of pending applicants by profile ID
+ *    description: Provides a JSON array of applications (as objects) where 'approved' key is falsy
+ *    tags:
+ *      - application
+ *    security:
+ *      - okta: [authRequired]
+ *    parameters:
+ *      - in: param
+ *        name: role name
+ *        schema:
+ *          type: string
+ *        description: A request parameter that accepts 'mentor' or 'mentee'
+ *    responses:
+ *      '200':
+ *        description: An array of application objects
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                $ref: '#/components/schemas/Application'
+ *              example:
+ *                - profile_id: "00u13omswyZM1xVya4x7"
+ *                  first_name: "User"
+ *                  last_name: "6"
+ *                  role_name: "mentor"
+ *                  created_at: "2022-02-02T18:43:53.607Z"
+ *                  application_id: 5
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ */
+
 // get application by profile id
 
 router.get('/profileId/:id', checkApplicationExists, checkRole, (req, res) => {
   res.status(200).json(req.intakeData);
 });
 
-// create a new application for user upon completion of /mentor, /mentee signup form
+/**
+ * @swagger
+ * /application/{profileId/:id}:
+ *  get:
+ *    summary: Get the list of pending applicants by profile ID
+ *    description: Provides a JSON array of applications (as objects) where 'approved' key is falsy
+ *    tags:
+ *      - application
+ *    security:
+ *      - okta: [authRequired]
+ *    parameters:
+ *      - in: param
+ *        name: role name
+ *        schema:
+ *          type: string
+ *        description: A request parameter that accepts 'mentor' or 'mentee'
+ *    responses:
+ *      '200':
+ *        description: An array of application objects
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                $ref: '#/components/schemas/Application'
+ *              example:
+ *                - profile_id: "00u13omswyZM1xVya4x7"
+ *                  first_name: "User"
+ *                  last_name: "6"
+ *                  role_name: "mentor"
+ *                  created_at: "2022-02-02T18:43:53.607Z"
+ *                  application_id: 5
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ */
+
+// post a new application for the current logged in user
 
 router.post('/new/:role', createProfile, cacheSignUpData, (req, res, next) => {
   const applicationTicket = {
