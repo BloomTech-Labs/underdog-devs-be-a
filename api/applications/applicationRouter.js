@@ -42,9 +42,51 @@ const { registerOktaUser } = require('../middleware/oktaAuth');
  *      example:
  *        application_id: 1
  *        position: 4
- *        profile_id: '10'
+ *        profile_id: "10"
  *        approved: false
  *        created_at: "2021-11-01T17:59:02.023Z"
+ */
+
+/**
+ * @swagger
+ * /application:
+ *  get:
+ *    summary: Get the list of all pending tickets from the application_tickets table
+ *    description: Provides a JSON array of applications (as objects) currently pending for clients
+ *    tags:
+ *      - application
+ *    security:
+ *      - okta: []
+ *    parameters:
+ *      - in: query
+ *        name: application property
+ *        schema:
+ *          type: string
+ *        description: A resource property key to query for - accepts partial matching
+ *    responses:
+ *      '200':
+ *        description: An array of application objects
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                $ref: '#/components/schemas/Application'
+ *              example:
+ *                - profile_id: "00u13omswyZM1xVya4x7"
+ *                  first_name: "User"
+ *                  last_name: "6"
+ *                  role_name: "mentor"
+ *                  created_at: "2022-02-02T18:43:53.607Z"
+ *                  application_id: 5
+ *                - profile_id: "10"
+ *                  first_name: "User"
+ *                  last_name: "10"
+ *                  role_name: "mentee"
+ *                  created_at: "2022-02-02T18:43:53.607Z"
+ *                  application_id: 6
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
  */
 
 // get all pending application tickets
