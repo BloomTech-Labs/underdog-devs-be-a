@@ -191,6 +191,56 @@ router.get('/profileId/:id', checkApplicationExists, checkRole, (req, res) => {
  * @swagger
  * /application/{new/:role}:
  *  post:
+ *    summary: Adds a new profile to the database. Stores intake data. Creates application ticket.
+ *    description: Post a new object to the profiles table using input from signup(intake) data. A temporary ID is generated and attached to the profile_id of this object and should be replaced at a later date with an okta ID if/when applicant is accepted and their profile is registered. Middleware handles storage of intake data and makes use of the temporary profile_id as well (so this should be updated in parallel with profiles profile_id). Finally, an application_ticket is created for the signee which has an 'approved' key set to false by default.
+ *    tags:
+ *      - application
+ *    security:
+ *      - okta: [authRequired, adminRequired]
+ *    parameters:
+ *      - in: param
+ *        name: role name
+ *        schema:
+ *          type: string
+ *        description: A request parameter that accepts role name
+ *    responses:
+ *      '200':
+ *        description: An array of application objects
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                $ref: '#/components/schemas/Application'
+ *              example:
+ *                - profile_id: "00u13omswyZM1xVya4x7"
+ *                  first_name: "User"
+ *                  last_name: "6"
+ *                  role_name: "mentor"
+ *                  created_at: "2022-02-02T18:43:53.607Z"
+ *                  application_id: 5
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ */
+
+// create a new user profile and application ticket
+
+router.post('/new/:role', createProfile, cacheSignUpData, (req, res, next) => {
+  const applicationTicket = {
+    profile_id: req.body.profile_id,
+    position: req.body.position,
+  };
+  Application.add(applicationTicket)
+    .then(() => {
+      res.status(201).json({ message: 'Application has been submitted' });
+    })
+    .catch(next);
+});
+
+/**
+ * @swagger
+ * /application/{new/:role}:
+ *  put:
  *    summary: Post the list of pending applicants by profile ID
  *    description: Provides a JSON array of applications (as objects) where 'approved' key is falsy
  *    tags:
@@ -222,20 +272,6 @@ router.get('/profileId/:id', checkApplicationExists, checkRole, (req, res) => {
  *      '401':
  *        $ref: '#/components/responses/UnauthorizedError'
  */
-
-// post a new application for the current logged in user
-
-router.post('/new/:role', createProfile, cacheSignUpData, (req, res, next) => {
-  const applicationTicket = {
-    profile_id: req.body.profile_id,
-    position: req.body.position,
-  };
-  Application.add(applicationTicket)
-    .then(() => {
-      res.status(201).json({ message: 'Application has been submitted' });
-    })
-    .catch(next);
-});
 
 // update the role_id for the profile of the applicant and update the application approved value to true
 
