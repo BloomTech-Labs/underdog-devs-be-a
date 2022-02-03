@@ -192,7 +192,7 @@ router.get('/profileId/:id', checkApplicationExists, checkRole, (req, res) => {
  * /application/{new/:role}:
  *  post:
  *    summary: Adds a new profile to the database. Stores intake data. Creates application ticket.
- *    description: Post a new object to the profiles table using input from signup(intake) data. A temporary ID is generated and attached to the profile_id of this object and should be replaced at a later date with an okta ID if/when applicant is accepted and their profile is registered. Middleware handles storage of intake data and makes use of the temporary profile_id as well (so this should be updated in parallel with profiles profile_id). Finally, an application_ticket is created for the signee which has an 'approved' key set to false by default.
+ *    description: Post a new object to the profiles table using input from signup(intake) data. A temporary ID is generated and attached to the profile_id of this object and should be replaced at a later date with an okta ID if/when applicant is accepted and their profile is registered. Middleware handles storage of intake data and makes use of the temporary profile_id as well (so this should be updated in parallel with profiles profile_id). Finally, an application_ticket is created for the signee which has an 'approved' key set to false by default. *NOTE: should caching of mentor/mentee intake data fail, the newly created profile will have to be deleted in order to re-do this process. Having three operations built into one endpoint is dangerous.. but it works.
  *    tags:
  *      - application
  *    security:
@@ -202,23 +202,22 @@ router.get('/profileId/:id', checkApplicationExists, checkRole, (req, res) => {
  *        name: role name
  *        schema:
  *          type: string
- *        description: A request parameter that accepts role name
+ *        description: This parameter is used to direct flow of signup form data to our database.
  *    responses:
  *      '200':
- *        description: An array of application objects
+ *        description: Response from successful post
  *        content:
  *          application/json:
  *            schema:
- *              type: array
+ *              type: object
+ *              properties:
+ *                message:
+ *                  description: Status of the request as a message
+ *                  type: string
  *              items:
  *                $ref: '#/components/schemas/Application'
  *              example:
- *                - profile_id: "00u13omswyZM1xVya4x7"
- *                  first_name: "User"
- *                  last_name: "6"
- *                  role_name: "mentor"
- *                  created_at: "2022-02-02T18:43:53.607Z"
- *                  application_id: 5
+ *                message: 'Application has been submitted'
  *      '401':
  *        $ref: '#/components/responses/UnauthorizedError'
  */
@@ -239,9 +238,9 @@ router.post('/new/:role', createProfile, cacheSignUpData, (req, res, next) => {
 
 /**
  * @swagger
- * /application/{new/:role}:
+ * /application/{update-role}:
  *  put:
- *    summary: Post the list of pending applicants by profile ID
+ *    summary: Update the role_id for the profile of the applicant
  *    description: Provides a JSON array of applications (as objects) where 'approved' key is falsy
  *    tags:
  *      - application
@@ -249,26 +248,25 @@ router.post('/new/:role', createProfile, cacheSignUpData, (req, res, next) => {
  *      - okta: [authRequired, adminRequired]
  *    parameters:
  *      - in: param
- *        name: role name
+ *        name:
  *        schema:
- *          type: string
- *        description: A request parameter that accepts role name
+ *          type:
+ *        description:
  *    responses:
  *      '200':
- *        description: An array of application objects
+ *        description: Response from successful put
  *        content:
  *          application/json:
  *            schema:
- *              type: array
+ *              type: object
+ *              properties:
+ *                message:
+ *                  description: Status of the request as a message
+ *                  type: string
  *              items:
  *                $ref: '#/components/schemas/Application'
  *              example:
- *                - profile_id: "00u13omswyZM1xVya4x7"
- *                  first_name: "User"
- *                  last_name: "6"
- *                  role_name: "mentor"
- *                  created_at: "2022-02-02T18:43:53.607Z"
- *                  application_id: 5
+ *                message: 'This application has been approved, and User role has been updated'
  *      '401':
  *        $ref: '#/components/responses/UnauthorizedError'
  */
