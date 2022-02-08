@@ -3,8 +3,8 @@ const dotenv = require('dotenv');
 dotenv.config({ path: '../../.env' });
 
 const client = new okta.Client({
-  orgUrl: process.env.OKTA_REGISTRATION_URL,
-  token: process.env.OKTA_REGISTRATION_TOKEN,
+  orgUrl: process.env.OKTA_URL_ISSUER,
+  token: process.env.OKTA_CLIENT_ID,
 });
 
 function passGenerator() {
