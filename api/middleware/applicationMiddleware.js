@@ -160,7 +160,8 @@ const validateMentorIntakeData = async (req, res, next) => {
 };
 
 module.exports = {
-  validateProfile,
+  cacheSignUpData,
+  checkApplicationExists,
   checkRole,
   validateApplicationTicket,
   validateMenteeIntakeData,

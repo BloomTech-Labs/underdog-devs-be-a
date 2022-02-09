@@ -56,8 +56,12 @@ const applicationTicketSchema = yup.object().shape({
     .oneOf([3, 4], '"position" must either 3 or 4'),
   profile_id: yup.string().trim().required('"profile_id" (string) is required'),
   approved: yup.boolean(),
-  created_at: yup.oneOf([undefined], '"created_at" must not be provided'),
-  updated_at: yup.oneOf([undefined], '"updated_at" must not be provided'),
+  created_at: yup
+    .mixed()
+    .oneOf([undefined], '"created_at" must not be provided'),
+  updated_at: yup
+    .mixed()
+    .oneOf([undefined], '"updated_at" must not be provided'),
 });
 
 module.exports = {
