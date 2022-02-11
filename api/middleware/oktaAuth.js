@@ -1,10 +1,9 @@
 const okta = require('@okta/okta-sdk-nodejs');
-const dotenv = require('dotenv');
-dotenv.config({ path: '../../.env' });
+const { config } = require('../../config/okta');
 
 const client = new okta.Client({
-  orgUrl: process.env.OKTA_URL_ISSUER,
-  token: process.env.OKTA_CLIENT_ID,
+  orgUrl: config.issuer,
+  token: config.clientId,
 });
 
 function passGenerator() {
