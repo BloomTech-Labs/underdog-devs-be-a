@@ -10,8 +10,10 @@ const dummyData = [
     list_convictions: 'coded too much',
     tech_stack: 'HTML/CSS/JS',
     experience_level: '2 years',
-    your_hope: 'I want a career in coding',
+    mentee_focus: 'I want a career in coding',
     other_info: 'Not really',
+    low_income: true,
+    underrepresented_group: false,
   },
   {
     profile_id: '7',
@@ -24,7 +26,9 @@ const dummyData = [
     list_convictions: 'coded too much',
     tech_stack: 'Wix',
     experience_level: '1 years',
-    your_hope: 'I want a career in coding too',
+    low_income: true,
+    mentee_focus: 'I want a career in coding',
+    underrepresented_group: false,
   },
   {
     profile_id: '10',
@@ -36,7 +40,9 @@ const dummyData = [
     formerly_incarcerated: false,
     tech_stack: 'html, myspace',
     experience_level: '5 years',
-    your_hope: 'I miss myspace',
+    low_income: true,
+    mentee_focus: 'I want a career in coding',
+    underrepresented_group: false,
   },
 ];
 

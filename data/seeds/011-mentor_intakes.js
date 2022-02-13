@@ -7,8 +7,8 @@ const dummyData = [
     last_name: 'Jeopardy',
     current_comp: 'Amazin',
     tech_stack: 'Node.js, Axios',
-    can_commit: false,
-    how_commit: '1:1 sessions - Once a month',
+    experience_level: 'expert',
+    mentor_commitment: '1:1 sessions - Once a month',
   },
   {
     profile_id: '9',
@@ -17,7 +17,8 @@ const dummyData = [
     first_name: 'Mr.',
     last_name: 'America',
     tech_stack: 'JS, HTML',
-    can_commit: true,
+    experience_level: 'expert',
+    mentor_commitment: '1:1 sessions - Once a month',
   },
   {
     profile_id: '00u13omswyZM1xVya4x7',
@@ -27,8 +28,8 @@ const dummyData = [
     last_name: 'Baby',
     current_comp: 'Oil United',
     tech_stack: 'Quickbooks',
-    can_commit: true,
-    how_commit: 'Daily, 9 hours',
+    experience_level: 'beginner',
+    mentor_commitment: '1:1 sessions - Once a month',
   },
 ];
 
