@@ -17,8 +17,8 @@ exports.up = function (knex) {
       table.string('last_name').notNullable();
       table.string('current_comp');
       table.string('tech_stack').notNullable();
-      table.string('can_commit').notNullable();
-      table.string('how_commit', 255);
+      table.string('experience_level').notNullable();
+      table.string('mentor_commitment', 255).notNullable();
       table.string('other_info', 255);
     });
 };
