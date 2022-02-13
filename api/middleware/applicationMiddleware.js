@@ -51,7 +51,7 @@ const cacheSignUpData = async (req, res, next) => {
       } else if (!newMentorApplication.location) {
         next({ status: 400, message: 'location required' });
       } else if (!newMentorApplication.mentor_commitment) {
-        next({ status: 400, message: 'can_commit required' });
+        next({ status: 400, message: 'mentor_commitment required' });
       } else if (!newMentorApplication.tech_stack) {
         next({ status: 400, message: 'tech_stack required' });
       } else {
