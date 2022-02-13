@@ -20,14 +20,14 @@ const cacheSignUpData = async (req, res, next) => {
     last_name: formData.last_name,
     email: formData.email,
     location: formData.location,
+    experience_level: formData.experience_level,
+    tech_stack: formData.tech_stack,
     other_info: formData.other_info,
   };
   const newMentorApplication = {
     ...sharedFields,
     current_comp: formData.current_comp,
-    tech_stack: formData.tech_stack,
-    can_commit: formData.can_commit,
-    how_commit: formData.how_commit,
+    mentor_commitment: formData.mentor_commitment,
     other_info: formData.other_info,
   };
   const newMenteeApplication = {
@@ -35,9 +35,9 @@ const cacheSignUpData = async (req, res, next) => {
     lives_in_us: formData.lives_in_us,
     formerly_incarcerated: formData.formerly_incarcerated,
     list_convictions: formData.list_convictions,
-    tech_stack: formData.tech_stack,
-    experience_level: formData.experience_level,
-    your_hope: formData.your_hope,
+    mentee_focus: formData.mentee_focus,
+    underrepresented_group: formData.underrepresented_group,
+    low_income: formData.low_income,
   };
 
   try {
@@ -50,7 +50,7 @@ const cacheSignUpData = async (req, res, next) => {
         next({ status: 400, message: 'email required' });
       } else if (!newMentorApplication.location) {
         next({ status: 400, message: 'location required' });
-      } else if (!newMentorApplication.can_commit) {
+      } else if (!newMentorApplication.mentor_commitment) {
         next({ status: 400, message: 'can_commit required' });
       } else if (!newMentorApplication.tech_stack) {
         next({ status: 400, message: 'tech_stack required' });
@@ -67,7 +67,7 @@ const cacheSignUpData = async (req, res, next) => {
   } catch (err) {
     return next({
       status: 422,
-      message: `There was a problem caching application intake data`,
+      message: err,
     });
   }
 };
