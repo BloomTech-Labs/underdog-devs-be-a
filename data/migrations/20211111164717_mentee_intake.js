@@ -17,10 +17,12 @@ exports.up = function (knex) {
       table.string('last_name').notNullable();
       table.boolean('lives_in_us').notNullable();
       table.boolean('formerly_incarcerated').notNullable();
+      table.boolean('underrepresented_group').notNullable();
+      table.boolean('low_income').notNullable();
       table.string('list_convictions');
       table.string('tech_stack').notNullable();
       table.string('experience_level').notNullable();
-      table.string('your_hope').notNullable();
+      table.string('mentee_focus').notNullable();
       table.string('other_info', 255);
     });
 };
