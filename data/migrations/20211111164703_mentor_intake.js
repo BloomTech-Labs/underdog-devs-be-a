@@ -16,7 +16,7 @@ exports.up = function (knex) {
       table.string('first_name').notNullable();
       table.string('last_name').notNullable();
       table.string('current_comp');
-      table.boolean('other_tech');
+      table.string('other_tech');
       table.boolean('front_end').defaultValue(false);
       table.boolean('back_end').defaultValue(false);
       table.boolean('full_stack').defaultValue(false);
