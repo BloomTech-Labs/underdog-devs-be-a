@@ -16,7 +16,12 @@ exports.up = function (knex) {
       table.string('first_name').notNullable();
       table.string('last_name').notNullable();
       table.string('current_comp');
-      table.string('tech_stack').notNullable();
+      table.boolean('other_tech');
+      table.boolean('front_end').defaultValue(false);
+      table.boolean('back_end').defaultValue(false);
+      table.boolean('full_stack').defaultValue(false);
+      table.boolean('android_mobile').defaultValue(false);
+      table.boolean('ios_mobile').defaultValue(false);
       table.string('experience_level').notNullable();
       table.string('mentor_commitment', 255).notNullable();
       table.string('other_info', 255);
