@@ -21,7 +21,13 @@ const cacheSignUpData = async (req, res, next) => {
     email: formData.email,
     location: formData.location,
     experience_level: formData.experience_level,
-    tech_stack: formData.tech_stack,
+    other_tech: formData.tech_stack,
+    front_end: formData.front_end,
+    back_end: formData.back_end,
+    full_stack: formData.full_stack,
+    ux_design: formData.ux_design,
+    android_mobile: formData.android_mobile,
+    ios_mobile: formData.ios_mobile,
     other_info: formData.other_info,
   };
   const newMentorApplication = {
@@ -35,9 +41,13 @@ const cacheSignUpData = async (req, res, next) => {
     lives_in_us: formData.lives_in_us,
     formerly_incarcerated: formData.formerly_incarcerated,
     list_convictions: formData.list_convictions,
-    mentee_focus: formData.mentee_focus,
+    other_focus: formData.mentee_focus,
     underrepresented_group: formData.underrepresented_group,
     low_income: formData.low_income,
+    industry_knowledge: formData.industry_knowledge,
+    job_help: formData.low_income,
+    career_coaching: formData.low_income,
+    pair_programming: formData.low_income,
   };
 
   try {
@@ -52,8 +62,6 @@ const cacheSignUpData = async (req, res, next) => {
         next({ status: 400, message: 'location required' });
       } else if (!newMentorApplication.mentor_commitment) {
         next({ status: 400, message: 'mentor_commitment required' });
-      } else if (!newMentorApplication.tech_stack) {
-        next({ status: 400, message: 'tech_stack required' });
       } else {
         req.body.position = 3;
         await insertMentorIntake(newMentorApplication);
