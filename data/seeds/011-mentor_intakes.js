@@ -33,8 +33,8 @@ const dummyData = [
     current_comp: 'Oil United',
     other_tech: 'Quickbooks',
     ios_mobile: true,
-    android_mobile: true,
-    ux_design: 'beginner',
+    ux_design: true,
+    experience_level: 'expert',
     mentor_commitment: '1:1 sessions - Once a month',
   },
 ];
