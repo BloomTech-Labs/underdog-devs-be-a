@@ -10,23 +10,17 @@ const roleTicketSchema = yup.object().shape({
   updated_at: yup
     .mixed()
     .oneOf([undefined], "'updated_at' field must not be provided"),
-  submitted_by: yup
-    .string()
-    .trim()
-    .required("'submitted_by' is required"),
-  subject_id: yup
-    .string()
-    .trim()
-    .required("'subject_id' is required"),
+  submitted_by: yup.string().trim().required("'submitted_by' is required"),
+  subject_id: yup.string().trim().required("'subject_id' is required"),
   requested_role: yup
     .number()
     .integer()
     .positive()
     .required("a valid 'requested_role' is required"),
-    approved_by: yup.string().trim(),
-    comments: yup.string().trim(),
-    pending: yup.boolean(),
-    resolved: yup.boolean()
+  approved_by: yup.string().trim(),
+  comments: yup.string().trim(),
+  pending: yup.boolean(),
+  resolved: yup.boolean(),
 });
 
 module.exports = roleTicketSchema;
