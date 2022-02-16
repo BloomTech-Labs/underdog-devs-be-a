@@ -350,7 +350,7 @@ router.put(
 /**
  * @swagger
  * /application/{update-notes/:id}:
- *  post:
+ *  put:
  *    summary: Updates application_notes field using the application id
  *    description: An application_notes field is updated when application_id and changes, from the req.body, are sent to the updateApplicationNotes function in the applicationModel. The updated note is returned on a successful update or a 404 if the application does not exist. The authRequired and adminRequired middleware functions keep this endpoint secure.
  *    tags:
