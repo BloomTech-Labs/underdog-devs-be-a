@@ -11,9 +11,10 @@ exports.up = function (knex) {
         .inTable('profiles')
         .onDelete('RESTRICT')
         .onUpdate('RESTRICT');
-      table.string('email').notNullable();
+      table.string('email').notNullable().unique();
       table.string('location').notNullable();
-      table.string('name').notNullable();
+      table.string('first_name').notNullable();
+      table.string('last_name').notNullable();
       table.boolean('lives_in_us').notNullable();
       table.boolean('formerly_incarcerated').notNullable();
       table.string('list_convictions');
