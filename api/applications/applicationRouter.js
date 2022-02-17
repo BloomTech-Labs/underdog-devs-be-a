@@ -3,6 +3,8 @@ const authRequired = require('../middleware/authRequired');
 const Application = require('./applicationModel');
 const Profile = require('../profile/profileModel');
 const router = express.Router();
+const { axios: axios } = require('axios');
+
 // const jwt = require('jwt-decode');
 const { adminRequired } = require('../middleware/permissionsRequired.js');
 const {
@@ -346,5 +348,31 @@ router.put(
       .catch(next);
   }
 );
+
+// posts mentee data to DS
+router.post('/dsMenteeData', (req, next) => {
+  const formData = req.body;
+  axios
+    .post(`${process.env.DS_API_URL}`, formData)
+    .then((res) => {
+      Application.insertMenteeIntake(formData);
+
+      res.status(200).json(res);
+    })
+    .catch(next);
+});
+
+// posts mentor data to DS
+router.post('/dsMentorData', (req, next) => {
+  const formData = req.body;
+  axios
+    .post(`${process.env.DS_API_URL}`, formData)
+    .then((res) => {
+      Application.insertMentorIntake(formData);
+
+      res.status(200).json(res);
+    })
+    .catch(next);
+});
 
 module.exports = router;
