@@ -350,7 +350,7 @@ router.put(
 );
 
 // posts mentee data to DS
-router.post('/dsMenteeData', (req, next) => {
+router.post('/dsMenteeData', authRequired, (req, next) => {
   const formData = req.body;
   axios
     .post(`${process.env.DS_API_URL}`, formData)
@@ -363,7 +363,7 @@ router.post('/dsMenteeData', (req, next) => {
 });
 
 // posts mentor data to DS
-router.post('/dsMentorData', (req, next) => {
+router.post('/dsMentorData', authRequired, (req, next) => {
   const formData = req.body;
   axios
     .post(`${process.env.DS_API_URL}`, formData)
