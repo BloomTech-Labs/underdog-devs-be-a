@@ -43,7 +43,6 @@ const dummyData = [
     experience_level: 'expert',
     pair_programming: true,
     job_search: true,
-    other_info: 'i like bagels',
   },
 ];
 

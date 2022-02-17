@@ -14,7 +14,6 @@ const dummyData = [
     experience_level: '2 years',
     industry_knowledge: true,
     job_search: true,
-    other_info: 'Not really',
     low_income: true,
     underrepresented_group: false,
     pair_programming: true,
