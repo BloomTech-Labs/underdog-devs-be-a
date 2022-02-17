@@ -19,35 +19,33 @@ const cacheSignUpData = async (req, res, next) => {
     first_name: formData.first_name,
     last_name: formData.last_name,
     email: formData.email,
-    location: formData.location,
+    country: formData.country,
+    state: formData.state,
+    city: formData.city,
     experience_level: formData.experience_level,
-    other_tech: formData.tech_stack,
     front_end: formData.front_end,
     back_end: formData.back_end,
     full_stack: formData.full_stack,
     ux_design: formData.ux_design,
     android_mobile: formData.android_mobile,
     ios_mobile: formData.ios_mobile,
+    industry_knowledge: formData.industry_knowledge,
+    job_search: formData.job_search,
+    career_development: formData.career_development,
+    pair_programming: formData.pair_programming,
     other_info: formData.other_info,
   };
   const newMentorApplication = {
     ...sharedFields,
     current_comp: formData.current_comp,
-    mentor_commitment: formData.mentor_commitment,
     other_info: formData.other_info,
   };
   const newMenteeApplication = {
     ...sharedFields,
-    lives_in_us: formData.lives_in_us,
     formerly_incarcerated: formData.formerly_incarcerated,
     list_convictions: formData.list_convictions,
-    other_focus: formData.mentee_focus,
     underrepresented_group: formData.underrepresented_group,
     low_income: formData.low_income,
-    industry_knowledge: formData.industry_knowledge,
-    job_help: formData.low_income,
-    career_coaching: formData.low_income,
-    pair_programming: formData.low_income,
   };
 
   try {
@@ -58,10 +56,12 @@ const cacheSignUpData = async (req, res, next) => {
         next({ status: 400, message: 'last_name required' });
       } else if (!newMentorApplication.email) {
         next({ status: 400, message: 'email required' });
-      } else if (!newMentorApplication.location) {
-        next({ status: 400, message: 'location required' });
-      } else if (!newMentorApplication.mentor_commitment) {
-        next({ status: 400, message: 'mentor_commitment required' });
+      } else if (!newMentorApplication.country) {
+        next({ status: 400, message: 'country required' });
+      } else if (!newMentorApplication.state) {
+        next({ status: 400, message: 'state required' });
+      } else if (!newMentorApplication.city) {
+        next({ status: 400, message: 'city required' });
       } else {
         req.body.position = 3;
         await insertMentorIntake(newMentorApplication);
