@@ -34,6 +34,7 @@ const cacheSignUpData = async (req, res, next) => {
     job_search: formData.job_search,
     career_development: formData.career_development,
     pair_programming: formData.pair_programming,
+    other_info: formData.other_info,
   };
   const newMentorApplication = {
     ...sharedFields,
