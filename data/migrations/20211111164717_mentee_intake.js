@@ -28,7 +28,6 @@ exports.up = function (knex) {
       table.boolean('android_mobile').defaultTo(false);
       table.boolean('ios_mobile').defaultTo(false);
       table.string('experience_level').notNullable();
-      table.string('other_focus').notNullable();
       table.boolean('career_development').defaultTo(false);
       table.boolean('industry_knowledge').defaultTo(false);
       table.boolean('job_search').defaultTo(false);
