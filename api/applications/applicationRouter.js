@@ -356,7 +356,6 @@ router.post('/dsMenteeData', authRequired, (req, next) => {
     .post(`${process.env.DS_API_URL}`, formData)
     .then((res) => {
       Application.insertMenteeIntake(formData);
-
       res.status(200).json(res);
     })
     .catch(next);
@@ -369,7 +368,6 @@ router.post('/dsMentorData', authRequired, (req, next) => {
     .post(`${process.env.DS_API_URL}`, formData)
     .then((res) => {
       Application.insertMentorIntake(formData);
-
       res.status(200).json(res);
     })
     .catch(next);

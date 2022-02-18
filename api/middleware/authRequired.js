@@ -23,7 +23,7 @@ const authRequired = async (req, res, next) => {
     if (!match) {
       return next({
         status: 401,
-        message: 'Missing idToken',
+        message: `Missing idToken`,
       });
     }
 
