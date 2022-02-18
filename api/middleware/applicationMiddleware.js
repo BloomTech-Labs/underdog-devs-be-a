@@ -39,7 +39,6 @@ const cacheSignUpData = async (req, res, next) => {
   const newMentorApplication = {
     ...sharedFields,
     current_comp: formData.current_comp,
-    other_info: formData.other_info,
   };
   const newMenteeApplication = {
     ...sharedFields,
@@ -51,24 +50,10 @@ const cacheSignUpData = async (req, res, next) => {
 
   try {
     if (role === 'mentor') {
-      if (!newMentorApplication.first_name) {
-        next({ status: 400, message: 'first_name required' });
-      } else if (!newMentorApplication.last_name) {
-        next({ status: 400, message: 'last_name required' });
-      } else if (!newMentorApplication.email) {
-        next({ status: 400, message: 'email required' });
-      } else if (!newMentorApplication.country) {
-        next({ status: 400, message: 'country required' });
-      } else if (!newMentorApplication.state) {
-        next({ status: 400, message: 'state required' });
-      } else if (!newMentorApplication.city) {
-        next({ status: 400, message: 'city required' });
-      } else {
-        req.body.position = 3;
-        await insertMentorIntake(newMentorApplication);
-        next();
-      }
-    } else if (role === 'mentee') {
+      req.body.position = 3;
+      await insertMentorIntake(newMentorApplication);
+      next();
+    } else {
       req.body.position = 4;
       await insertMenteeIntake(newMenteeApplication);
       next();
