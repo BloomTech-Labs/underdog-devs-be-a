@@ -69,18 +69,17 @@ const cacheSignUpData = async (req, res, next) => {
 };
 
 const checkApplicationExists = async (req, res, next) => {
-  try {
-    const profile = await getTicketById(req.params.id);
-    if (profile) {
-      req.body = profile;
+  getTicketById(req.params.id)
+    .then((profile) => {
+      req.profile = profile;
       next();
-    }
-  } catch (err) {
-    return next({
-      status: 404,
-      message: `no applications with profile_id: ${req.params.id} were found`,
-    });
-  }
+    })
+    .catch(() =>
+      next({
+        status: 404,
+        message: `no applications with profile_id: ${req.params.id} were found`,
+      })
+    );
 };
 
 const checkRole = async (req, res, next) => {
