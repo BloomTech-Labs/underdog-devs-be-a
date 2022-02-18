@@ -13,6 +13,7 @@ const {
   menteeApplicationSchema,
   applicationTicketSchema,
 } = require('../../data/schemas/applicationSchema');
+const { findById } = require('../profile/profileModel');
 
 // will change to send data directly to DS BE in the future
 const cacheSignUpData = async (req, res, next) => {
@@ -70,8 +71,8 @@ const cacheSignUpData = async (req, res, next) => {
 
 const checkApplicationExists = async (req, res, next) => {
   getTicketById(req.params.id)
-    .then((profile) => {
-      req.profile = profile;
+    .then((application) => {
+      req.body = application;
       next();
     })
     .catch(() =>
@@ -113,6 +114,15 @@ const checkRole = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+const findProfile = async (req, res, next) => {
+  findById(req.params.id)
+    .then((profile) => {
+      req.profile = profile;
+      next();
+    })
+    .catch(next);
 };
 
 const validateApplicationTicket = async (req, res, next) => {
@@ -169,6 +179,7 @@ module.exports = {
   cacheSignUpData,
   checkApplicationExists,
   checkRole,
+  findProfile,
   validateApplicationTicket,
   validateMenteeIntakeData,
   validateMentorIntakeData,
