@@ -95,9 +95,16 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
         "first_name": 'Hotdog',
         "last_name": 'Jeopardy',
         "current_comp": 'Amazin',
-        "tech_stack": 'Node.js, Axios',
-        "can_commit": false,
-        "how_commit": '1:1 sessions - Once a month',
+        "other_tech": 'Node.js, Axios',
+        "front_end": true,
+        "back_end": false,
+        "full_stack": false,
+        "ux_design": true,
+        "android_mobile": false,
+        "ios_mobile": false
+        "experience_level": 'expert',
+        "mentor_commitment": '1:1 sessions - Once a month',
+        "other_info": 'none'
     }
 
 ###### Mentee intake schema:
@@ -111,9 +118,21 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
         "lives_in_us": true,
         "formerly_incarcerated": true,
         "list_convictions": 'coded too much',
-        "tech_stack": 'HTML/CSS/JS',
-        "experience_level": '2 years',
-        "your_hope": 'I want a career in coding',
+        "other_tech": 'Node.js, Axios',
+        "front_end": true,
+        "back_end": false,
+        "full_stack": false,
+        "ux_design": true,
+        "android_mobile": false,
+        "ios_mobile": false
+        "experience_level": beginner',
+        "other_focus": 'I want a career in coding',
+        "underrepresented_group": true,
+        "low_income": false,
+        "career_coaching": false,
+        "job_help": true,
+        "industry_knowledge": true,
+        "pair_programming": false,
         "other_info": 'Not really',
     }
 
