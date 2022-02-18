@@ -15,7 +15,8 @@ function getPendingTickets() {
       'p.last_name',
       'r.role_name',
       'a.created_at',
-      'a.application_id'
+      'a.application_id',
+      'a.application_notes'
     )
     .where('a.approved', false);
 }
@@ -94,6 +95,15 @@ function updateTicket(application_id, changes) {
     .update(changes);
 }
 
+function updateApplicationNotes(application_id, noteChanges) {
+  return db('application_tickets')
+    .where('application_id', application_id)
+    .first()
+    .update('application_notes', noteChanges, [
+      'application_tickets.application_notes as new_notes',
+    ]);
+}
+
 module.exports = {
   add,
   updateTicket,
@@ -104,4 +114,5 @@ module.exports = {
   getMenteeIntake,
   insertMenteeIntake,
   insertMentorIntake,
+  updateApplicationNotes,
 };
