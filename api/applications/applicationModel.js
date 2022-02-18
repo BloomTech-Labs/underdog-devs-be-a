@@ -60,7 +60,8 @@ function getMenteeIntake(profile_id) {
     .join('roles as r', 'p.role_id', 'r.role_id')
     .select(
       'm.profile_id',
-      'm.name',
+      'm.first_name',
+      'm.last_name',
       'm.email',
       'm.location',
       'm.lives_in_us',
