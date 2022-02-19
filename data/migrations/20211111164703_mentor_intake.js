@@ -20,14 +20,10 @@ exports.up = function (knex) {
       table.string('current_comp');
       table.boolean('front_end').defaultTo(false);
       table.boolean('back_end').defaultTo(false);
-      table.boolean('full_stack').defaultTo(false);
-      table.boolean('ux_design').defaultTo(false);
-      table.boolean('android_mobile').defaultTo(false);
-      table.boolean('ios_mobile').defaultTo(false);
-      table.boolean('career_development').defaultTo(false);
+      table.string('subject').notNullable();
       table.string('experience_level').notNullable();
       table.boolean('industry_knowledge').defaultTo(false);
-      table.boolean('job_search').defaultTo(false);
+      table.boolean('job_help').defaultTo(false);
       table.boolean('pair_programming').defaultTo(false);
       table.string('other_info');
     });
