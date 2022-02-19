@@ -120,7 +120,6 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
         "list_convictions": 'coded too much',
         "subject": 'frontend'
         "experience_level": beginner',
-        "other_focus": 'I want a career in coding',
         "underrepresented_group": true,
         "low_income": false,
         "job_help": true,
