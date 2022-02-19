@@ -1,3 +1,5 @@
+const sendData = require('./sendData');
+
 const {
   getTicketById,
   getMentorIntake,
@@ -51,10 +53,12 @@ const cacheSignUpData = async (req, res, next) => {
   try {
     if (role === 'mentor') {
       req.body.position = 3;
+      sendData(newMentorApplication, role);
       await insertMentorIntake(newMentorApplication);
       next();
     } else {
       req.body.position = 4;
+      sendData(newMentorApplication, role);
       await insertMenteeIntake(newMenteeApplication);
       next();
     }
