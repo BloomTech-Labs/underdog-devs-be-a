@@ -18,8 +18,6 @@ exports.up = function (knex) {
       table.string('first_name').notNullable();
       table.string('last_name').notNullable();
       table.string('current_comp');
-      table.boolean('front_end').defaultTo(false);
-      table.boolean('back_end').defaultTo(false);
       table.string('subject').notNullable();
       table.string('experience_level').notNullable();
       table.boolean('industry_knowledge').defaultTo(false);
