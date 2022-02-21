@@ -379,7 +379,6 @@ router.post('/dsMentorData', authRequired, cacheSignUpData, (req, next) => {
     })
     .catch(next);
 });
-
 /**
  * @swagger
  * /application/{update-notes/:id}:
