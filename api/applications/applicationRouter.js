@@ -9,6 +9,7 @@ const {
   cacheSignUpData,
   checkApplicationExists,
   checkRole,
+  sendData,
 } = require('../middleware/applicationMiddleware');
 const { createProfile } = require('../middleware/profilesMiddleware');
 const { registerOktaUser } = require('../middleware/oktaAuth');
@@ -230,6 +231,7 @@ router.post(
   createProfile,
   validation(applicationSchema),
   cacheSignUpData,
+  sendData,
   (req, res, next) => {
     const applicationTicket = {
       profile_id: req.body.profile_id,

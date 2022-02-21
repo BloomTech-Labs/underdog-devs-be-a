@@ -27,6 +27,7 @@ exports.up = function (knex) {
       table.boolean('job_help').defaultTo(false);
       table.boolean('pair_programming').defaultTo(false);
       table.string('other_info');
+      table.string('validateStatus').defaultTo('pending');
     });
 };
 

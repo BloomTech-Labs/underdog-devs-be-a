@@ -1,3 +1,6 @@
+const axios = require('axios');
+const { config } = require('../../config/dsConfig');
+
 const {
   getTicketById,
   getMentorIntake,
@@ -29,6 +32,7 @@ const cacheSignUpData = async (req, res, next) => {
     job_help: formData.job_help,
     pair_programming: formData.pair_programming,
     other_info: formData.other_info,
+    validateStatus: 'pending',
   };
   const newMentorApplication = {
     ...sharedFields,
@@ -45,10 +49,14 @@ const cacheSignUpData = async (req, res, next) => {
   try {
     if (role === 'mentor') {
       req.body.position = 3;
+      req.application = newMentorApplication;
+      req.role = 'Mentors';
       await insertMentorIntake(newMentorApplication);
       next();
     } else {
       req.body.position = 4;
+      req.application = newMenteeApplication;
+      req.role = 'Mentees';
       await insertMenteeIntake(newMenteeApplication);
       next();
     }
@@ -147,6 +155,17 @@ const validateMentorIntakeData = async (req, res, next) => {
   }
 };
 
+const sendData = (req, res, next) => {
+  axios
+    .post(`${config.baseURL}/${req.role}/create`, req.application)
+    .then((res) => {
+      next({ status: res.status, message: res.data });
+    })
+    .catch((err) => {
+      next({ status: res.status, message: err });
+    });
+};
+
 module.exports = {
   cacheSignUpData,
   checkApplicationExists,
@@ -154,4 +173,5 @@ module.exports = {
   validateApplicationTicket,
   validateMenteeIntakeData,
   validateMentorIntakeData,
+  sendData,
 };

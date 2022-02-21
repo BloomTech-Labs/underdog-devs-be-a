@@ -91,20 +91,19 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
     {
         "profile_id": '00u13oned0U8XP8Mb4x7',
         "email": 'fakeemail2@gmail.com',
-        "location": 'Bumville, USA',
+        "country": 'USA',
+        "state": 'California',
+        "city": 'San Francisco',
         "first_name": 'Hotdog',
         "last_name": 'Jeopardy',
         "current_comp": 'Amazin',
-        "other_tech": 'Node.js, Axios',
-        "front_end": true,
-        "back_end": false,
-        "full_stack": false,
-        "ux_design": true,
-        "android_mobile": false,
-        "ios_mobile": false
+        "job_help": true,
+        "industry_knowledge": true,
+        "pair_programming": false,
+        "subject": 'frontend'
         "experience_level": 'expert',
-        "mentor_commitment": '1:1 sessions - Once a month',
-        "other_info": 'none'
+        "other_info": 'none',
+        "validateStatus: 'pending',
     }
 
 ###### Mentee intake schema:
@@ -112,28 +111,22 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
     {
         "profile_id": '12',
         "email": 'fakeemail1@gmail.com',
-        "location": 'California, USA',
+        "country": 'USA',
+        "state": 'California',
+        "city": 'San Francisco',
         "first_name": 'Joe',
         "last_name": 'Baseball',
-        "lives_in_us": true,
         "formerly_incarcerated": true,
         "list_convictions": 'coded too much',
-        "other_tech": 'Node.js, Axios',
-        "front_end": true,
-        "back_end": false,
-        "full_stack": false,
-        "ux_design": true,
-        "android_mobile": false,
-        "ios_mobile": false
+        "subject": 'frontend'
         "experience_level": beginner',
-        "other_focus": 'I want a career in coding',
         "underrepresented_group": true,
         "low_income": false,
-        "career_coaching": false,
         "job_help": true,
         "industry_knowledge": true,
         "pair_programming": false,
         "other_info": 'Not really',
+        "validateStatus: 'pending',
     }
 
 | Method | Endpoint                        | Required Request Body                                                      | Returns                                                          | User Auth |
