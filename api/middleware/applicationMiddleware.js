@@ -70,44 +70,44 @@ const cacheSignUpData = async (req, res, next) => {
 };
 
 const checkApplicationExists = async (req, res, next) => {
-  getTicketById(req.params.id)
-    .then((application) => {
-      req.body = application;
-      next();
-    })
-    .catch(() =>
-      next({
-        status: 404,
-        message: `no applications with profile_id: ${req.params.id} were found`,
-      })
-    );
+  const application = await getTicketById(req.params.id);
+
+  if (application) {
+    req.application = application;
+    next();
+  } else {
+    return next({
+      status: 404,
+      message: `no applications with profile_id: ${req.params.id} were found`,
+    });
+  }
 };
 
 const checkRole = async (req, res, next) => {
-  const profile = req.body;
+  const application = req.application;
   try {
-    if (profile.position === 3) {
-      const mentorData = await getMentorIntake(profile.profile_id);
+    if (application.position === 3) {
+      const mentorData = await getMentorIntake(application.profile_id);
       if (!mentorData) {
         return next({
           status: 404,
-          message: `form data for ${profile.profile_id} not found`,
+          message: `form data for ${application.profile_id} not found`,
         });
       } else {
         req.intakeData = mentorData;
-        mentorData.application_id = profile.application_id;
+        mentorData.application_id = application.application_id;
         next();
       }
-    } else if (profile.position === 4) {
-      const menteeData = await getMenteeIntake(profile.profile_id);
+    } else if (application.position === 4) {
+      const menteeData = await getMenteeIntake(application.profile_id);
       if (!menteeData) {
         return next({
           status: 404,
-          message: `form data for ${profile.profile_id} not found`,
+          message: `form data for ${application.profile_id} not found`,
         });
       } else {
         req.intakeData = menteeData;
-        menteeData.application_id = profile.application_id;
+        menteeData.application_id = application.application_id;
         next();
       }
     }
@@ -117,12 +117,17 @@ const checkRole = async (req, res, next) => {
 };
 
 const findProfile = async (req, res, next) => {
-  findById(req.params.id)
-    .then((profile) => {
-      req.profile = profile;
-      next();
-    })
-    .catch(next);
+  const profile = await findById(req.params.id);
+
+  if (profile) {
+    req.profile = profile;
+    next();
+  } else {
+    return next({
+      status: 404,
+      message: `no profiles with profile_id: ${req.params.id} were found`,
+    });
+  }
 };
 
 const validateApplicationTicket = async (req, res, next) => {
