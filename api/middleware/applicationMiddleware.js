@@ -50,11 +50,13 @@ const cacheSignUpData = async (req, res, next) => {
     if (role === 'mentor') {
       req.body.position = 3;
       req.application = newMentorApplication;
+      req.role = 'Mentors';
       await insertMentorIntake(newMentorApplication);
       next();
     } else {
       req.body.position = 4;
       req.application = newMenteeApplication;
+      req.role = 'Mentees';
       await insertMenteeIntake(newMenteeApplication);
       next();
     }
@@ -155,12 +157,12 @@ const validateMentorIntakeData = async (req, res, next) => {
 
 const sendData = (req, res, next) => {
   axios
-    .post(`${config.baseURL}${req.params.role}/create`, req.application)
+    .post(`${config.baseURL}/${req.role}/create`, req.application)
     .then((res) => {
-      next({ status: 200, message: res.data });
+      next({ status: res.status, message: res.data });
     })
     .catch((err) => {
-      next({ status: 400, message: err });
+      next({ status: res.status, message: err });
     });
 };
 
