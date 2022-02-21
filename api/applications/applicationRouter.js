@@ -360,7 +360,7 @@ router.put(
 router.post('/dsMenteeData/', authRequired, cacheSignUpData, (req, next) => {
   const formData = req.body;
   axios
-    .post(`${process.env.DS_API_URL}:role/create`, formData)
+    .post(`${process.env.DS_API_URL}mentee/create`, formData)
     .then((res) => {
       Application.insertMenteeIntake(formData);
       res.status(200).json(res);
@@ -372,13 +372,14 @@ router.post('/dsMenteeData/', authRequired, cacheSignUpData, (req, next) => {
 router.post('/dsMentorData', authRequired, cacheSignUpData, (req, next) => {
   const formData = req.body;
   axios
-    .post(`${process.env.DS_API_URL}:role/create`, formData)
+    .post(`${process.env.DS_API_URL}mentor/create`, formData)
     .then((res) => {
       Application.insertMentorIntake(formData);
       res.status(200).json(res);
     })
     .catch(next);
 });
+
 /**
  * @swagger
  * /application/{update-notes/:id}:
