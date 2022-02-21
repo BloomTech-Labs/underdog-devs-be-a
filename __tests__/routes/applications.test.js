@@ -135,20 +135,87 @@ describe('Application Router', () => {
         });
       });
     });
+
+    describe('failure', () => {
+      describe('invalid role parameter', () => {
+        const invalidRoleName = 'bad-role';
+        let res;
+        beforeAll(async () => {
+          res = await request(app).get(`/application/${invalidRoleName}`);
+        });
+
+        it('responds with status 404', () => {
+          const expected = 404;
+          const actual = res.status;
+
+          expect(actual).toBe(expected);
+        });
+
+        it('returns error "role not found"', () => {
+          const expected = /role not found/i;
+          const actual = res.body.message;
+
+          expect(actual).toMatch(expected);
+        });
+      });
+    });
   });
 
   describe('[GET] /application/profileId/:id', () => {
     describe('success', () => {
+      const validProfileID = 10;
       let res;
       beforeAll(async () => {
-        res = await request(app).get('/application/profileId/10');
+        res = await request(app).get(
+          `/application/profileId/${validProfileID}`
+        );
       });
 
-      it('responds with status 200', async () => {
+      it('responds with status 200', () => {
         const expected = 200;
         const actual = res.status;
 
         expect(actual).toBe(expected);
+      });
+
+      it('returns application(s) for a given user', () => {
+        const expected = {
+          application_id: 6,
+          created_at: '2022-01-28T23:38:28.256Z',
+          first_name: 'User',
+          last_name: '10',
+          profile_id: '10',
+          role_name: 'mentee',
+        };
+        const actual = res.body.application;
+
+        expect(actual).toMatchObject(expected);
+      });
+    });
+
+    describe('failure', () => {
+      describe('invalid profile id', () => {
+        const invalidProfileID = 10000;
+        let res;
+        beforeAll(async () => {
+          res = await request(app).get(
+            `/application/profileId/${invalidProfileID}`
+          );
+        });
+
+        it('responds with status 404', () => {
+          const expected = 404;
+          const actual = res.status;
+
+          expect(actual).toBe(expected);
+        });
+
+        it('returns error "profile id XX not found"', () => {
+          const expected = `profile_id ${invalidProfileID} not found`;
+          const actual = res.body.message;
+
+          expect(actual).toMatch(expected);
+        });
       });
     });
   });

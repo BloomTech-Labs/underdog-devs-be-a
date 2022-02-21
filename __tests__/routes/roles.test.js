@@ -87,6 +87,10 @@ describe('Roles Router', () => {
         res = await request(app).get(`/roles/${validProfileID}`);
       });
 
+      it('requires authentication', () => {
+        expect(authRequired).toBeCalled();
+      });
+
       it('responds with status 200', () => {
         const expected = 200;
         const actual = res.status;
@@ -161,6 +165,104 @@ describe('Roles Router', () => {
         const actual = res.body.role_id;
 
         expect(actual).toBe(expected);
+      });
+    });
+
+    describe('failure', () => {
+      describe('invalid profile id', () => {
+        const invalidProfileID = 10000;
+        let res;
+        beforeAll(async () => {
+          res = await request(app).put(`/roles/${invalidProfileID}`);
+        });
+
+        it('responds with status 404', () => {
+          const expected = 404;
+          const actual = res.status;
+
+          expect(actual).toBe(expected);
+        });
+
+        it('returns error message', () => {
+          const expected = /user not found/i;
+          const actual = res.body.message;
+
+          expect(actual).toMatch(expected);
+        });
+      });
+
+      describe('invalid role id', () => {
+        describe('role id is missing', () => {
+          const validProfileID = 10;
+          let res;
+          beforeAll(async () => {
+            res = await request(app).put(`/roles/${validProfileID}`);
+          });
+
+          it('responds with status 400', () => {
+            const expected = 400;
+            const actual = res.status;
+
+            expect(actual).toBe(expected);
+          });
+
+          it('returns error "role_id is required"', () => {
+            const expected = /role_id is required/i;
+            const actual = res.body.message;
+
+            expect(actual).toMatch(expected);
+          });
+        });
+
+        describe('role id is out of bounds', () => {
+          const validProfileID = 10;
+          const invalidRoleID = -10;
+          let res;
+          beforeAll(async () => {
+            res = await request(app).put(`/roles/${validProfileID}`).send({
+              role_id: invalidRoleID,
+            });
+          });
+
+          it('responds with status 400', () => {
+            const expected = 400;
+            const actual = res.status;
+
+            expect(actual).toBe(expected);
+          });
+
+          it('returns error "invalid role_id"', () => {
+            const expected = /invalid role_id/i;
+            const actual = res.body.message;
+
+            expect(actual).toMatch(expected);
+          });
+        });
+
+        describe('new role id matches current id', () => {
+          const validProfileID = 10;
+          const currentRoleID = 4;
+          let res;
+          beforeAll(async () => {
+            res = await request(app).put(`/roles/${validProfileID}`).send({
+              role_id: currentRoleID,
+            });
+          });
+
+          it('responds with status 400', () => {
+            const expected = 400;
+            const actual = res.status;
+
+            expect(actual).toBe(expected);
+          });
+
+          it('returns error "this is already their current role"', () => {
+            const expected = /this is already their current role/i;
+            const actual = res.body.message;
+
+            expect(actual).toMatch(expected);
+          });
+        });
       });
     });
   });
