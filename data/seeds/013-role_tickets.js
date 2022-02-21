@@ -1,4 +1,4 @@
-const dummyData = [
+const dummyRoleTickets = [
   {
     submitted_by: '00ulthapbErVUwVJy4x6',
     subject_id: '00ulthapbErVUwVJy4x6',
@@ -19,10 +19,12 @@ const dummyData = [
   },
 ];
 
-exports.seed = function (knex) {
+const seed = function (knex) {
   return knex('role_tickets')
     .del()
     .then(function () {
-      return knex('role_tickets').insert(dummyData);
+      return knex('role_tickets').insert(dummyRoleTickets);
     });
 };
+
+module.exports = { seed, dummyRoleTickets };
