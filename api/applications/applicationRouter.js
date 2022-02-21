@@ -13,8 +13,9 @@ const {
   checkRole,
 } = require('../middleware/applicationMiddleware');
 const { createProfile } = require('../middleware/profilesMiddleware');
-
 const { registerOktaUser } = require('../middleware/oktaAuth');
+const validation = require('../middleware/applicationValidation');
+const applicationSchema = require('../validations/application/applicationSchema');
 
 /**
  * @swagger
@@ -226,17 +227,23 @@ router.get('/profileId/:id', checkApplicationExists, checkRole, (req, res) => {
 
 // create a new user profile and application ticket
 
-router.post('/new/:role', createProfile, cacheSignUpData, (req, res, next) => {
-  const applicationTicket = {
-    profile_id: req.body.profile_id,
-    position: req.body.position,
-  };
-  Application.add(applicationTicket)
-    .then(() => {
-      res.status(201).json({ message: 'Application has been submitted' });
-    })
-    .catch(next);
-});
+router.post(
+  '/new/:role',
+  createProfile,
+  validation(applicationSchema),
+  cacheSignUpData,
+  (req, res, next) => {
+    const applicationTicket = {
+      profile_id: req.body.profile_id,
+      position: req.body.position,
+    };
+    Application.add(applicationTicket)
+      .then(() => {
+        res.status(201).json({ message: 'Application has been submitted' });
+      })
+      .catch(next);
+  }
+);
 
 /**
  * @swagger
