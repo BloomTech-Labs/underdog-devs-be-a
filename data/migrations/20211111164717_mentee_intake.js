@@ -12,16 +12,22 @@ exports.up = function (knex) {
         .onDelete('RESTRICT')
         .onUpdate('RESTRICT');
       table.string('email').notNullable().unique();
-      table.string('location').notNullable();
+      table.string('country').notNullable();
+      table.string('city');
+      table.string('state');
       table.string('first_name').notNullable();
       table.string('last_name').notNullable();
-      table.boolean('lives_in_us').notNullable();
       table.boolean('formerly_incarcerated').notNullable();
+      table.boolean('underrepresented_group').notNullable();
+      table.boolean('low_income').notNullable();
       table.string('list_convictions');
-      table.string('tech_stack').notNullable();
       table.string('experience_level').notNullable();
-      table.string('your_hope').notNullable();
-      table.string('other_info', 255);
+      table.string('subject').notNullable();
+      table.boolean('industry_knowledge').defaultTo(false);
+      table.boolean('job_help').defaultTo(false);
+      table.boolean('pair_programming').defaultTo(false);
+      table.string('other_info');
+      table.string('validateStatus').defaultTo('pending');
     });
 };
 

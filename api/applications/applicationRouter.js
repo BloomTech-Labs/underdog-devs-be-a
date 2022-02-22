@@ -9,10 +9,12 @@ const {
   cacheSignUpData,
   checkApplicationExists,
   checkRole,
+  sendData,
 } = require('../middleware/applicationMiddleware');
 const { createProfile } = require('../middleware/profilesMiddleware');
-
 const { registerOktaUser } = require('../middleware/oktaAuth');
+const validation = require('../middleware/applicationValidation');
+const applicationSchema = require('../validations/application/applicationSchema');
 
 /**
  * @swagger
@@ -224,17 +226,24 @@ router.get('/profileId/:id', checkApplicationExists, checkRole, (req, res) => {
 
 // create a new user profile and application ticket
 
-router.post('/new/:role', createProfile, cacheSignUpData, (req, res, next) => {
-  const applicationTicket = {
-    profile_id: req.body.profile_id,
-    position: req.body.position,
-  };
-  Application.add(applicationTicket)
-    .then(() => {
-      res.status(201).json({ message: 'Application has been submitted' });
-    })
-    .catch(next);
-});
+router.post(
+  '/new/:role',
+  createProfile,
+  validation(applicationSchema),
+  cacheSignUpData,
+  sendData,
+  (req, res, next) => {
+    const applicationTicket = {
+      profile_id: req.body.profile_id,
+      position: req.body.position,
+    };
+    Application.add(applicationTicket)
+      .then(() => {
+        res.status(201).json({ message: 'Application has been submitted' });
+      })
+      .catch(next);
+  }
+);
 
 /**
  * @swagger
@@ -342,6 +351,61 @@ router.put(
           message:
             'This application has been approved and registration process is under way..',
         });
+      })
+      .catch(next);
+  }
+);
+
+/**
+ * @swagger
+ * /application/{update-notes/:id}:
+ *  put:
+ *    summary: Updates application_notes field using the application id
+ *    description: An application_notes field is updated when application_id and changes, from the req.body, are sent to the updateApplicationNotes function in the applicationModel. The updated note is returned on a successful update or a 404 if the application does not exist. The authRequired and adminRequired middleware functions keep this endpoint secure.
+ *    tags:
+ *      - application
+ *    security:
+ *      - okta: [authRequired, adminRequired]
+ *    parameters:
+ *      - in: param
+ *        name: application id
+ *        schema:
+ *          type: string
+ *        description: Application ID of pending applicant
+ *    responses:
+ *      '200':
+ *        description: Response from successful put
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                newNote:updated note content
+ *                  description: Status of the request as a message
+ *                  type: string
+ *              items:
+ *                $ref: '#/components/schemas/Application'
+ *              example:
+ *                newNote: 'Example of the newNote'
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ */
+
+// updates applicants application_notes field
+
+router.put(
+  '/update-notes/:id',
+  authRequired,
+  adminRequired,
+  (req, res, next) => {
+    const application_id = req.params.id;
+    const noteChanges = req.body.newNote;
+    Application.updateApplicationNotes(application_id, noteChanges)
+      .then((response) => {
+        if (response == 0)
+          return next({ message: 'Application does not exist', status: 404 });
+
+        res.status(200).json(response[0]);
       })
       .catch(next);
   }

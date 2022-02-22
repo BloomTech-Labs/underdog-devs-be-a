@@ -82,7 +82,8 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
         "position": "4",
         "profile_id": "10",
         "approved": false,
-        "created_at": "2021-11-01T17:59:02.023Z"
+        "created_at": "2021-11-01T17:59:02.023Z",
+        "application_notes":"Notes about applicant",
     }
 
 ###### Mentor intake schema:
@@ -90,13 +91,19 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
     {
         "profile_id": '00u13oned0U8XP8Mb4x7',
         "email": 'fakeemail2@gmail.com',
-        "location": 'Bumville, USA',
+        "country": 'USA',
+        "state": 'California',
+        "city": 'San Francisco',
         "first_name": 'Hotdog',
         "last_name": 'Jeopardy',
         "current_comp": 'Amazin',
-        "tech_stack": 'Node.js, Axios',
-        "can_commit": false,
-        "how_commit": '1:1 sessions - Once a month',
+        "job_help": true,
+        "industry_knowledge": true,
+        "pair_programming": false,
+        "subject": 'frontend'
+        "experience_level": 'expert',
+        "other_info": 'none',
+        "validateStatus: 'pending',
     }
 
 ###### Mentee intake schema:
@@ -104,26 +111,33 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
     {
         "profile_id": '12',
         "email": 'fakeemail1@gmail.com',
-        "location": 'California, USA',
+        "country": 'USA',
+        "state": 'California',
+        "city": 'San Francisco',
         "first_name": 'Joe',
         "last_name": 'Baseball',
-        "lives_in_us": true,
         "formerly_incarcerated": true,
         "list_convictions": 'coded too much',
-        "tech_stack": 'HTML/CSS/JS',
-        "experience_level": '2 years',
-        "your_hope": 'I want a career in coding',
+        "subject": 'frontend'
+        "experience_level": beginner',
+        "underrepresented_group": true,
+        "low_income": false,
+        "job_help": true,
+        "industry_knowledge": true,
+        "pair_programming": false,
         "other_info": 'Not really',
+        "validateStatus: 'pending',
     }
 
-| Method | Endpoint                       | Required Request Body                                                                                              | Returns                                                        | User Auth |
-| ------ | ------------------------------ | ------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------- | --------- |
-| GET    | `/application/`                | -                                                                                                                  | `gets all pending applications`                                | `Admin`   |
-| GET    | `/application/:role`           | -`mentor or mentee (req.param)`                                                                                    | `gets all pending applications filtered by role`               | `Admin`   |
-| GET    | `/application/profileId/:id`   | -`profile id (req.param)`                                                                                          | `gets pending application by profile id`                       | `Admin`   |
-| POST   | `/application/new/:role`       | -`mentor or mentee (req.param)`, `sign-up form data(mentor/mentee intake)`                                         | `stores intake data & creates new pending application`         |           |
-| PUT    | `/application/update-role`     | -`position (role_id)`, `application_id`, `profile_id`,                                                             | `update profile role and update application to approved: true` | `Admin`   |
-| PUT    | `/application/register/:id`    | -`profile_id (req.param)`                                                                                          | `registers user to okta & updates application to approved: true`| `Admin`  |
+| Method | Endpoint                        | Required Request Body                                                      | Returns                                                          | User Auth |
+| ------ | ------------------------------- | -------------------------------------------------------------------------- | ---------------------------------------------------------------- | --------- |
+| GET    | `/application/`                 | -                                                                          | `gets all pending applications`                                  | `Admin`   |
+| GET    | `/application/:role`            | -`mentor or mentee (req.param)`                                            | `gets all pending applications filtered by role`                 | `Admin`   |
+| GET    | `/application/profileId/:id`    | -`profile id (req.param)`                                                  | `gets pending application by profile id`                         | `Admin`   |
+| POST   | `/application/new/:role`        | -`mentor or mentee (req.param)`, `sign-up form data(mentor/mentee intake)` | `stores intake data & creates new pending application`           |           |
+| PUT    | `/application/update-role`      | -`position (role_id)`, `application_id`, `profile_id`,                     | `update profile role and update application to approved: true`   | `Admin`   |
+| PUT    | `/application/register/:id`     | -`profile_id (req.param)`                                                  | `registers user to okta & updates application to approved: true` | `Admin`   |
+| PUT    | `/application/update-notes/:id` | -`application_id (req.param)` , `newNotes (req.body.newNotes)`             | `updates note field on application ticket`                       | `Admin`   |
 
 ## Application - Matching Mentors and Mentees
 
@@ -299,13 +313,13 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
         "updated_at": "2022-01-25T20:33:26.119Z"
     }
 
-| Method | Endpoint                        | Required Request Body                          | Returns                            | User Auth |
-| ------ | ------------------------------- | ---------------------------------------------- | ---------------------------------- | --------- |
-| GET    | `/role-tickets`                 | -                                              | `get all role tickets`             | `admin`   |
-| GET    | `/role-tickets/:role_ticket_id` | -                                              | `get a specific role ticket`       | `admin`   |
-| POST   | `/role-tickets`                 | `submitted_by`, `subject_id`, `requested_role` | `create a new role ticket`         |           |
-| PUT    | `/role-tickets/:role_ticket_id` | -                                              | `updates a role ticket by id`      |           |
-| DELETE | `/role-tickets/:role_ticket_id` | -                                              | `delete a role ticket by id`       |           |
+| Method | Endpoint                        | Required Request Body                          | Returns                       | User Auth |
+| ------ | ------------------------------- | ---------------------------------------------- | ----------------------------- | --------- |
+| GET    | `/role-tickets`                 | -                                              | `get all role tickets`        | `admin`   |
+| GET    | `/role-tickets/:role_ticket_id` | -                                              | `get a specific role ticket`  | `admin`   |
+| POST   | `/role-tickets`                 | `submitted_by`, `subject_id`, `requested_role` | `create a new role ticket`    |           |
+| PUT    | `/role-tickets/:role_ticket_id` | -                                              | `updates a role ticket by id` |           |
+| DELETE | `/role-tickets/:role_ticket_id` | -                                              | `delete a role ticket by id`  |           |
 
 ###### Progress schema:
 

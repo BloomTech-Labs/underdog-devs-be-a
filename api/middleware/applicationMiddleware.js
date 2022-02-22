@@ -1,3 +1,6 @@
+const axios = require('axios');
+const { config } = require('../../config/dsConfig');
+
 const {
   getTicketById,
   getMentorIntake,
@@ -11,6 +14,7 @@ const {
   applicationTicketSchema,
 } = require('../../data/schemas/applicationSchema');
 
+// will change to send data directly to DS BE in the future
 const cacheSignUpData = async (req, res, next) => {
   const role = req.params.role;
   const formData = req.body;
@@ -19,55 +23,47 @@ const cacheSignUpData = async (req, res, next) => {
     first_name: formData.first_name,
     last_name: formData.last_name,
     email: formData.email,
-    location: formData.location,
+    country: formData.country,
+    state: formData.state,
+    city: formData.city,
+    experience_level: formData.experience_level,
+    subject: formData.subject,
+    industry_knowledge: formData.industry_knowledge,
+    job_help: formData.job_help,
+    pair_programming: formData.pair_programming,
     other_info: formData.other_info,
+    validateStatus: 'pending',
   };
   const newMentorApplication = {
     ...sharedFields,
     current_comp: formData.current_comp,
-    tech_stack: formData.tech_stack,
-    can_commit: formData.can_commit,
-    how_commit: formData.how_commit,
-    other_info: formData.other_info,
   };
   const newMenteeApplication = {
     ...sharedFields,
-    lives_in_us: formData.lives_in_us,
     formerly_incarcerated: formData.formerly_incarcerated,
     list_convictions: formData.list_convictions,
-    tech_stack: formData.tech_stack,
-    experience_level: formData.experience_level,
-    your_hope: formData.your_hope,
+    underrepresented_group: formData.underrepresented_group,
+    low_income: formData.low_income,
   };
 
   try {
     if (role === 'mentor') {
-      if (!newMentorApplication.first_name) {
-        next({ status: 400, message: 'first_name required' });
-      } else if (!newMentorApplication.last_name) {
-        next({ status: 400, message: 'last_name required' });
-      } else if (!newMentorApplication.email) {
-        next({ status: 400, message: 'email required' });
-      } else if (!newMentorApplication.location) {
-        next({ status: 400, message: 'location required' });
-      } else if (!newMentorApplication.can_commit) {
-        next({ status: 400, message: 'can_commit required' });
-      } else if (!newMentorApplication.tech_stack) {
-        next({ status: 400, message: 'tech_stack required' });
-      } else {
-        req.body.position = 3;
-        await insertMentorIntake(newMentorApplication);
-        next();
-      }
-    } else if (role === 'mentee') {
+      req.body.position = 3;
+      req.application = newMentorApplication;
+      req.role = 'Mentors';
+      await insertMentorIntake(newMentorApplication);
+      next();
+    } else {
       req.body.position = 4;
+      req.application = newMenteeApplication;
+      req.role = 'Mentees';
       await insertMenteeIntake(newMenteeApplication);
       next();
     }
   } catch (err) {
     return next({
       status: 422,
-      message: `There was a problem caching application intake data`,
+      message: err,
     });
   }
 };
@@ -159,6 +155,17 @@ const validateMentorIntakeData = async (req, res, next) => {
   }
 };
 
+const sendData = (req, res, next) => {
+  axios
+    .post(`${config.baseURL}/${req.role}/create`, req.application)
+    .then((res) => {
+      next({ status: res.status, message: res.data });
+    })
+    .catch((err) => {
+      next({ status: res.status, message: err });
+    });
+};
+
 module.exports = {
   cacheSignUpData,
   checkApplicationExists,
@@ -166,4 +173,5 @@ module.exports = {
   validateApplicationTicket,
   validateMenteeIntakeData,
   validateMentorIntakeData,
+  sendData,
 };
