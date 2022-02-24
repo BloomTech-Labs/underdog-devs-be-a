@@ -382,7 +382,7 @@ router.put(
  *            schema:
  *              type: object
  *              properties:
- *                newNote:updated note content
+ *                newNote:
  *                  description: Status of the request as a message
  *                  type: string
  *              items:
@@ -437,35 +437,14 @@ router.put(
  *            schema:
  *              type: object
  *              properties:
- *                result: Mentor or Mentee intake data
- *                  description: Status of the request as a message
- *                  type: string
+ *                message:
+ *                  description: Result of request as object
+ *                  type: object
  *              items:
  *                $ref: '#/components/schemas/Application'
  *              example:
- *                "result": [
-            {
-                "profile_id": "4F177Y8xr4Ap1q0y",
-                "first_name": "Raiden",
-                "last_name": "Nelson",
-                "email": "fake@email.com",
-                "city": "Ashland",
-                "state": "Oregon",
-                "country": "USA",
-                "formerly_incarcerated": true,
-                "underrepresented_group": true,
-                "low_income": true,
-                "list_convictions": [
-                    "Infraction"
-                ],
-                "subject": "General Programming",
-                "experience_level": "Expert",
-                "job_help": false,
-                "industry_knowledge": false,
-                "pair_programming": false,
-                "other_info": "Notes"
-            }
-        ]
+ *                message: {"result": [{"profile_id": "4F177Y8xr4Ap1q0y","first_name": "Raiden","last_name": "Nelson","email": "fake@email.com","city": "Ashland","state": "Oregon","country": "USA",
+"formerly_incarcerated": true,"underrepresented_group": true,"low_income": true,"list_convictions": ["Infraction"],"subject": "General Programming","experience_level": "Expert","job_help": false,"industry_knowledge": false,"pair_programming": false,"other_info": "Notes"}]} 
  *      '401':
  *        $ref: '#/components/responses/UnauthorizedError'
  */
@@ -474,8 +453,8 @@ router.put(
 
 router.get(
   '/intake/:role/:id',
-  authRequired,
-  adminRequired,
+  // authRequired,
+  // adminRequired,
   (req, res, next) => {
     const profile_id = req.params.id;
     const role = req.params.role;
