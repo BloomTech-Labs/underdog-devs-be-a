@@ -412,7 +412,7 @@ router.put(
 );
 
 // gets mentee Subject by mentee's ID
-router.get('/subject/:id', (req, res, next) => {
+router.get('/subject/:id', authRequired, (req, res, next) => {
   const menteeId = req.params.id;
   Application.getMenteeSubject(menteeId)
     .then((subject) => {
