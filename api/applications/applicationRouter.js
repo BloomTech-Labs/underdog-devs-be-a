@@ -453,8 +453,8 @@ router.put(
 
 router.get(
   '/intake/:role/:id',
-  // authRequired,
-  // adminRequired,
+  authRequired,
+  adminRequired,
   (req, res, next) => {
     const profile_id = req.params.id;
     const role = req.params.role;
