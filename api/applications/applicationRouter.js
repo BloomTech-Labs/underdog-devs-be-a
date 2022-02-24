@@ -413,17 +413,22 @@ router.put(
   }
 );
 
-router.get('/intake/:id', authRequired, adminRequired, (req, res, next) => {
-  const profile_id = req.params.id;
-  const role = req.body.role;
-  axios
-    .post(`${config.baseURL}${role}/read`, { profile_id: profile_id })
-    .then((res) => {
-      next({ status: res.status, message: res.data });
-    })
-    .catch((err) => {
-      next({ status: res.status, message: err });
-    });
-});
+router.get(
+  '/intake/:role/:id',
+  authRequired,
+  adminRequired,
+  (req, res, next) => {
+    const profile_id = req.params.id;
+    const role = req.body.role;
+    axios
+      .post(`${config.baseURL}${role}/read`, { profile_id: profile_id })
+      .then((res) => {
+        next({ status: res.status, message: res.data });
+      })
+      .catch((err) => {
+        next({ status: res.status, message: err });
+      });
+  }
+);
 
 module.exports = router;
