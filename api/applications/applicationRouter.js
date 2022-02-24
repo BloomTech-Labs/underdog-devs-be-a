@@ -411,4 +411,14 @@ router.put(
   }
 );
 
+// gets mentee Subject by mentee's ID
+router.get('/subject/:id', (req, res, next) => {
+  const menteeId = req.params.id;
+  Application.getMenteeSubject(menteeId)
+    .then((subject) => {
+      res.status(200).json(subject);
+    })
+    .catch(next);
+});
+
 module.exports = router;
