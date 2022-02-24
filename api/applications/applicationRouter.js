@@ -413,16 +413,78 @@ router.put(
   }
 );
 
+/**
+ * @swagger
+ * /application/intake/:role/:id}:
+ *  put:
+ *    summary: Gets mentor or mentee intake data using role and id
+ *    description: Mentor or mentee intake data is retrieved through a get request, where role and profile_id are sent as params. The mentor or mentee correlating with the profile_id will be returned on a successful get or a 404 if the profile does not exist. The authRequired and adminRequired middleware functions keep this endpoint secure.
+ *    tags:
+ *      - application
+ *    security:
+ *      - okta: [authRequired, adminRequired]
+ *    parameters:
+ *      - in: param
+ *        name: role / profile id
+ *        schema:
+ *          type: string
+ *        description: Profile ID of pending applicant and role (Mentors or Mentees)
+ *    responses:
+ *      '200':
+ *        description: Response from successful get
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                result: Mentor or Mentee intake data
+ *                  description: Status of the request as a message
+ *                  type: string
+ *              items:
+ *                $ref: '#/components/schemas/Application'
+ *              example:
+ *                "result": [
+            {
+                "profile_id": "4F177Y8xr4Ap1q0y",
+                "first_name": "Raiden",
+                "last_name": "Nelson",
+                "email": "fake@email.com",
+                "city": "Ashland",
+                "state": "Oregon",
+                "country": "USA",
+                "formerly_incarcerated": true,
+                "underrepresented_group": true,
+                "low_income": true,
+                "list_convictions": [
+                    "Infraction"
+                ],
+                "subject": "General Programming",
+                "experience_level": "Expert",
+                "job_help": false,
+                "industry_knowledge": false,
+                "pair_programming": false,
+                "other_info": "Notes"
+            }
+        ]
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ */
+
+// gets mentor or mentee application intake data from Data Science
+
 router.get(
   '/intake/:role/:id',
   authRequired,
   adminRequired,
   (req, res, next) => {
     const profile_id = req.params.id;
-    const role = req.body.role;
+    const role = req.params.role;
     axios
       .post(`${config.baseURL}${role}/read`, { profile_id: profile_id })
       .then((res) => {
+        if (res.data.result.length === 0)
+          return next({ message: 'Profile does not exist', status: 404 });
+
         next({ status: res.status, message: res.data });
       })
       .catch((err) => {

@@ -138,6 +138,7 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 | PUT    | `/application/update-role`      | -`position (role_id)`, `application_id`, `profile_id`,                     | `update profile role and update application to approved: true`   | `Admin`   |
 | PUT    | `/application/register/:id`     | -`profile_id (req.param)`                                                  | `registers user to okta & updates application to approved: true` | `Admin`   |
 | PUT    | `/application/update-notes/:id` | -`application_id (req.param)` , `newNotes (req.body.newNotes)`             | `updates note field on application ticket`                       | `Admin`   |
+| PUT    | `/application/intake/:role/:id` | -`role (req.param)` , `profile_id (req.param)`                             | `get mentor or mentee intake data from DS database`              | `Admin`   |
 
 ## Application - Matching Mentors and Mentees
 
