@@ -382,13 +382,13 @@ router.put(
  *            schema:
  *              type: object
  *              properties:
- *                newNote:
+ *                application_notes:
  *                  description: Status of the request as a message
  *                  type: string
  *              items:
  *                $ref: '#/components/schemas/Application'
  *              example:
- *                newNote: 'Example of the newNote'
+ *                application_notes: 'Example of the application_notes'
  *      '401':
  *        $ref: '#/components/responses/UnauthorizedError'
  */
@@ -401,8 +401,8 @@ router.put(
   adminRequired,
   (req, res, next) => {
     const application_id = req.params.id;
-    const noteChanges = req.body.newNote;
-    Application.updateApplicationNotes(application_id, noteChanges)
+    const application_notes = req.body.application_notes;
+    Application.updateApplicationNotes(application_id, application_notes)
       .then((response) => {
         if (response == 0)
           return next({ message: 'Application does not exist', status: 404 });
