@@ -16,7 +16,8 @@ function getPendingTickets() {
       'r.role_name',
       'a.created_at',
       'a.application_id',
-      'a.application_notes'
+      'a.application_notes',
+      'p.email'
     )
     .where('a.approved', false);
 }
