@@ -37,7 +37,8 @@ const cacheSignUpData = async (req, res, next) => {
   };
   const newMentorApplication = {
     ...sharedFields,
-    current_comp: formData.current_comp,
+    current_company: formData.current_company,
+    current_position: formData.current_position,
   };
   const newMenteeApplication = {
     ...sharedFields,

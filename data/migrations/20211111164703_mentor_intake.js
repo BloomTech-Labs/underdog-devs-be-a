@@ -17,7 +17,8 @@ exports.up = function (knex) {
       table.string('state');
       table.string('first_name').notNullable();
       table.string('last_name').notNullable();
-      table.string('current_comp');
+      table.string('current_company');
+      table.string('current_position');
       table.string('subject').notNullable();
       table.string('experience_level').notNullable();
       table.boolean('industry_knowledge').defaultTo(false);

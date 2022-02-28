@@ -12,7 +12,7 @@ const {
 } = require('../middleware/applicationMiddleware');
 const { createProfile } = require('../middleware/profilesMiddleware');
 const { registerOktaUser } = require('../middleware/oktaAuth');
-const validation = require('../middleware/applicationValidation');
+const validation = require('../middleware/validation');
 const applicationSchema = require('../validations/application/applicationSchema');
 
 /**
