@@ -291,7 +291,7 @@ router.put(
 //get match mentor by profile_id
 router.get('/match/:id', authRequired, (req, res, next) => {
   axios
-    .post(`${process.env.DS_API_URL}match/${req.params.id}/?n_matches=5`)
+    .post(`${process.env.DS_API_URL}/match/${req.params.id}/?n_matches=5`)
     .then((results) => {
       let mentors = [];
       results.data.result.map(async (x) => {
