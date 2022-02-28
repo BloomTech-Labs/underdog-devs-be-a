@@ -2,8 +2,8 @@ const okta = require('@okta/okta-sdk-nodejs');
 const { config } = require('../../config/okta');
 
 const client = new okta.Client({
-  orgUrl: config.issuer,
-  token: config.clientId,
+  orgUrl: config.orgUrl,
+  token: config.devToken,
 });
 
 function passGenerator() {
@@ -21,27 +21,29 @@ const registerOktaUser = async (req, res, next) => {
   const tempPassword = passGenerator();
   const newUser = {
     profile: {
-      firstName: req.body.first_name,
-      lastName: req.body.last_name,
-      email: req.body.email,
-      login: req.body.email,
+      firstName: req.profile.first_name,
+      lastName: req.profile.last_name,
+      email: req.profile.email,
+      login: req.profile.email,
     },
     credentials: {
       password: {
-        // this must be made available to admins.
-        // approved users should be prompted to rewrite this value.
         value: tempPassword,
       },
     },
   };
 
-  try {
-    const oktaUser = await client.createUser(newUser);
-    req.user = oktaUser;
-    next();
-  } catch (err) {
-    return next(err);
-  }
+  client
+    .createUser(newUser)
+    .then((oktaResponse) => {
+      req.tempPassword = tempPassword;
+      req.oktaResponse = oktaResponse;
+      next();
+    })
+    .catch((err) => {
+      console.error(err);
+      return next({ status: 404, stack: err.stack, message: err.message });
+    });
 };
 
 module.exports = { registerOktaUser };

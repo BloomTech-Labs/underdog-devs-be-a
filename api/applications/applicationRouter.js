@@ -1,15 +1,14 @@
 const express = require('express');
 const authRequired = require('../middleware/authRequired');
 const Application = require('./applicationModel');
-const Profile = require('../profile/profileModel');
 const router = express.Router();
-// const jwt = require('jwt-decode');
 const { adminRequired } = require('../middleware/permissionsRequired.js');
 const {
   cacheSignUpData,
   checkApplicationExists,
   checkRole,
   sendData,
+  findProfile,
 } = require('../middleware/applicationMiddleware');
 const { createProfile } = require('../middleware/profilesMiddleware');
 const { registerOktaUser } = require('../middleware/oktaAuth');
@@ -247,65 +246,10 @@ router.post(
 
 /**
  * @swagger
- * /application/{update-role}:
+ * /application/{approve/:id}:
  *  put:
- *    summary: Update the role_id for the profile of the applicant
- *    description: Provides a JSON array of applications (as objects) where 'approved' key is falsy
- *    tags:
- *      - application
- *    security:
- *      - okta: [authRequired, adminRequired]
- *    parameters:
- *      - in: param
- *        name:
- *        schema:
- *          type:
- *        description:
- *    responses:
- *      '200':
- *        description: Response from successful put
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  description: Status of the request as a message
- *                  type: string
- *              items:
- *                $ref: '#/components/schemas/Application'
- *              example:
- *                message: 'This application has been approved, and User role has been updated'
- *      '401':
- *        $ref: '#/components/responses/UnauthorizedError'
- */
-
-// update the role_id for the profile of the applicant and update the application approved value to true
-
-router.put('/update-role', authRequired, adminRequired, (req, res, next) => {
-  const profile_id = req.body.profile_id;
-  const application_id = req.body.application_id;
-  const role_id = req.body.position;
-  Profile.update(profile_id, { role_id: role_id })
-    .then(() => {
-      Application.updateTicket(application_id, { approved: true })
-        .then(() => {
-          res.status(202).json({
-            message:
-              'This application has been approved, and User role has been updated',
-          });
-        })
-        .catch(next);
-    })
-    .catch(next);
-});
-
-/**
- * @swagger
- * /application/{register/:id}:
- *  post:
- *    summary: Registers profile with okta, updates application ticket
- *    description: If a pending application with this profile ID exists, middlware fetches data from mentor/mentee intake tables. This object is passed along into registerOktaUser where its shaped and sent to Oktas API using their clients createUser method.
+ *    summary: Registers profile with okta, updates application ticket "approved" to true, returns a temporary password
+ *    description: If a pending application with this profile ID exists, middlware will fetch that profile from the database. This object is passed along into registerOktaUser where its shaped and sent to Oktas API using their clients createUser method.
  *    tags:
  *      - application
  *    security:
@@ -318,38 +262,39 @@ router.put('/update-role', authRequired, adminRequired, (req, res, next) => {
  *        description: Profile ID of pending applicant
  *    responses:
  *      '200':
- *        description: Response from successful post
+ *        description: Response from successful put
  *        content:
  *          application/json:
  *            schema:
  *              type: object
  *              properties:
- *                message:
- *                  description: Status of the request as a message
+ *                tempPassword:
+ *                  description: temporary password for admins to give to approved users
  *                  type: string
  *              items:
  *                $ref: '#/components/schemas/Application'
  *              example:
- *                message: 'This application has been approved and registration process is under way..'
+ *                message: "3sdfi324"
  *      '401':
  *        $ref: '#/components/responses/UnauthorizedError'
  */
 
-// update applicants approved status and creates new user with okta
+// registers a user with okta and approves their application ticket
 
 router.put(
-  '/register/:id',
+  '/approve/:id',
   authRequired,
+  adminRequired,
   checkApplicationExists,
-  checkRole,
+  findProfile,
   registerOktaUser,
   (req, res, next) => {
-    const application_id = req.body.application_id;
+    const application_id = req.application.application_id;
+
     Application.updateTicket(application_id, { approved: true })
       .then(() => {
-        res.status(202).json({
-          message:
-            'This application has been approved and registration process is under way..',
+        res.status(200).json({
+          tempPassword: req.tempPassword,
         });
       })
       .catch(next);
