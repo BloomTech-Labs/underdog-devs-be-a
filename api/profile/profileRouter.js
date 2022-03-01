@@ -262,7 +262,40 @@ router.put('/', authRequired, (req, res) => {
       });
   }
 });
-
+/**
+ * @swagger
+ * profile/is_active/:profile_id:
+ *  put:
+ *    summary: Update a is_active filed in for the profile table.
+ *    security:
+ *      - okta: [authRequired,superAdminRequired,validateUser]
+ *    tags:
+ *      - profile
+ *    requestBody:
+ *      description: Profile object to updated is_active
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Profile'
+ *    responses:
+ *      401:
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *      404:
+ *        $ref: '#/components/responses/NotFound'
+ *      200:
+ *        description: A profile object
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: A message about the result
+ *                  example: profile created
+ *                profile:
+ *                  $ref: '#/components/schemas/Profile'
+ */
 // Activates or deactivates a user depending on what their current is_active status is
 router.put(
   '/is_active/:profile_id',
@@ -288,9 +321,10 @@ router.put(
   }
 );
 
+//get match mentor by profile_id
 router.get('/match/:id', authRequired, (req, res, next) => {
   axios
-    .post(`${process.env.DS_API_URL}match/${req.params.id}/?n_matches=5`)
+    .post(`${process.env.DS_API_URL}/match/${req.params.id}/?n_matches=5`)
     .then((results) => {
       let mentors = [];
       results.data.result.map(async (x) => {
