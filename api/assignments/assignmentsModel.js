@@ -10,40 +10,20 @@ const findAll = async () => {
     .where('p.role_id', '=', '4');
 
   const assignments = await db
-    .select('a.mentor_id', 'a.mentee_id', 'p.first_name', 'p.last_name')
+    .select('a.mentor_id', 'a.mentee_id')
     .from('assignments as a')
     .join('profiles as p', 'p.profile_id', 'a.mentee_id');
 
   // test comment
   for (let i = 0; i < mentees.length; i++) {
-    mentees[i]['mentors'] = [];
+    mentees[i]['matched'] = false;
 
-    // for (let j = 0; j < assignments.length; j++) {
-    //   if (assignments[j]['mentee_id'] === mentees[i]['profile_id']) {
-    //     mentees[i]['mentors'].push({
-    //       profile_id: assignments[j]['mentee_id'],
-    //       first_name: assignments[j]['first_name'],
-    //       last_name: assignments[j]['last_name'],
-    //     });
-    //   }
-    // }
-    // for (let m of assignments) {
-    //   if (m.mentee_id === mentees[i]['profile_id']) {
-    //   }
+    for (let j = 0; j < assignments.length; j++) {
+      if (assignments[j]['mentee_id'] === mentees[i]['profile_id']) {
+        mentees[i]['matched'] = true;
+      }
+    }
   }
-
-  // .select(
-  //   // 'a.assignment_id',
-  //   'a.mentee_id',
-  //   'p.email',
-  //   'p.first_name',
-  //   'p.last_name',
-  //   'p.role_id',
-  //   'p.profile_id'
-  // )
-  // .from('profiles as p')
-  // .where('p.role_id', '=', '4')
-  // .leftJoin('assignments as a', 'p.profile_id', '=', 'a.mentee_id');
 
   console.log(mentees);
   console.log(assignments);
