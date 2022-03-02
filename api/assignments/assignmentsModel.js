@@ -14,6 +14,7 @@ const findAll = async () => {
     .from('assignments as a')
     .join('profiles as p', 'p.profile_id', 'a.mentee_id');
 
+  // test comment
   for (let i = 0; i < mentees.length; i++) {
     mentees[i]['mentors'] = [];
 
