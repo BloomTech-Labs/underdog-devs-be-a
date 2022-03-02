@@ -15,7 +15,6 @@ const {
 } = require('../../data/schemas/applicationSchema');
 const { findById } = require('../profile/profileModel');
 
-// will change to send data directly to DS BE in the future
 const cacheSignUpData = async (req, res, next) => {
   const role = req.params.role;
   const formData = req.body;
