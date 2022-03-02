@@ -24,9 +24,6 @@ const findAll = async () => {
     }
   }
 
-  console.log(mentees);
-  console.log(assignments);
-
   return mentees;
 };
 
