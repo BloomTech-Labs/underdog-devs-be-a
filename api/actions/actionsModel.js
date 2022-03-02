@@ -12,15 +12,15 @@ const findById = (action_ticket_id) => {
   return db('action_tickets').where({ action_ticket_id }).first();
 };
 
-const create = (actions) => {
-  return db('action_tickets').insert(actions).returning('*');
+const create = (action) => {
+  return db('action_tickets').insert(action).returning('*');
 };
 
-const update = (id, actions) => {
+const update = (id, action) => {
   return db('action_tickets')
     .where({ action_ticket_id: id })
     .first()
-    .update(actions)
+    .update(action)
     .returning('*');
 };
 

@@ -186,14 +186,10 @@ router.get('/:id', checkActionTicketExists, (req, res) => {
  *            schema:
  *              type: object
  *              properties:
- *                message:
- *                  description: Status of the request as a message
- *                  type: string
  *                action:
- *                  description: Object mirroring the newly created action -- will only display keys included in the request body upon posting, even if other keys are present/made in the database at creation
+ *                  description: Object mirroring the newly created action
  *                  type: object
  *              example:
- *                message: 'success'
  *                action:
  *                  submitted_by: 7
  *                  subject_id: 10
@@ -203,8 +199,8 @@ router.get('/:id', checkActionTicketExists, (req, res) => {
 router.post('/', validateSubjectBody, (req, res, next) => {
   const action = req.body;
   Actions.create(action)
-    .then(() => {
-      res.status(201).json({ message: 'success', action });
+    .then((newAction) => {
+      res.status(201).json(newAction[0]);
     })
     .catch(next);
 });
@@ -247,8 +243,6 @@ router.post('/', validateSubjectBody, (req, res, next) => {
  *                  type: object
  *                  description: Object containing all information pertaining to the newly updated resource
  *              example:
- *                message: "ticket updated"
- *                changes:
  *                  "action_ticket_id": 1
  *                  "submitted_by": "7"
  *                  "subject_id": "10"
@@ -271,9 +265,7 @@ router.put(
 
     Actions.update(id, changes)
       .then((updated) => {
-        res
-          .status(200)
-          .json({ message: 'ticket updated', changes: updated[0] });
+        res.status(200).json(updated[0]);
       })
       .catch(next);
   }

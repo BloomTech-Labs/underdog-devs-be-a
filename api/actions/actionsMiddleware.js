@@ -5,7 +5,8 @@ const validateSubjectBody = (req, res, next) => {
   if (!issue || issue.trim() === '' || issue.length > 600)
     next({
       status: 400,
-      message: 'You must submit an issue as a string of text',
+      message:
+        'You must submit an issue property as a string of text in your request',
     });
   else next();
 };
