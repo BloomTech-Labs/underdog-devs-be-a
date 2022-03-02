@@ -1,8 +1,6 @@
 const db = require('../../data/db-config');
 
 const findAll = async () => {
-  // return await db('assignments');
-
   const mentees = await db
     // select all ('*') here is more than necessary, but was left for now under the assumption that some profile information that does not yet exist will eventually (e.g. interests, tech stack, etc). can be pared down as necessary once the profile information gets solidified
     .select('*')
