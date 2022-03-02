@@ -105,6 +105,13 @@ function updateApplicationNotes(application_id, noteChanges) {
     ]);
 }
 
+function getMenteeSubject(mentee_intake_id) {
+  return db('mentee_intake as m')
+    .select('m.subject')
+    .where('mentee_intake_id', mentee_intake_id)
+    .first();
+}
+
 module.exports = {
   add,
   updateTicket,
@@ -116,4 +123,5 @@ module.exports = {
   insertMenteeIntake,
   insertMentorIntake,
   updateApplicationNotes,
+  getMenteeSubject,
 };

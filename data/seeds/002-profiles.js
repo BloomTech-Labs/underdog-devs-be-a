@@ -1,4 +1,4 @@
-const profiles = [...new Array(12)].map((i, idx) => ({
+const profiles = [...new Array(14)].map((i, idx) => ({
   profile_id: (idx + 1).toString(),
   email: `llama00${idx + 1}@maildrop.cc`,
   first_name: idx < 2 ? `Admin` : idx == 2 ? `Moderator` : `User`,
@@ -15,6 +15,8 @@ profiles[3].profile_id = '00ultwqjtqt4VCcS24x6';
 profiles[4].profile_id = '00ultwz1n9ORpNFc04x6';
 profiles[5].profile_id = '00u13omswyZM1xVya4x7';
 profiles[7].profile_id = '00u13oned0U8XP8Mb4x7';
+profiles[12].profile_id = 'BH6hr755W188LA6e';
+profiles[13].profile_id = 'l46VW1FXE2lM1610';
 
 profiles[4].role_id = 5;
 profiles[6].role_id = 3;
@@ -23,6 +25,8 @@ profiles[8].role_id = 3;
 profiles[9].role_id = 4;
 profiles[10].role_id = 4;
 profiles[11].role_id = 5;
+profiles[12].role_id = 2;
+profiles[13].role_id = 2;
 
 profiles[7].progress_id = 3;
 profiles[9].progress_id = 4;
@@ -148,6 +152,26 @@ exports.profileList = [
     progress_id: null,
     progress_status: null,
     role_id: 5,
+  },
+  {
+    email: 'mentortest1@maildrop.cc',
+    first_name: 'MentorTest',
+    is_active: true,
+    last_name: '1',
+    profile_id: 'l46VW1FXE2lM1610',
+    progress_id: null,
+    progress_status: null,
+    role_id: 2,
+  },
+  {
+    email: 'mentortest2@Maildrop.cc',
+    first_name: 'MentorTest',
+    is_active: true,
+    last_name: '2',
+    profile_id: 'BH6hr755W188LA6e',
+    progress_id: null,
+    progress_status: null,
+    role_id: 2,
   },
 ];
 

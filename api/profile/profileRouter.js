@@ -2,6 +2,7 @@ const express = require('express');
 const authRequired = require('../middleware/authRequired');
 const Profiles = require('./profileModel');
 const router = express.Router();
+const axios = require('axios');
 const {
   adminRequired,
   superAdminRequired,
@@ -286,5 +287,23 @@ router.put(
     }
   }
 );
+
+//get match mentor by profile_id
+router.get('/match/:id', authRequired, (req, res, next) => {
+  axios
+    .post(`${process.env.DS_API_URL}/match/${req.params.id}/?n_matches=5`)
+    .then((results) => {
+      let mentors = [];
+      results.data.result.map(async (x) => {
+        await Profiles.findById(x).then((mentor) => {
+          mentors.push(mentor);
+        });
+        res.status(200).json({ matches: mentors });
+      });
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
 
 module.exports = router;
