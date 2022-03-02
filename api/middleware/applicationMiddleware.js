@@ -77,7 +77,7 @@ const checkApplicationExists = async (req, res, next) => {
     req.application = application;
     next();
   } else {
-    return next({
+    next({
       status: 404,
       message: `no applications with profile_id: ${req.params.id} were found`,
     });
@@ -86,11 +86,12 @@ const checkApplicationExists = async (req, res, next) => {
 
 const checkRole = async (req, res, next) => {
   const application = req.application;
+
   try {
     if (application.position === 3) {
       const mentorData = await getMentorIntake(application.profile_id);
       if (!mentorData) {
-        return next({
+        next({
           status: 404,
           message: `form data for ${application.profile_id} not found`,
         });
@@ -99,10 +100,13 @@ const checkRole = async (req, res, next) => {
         mentorData.application_id = application.application_id;
         next();
       }
-    } else if (application.position === 4) {
+    }
+
+    if (application.position === 4) {
       const menteeData = await getMenteeIntake(application.profile_id);
+
       if (!menteeData) {
-        return next({
+        next({
           status: 404,
           message: `form data for ${application.profile_id} not found`,
         });
@@ -124,7 +128,7 @@ const findProfile = async (req, res, next) => {
     req.profile = profile;
     next();
   } else {
-    return next({
+    next({
       status: 404,
       message: `no profiles with profile_id: ${req.params.id} were found`,
     });

@@ -1,12 +1,11 @@
 const db = require('../../data/db-config');
 
 async function add(newApplication) {
-  const ticket = await db('application_tickets').insert(newApplication);
-  return ticket;
+  return await db('application_tickets').insert(newApplication);
 }
 
-function getPendingTickets() {
-  return db('application_tickets as a')
+async function getPendingTickets() {
+  return await db('application_tickets as a')
     .join('profiles as p', 'a.profile_id', 'p.profile_id')
     .join('roles as r', 'r.role_id', 'p.role_id')
     .select(
@@ -22,8 +21,8 @@ function getPendingTickets() {
     .where('a.approved', false);
 }
 
-function getPendingTicketsByRole(role_name) {
-  return db('application_tickets as a')
+async function getPendingTicketsByRole(role_name) {
+  return await db('application_tickets as a')
     .join('profiles as p', 'a.profile_id', 'p.profile_id')
     .join('roles as r', 'r.role_id', 'p.role_id')
     .select(
@@ -38,15 +37,15 @@ function getPendingTicketsByRole(role_name) {
     .where('r.role_name', role_name);
 }
 
-function getTicketById(profile_id) {
-  return db('application_tickets as a')
+async function getTicketById(profile_id) {
+  return await db('application_tickets as a')
     .select('*')
     .where('a.profile_id', profile_id)
     .first();
 }
 
-function getMentorIntake(profile_id) {
-  return db('application_tickets as a')
+async function getMentorIntake(profile_id) {
+  return await db('application_tickets as a')
     .join('profiles as p', 'a.profile_id', 'p.profile_id')
     .join('mentor_intake as m', 'a.profile_id', 'm.profile_id')
     .join('roles as r', 'p.role_id', 'r.role_id')
@@ -55,8 +54,8 @@ function getMentorIntake(profile_id) {
     .first();
 }
 
-function getMenteeIntake(profile_id) {
-  return db('application_tickets as a')
+async function getMenteeIntake(profile_id) {
+  return await db('application_tickets as a')
     .join('profiles as p', 'a.profile_id', 'p.profile_id')
     .join('mentee_intake as m', 'a.profile_id', 'm.profile_id')
     .join('roles as r', 'p.role_id', 'r.role_id')
@@ -80,24 +79,22 @@ function getMenteeIntake(profile_id) {
 }
 
 async function insertMenteeIntake(newMenteeIntake) {
-  const form = await db('mentee_intake').insert(newMenteeIntake);
-  return form;
+  return await db('mentee_intake').insert(newMenteeIntake);
 }
 
 async function insertMentorIntake(newMentorIntake) {
-  const form = await db('mentor_intake').insert(newMentorIntake);
-  return form;
+  return await db('mentor_intake').insert(newMentorIntake);
 }
 
-function updateTicket(application_id, changes) {
-  return db('application_tickets')
+async function updateTicket(application_id, changes) {
+  return await db('application_tickets')
     .where('application_id', application_id)
     .first()
     .update(changes);
 }
 
-function updateApplicationNotes(application_id, noteChanges) {
-  return db('application_tickets')
+async function updateApplicationNotes(application_id, noteChanges) {
+  return await db('application_tickets')
     .where('application_id', application_id)
     .first()
     .update('application_notes', noteChanges, [

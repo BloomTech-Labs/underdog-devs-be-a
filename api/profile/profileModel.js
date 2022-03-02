@@ -4,35 +4,35 @@ const findAll = async () => {
   return await db('profiles');
 };
 
-const findBy = (filter) => {
-  return db('profiles').where(filter);
+const findBy = async (filter) => {
+  return await db('profiles').where(filter);
 };
 
 const findById = async (profile_id) => {
-  return db('profiles').where({ profile_id }).first().select('*');
+  return await db('profiles').where({ profile_id }).first().select('*');
 };
 
 const create = async (profile) => {
-  return db('profiles').insert(profile).returning('*');
+  return await db('profiles').insert(profile).returning('*');
 };
 
-const update = (id, profile) => {
-  return db('profiles')
+const update = async (id, profile) => {
+  return await db('profiles')
     .where({ profile_id: id })
     .first()
     .update(profile)
     .returning('*');
 };
 
-const updateIsActive = (profile_id, status) => {
+const updateIsActive = async (profile_id, status) => {
   const oppositeStatus = !status;
   db('profiles')
     .where({ profile_id })
     .update({
       is_active: oppositeStatus,
     })
-    .then(() => {
-      return db('profiles').select('is_active');
+    .then(async () => {
+      return await db('profiles').select('is_active');
     });
 };
 

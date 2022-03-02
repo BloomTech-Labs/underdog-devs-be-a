@@ -1,7 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const Actions = require('./actionsModel');
-const { validateSubjectBody } = require('./actionsMiddleware');
+const {
+  validateSubjectBody,
+  checkActionTicketExists,
+} = require('./actionsMiddleware');
 /**
  * @swagger
  * components:
@@ -107,14 +110,12 @@ const { validateSubjectBody } = require('./actionsMiddleware');
  *                  created_at: "2022-01-26 15:33:34.945832-07"
  *                  updated_at: "2022-01-26 15:33:34.945832-07"
  */
-router.get('/', function (req, res) {
+router.get('/', (req, res, next) => {
   Actions.findAll()
     .then((actions) => {
       res.status(200).json(actions);
     })
-    .catch((err) => {
-      res.status(500).json({ message: err.message });
-    });
+    .catch(next);
 });
 
 /**
@@ -153,16 +154,11 @@ router.get('/', function (req, res) {
  *                  strike: true
  *                  created_at: "2022-01-26 15:33:34.945832-07"
  *                  updated_at: "2022-01-26 15:33:34.945832-07"
+ *      '400':
+ *        description: Bad Request, Action with that Id does not exist
  */
-router.get('/:id', function (req, res) {
-  const id = req.params.id;
-  Actions.findById(id)
-    .then((action) => {
-      res.status(200).json(action);
-    })
-    .catch((err) => {
-      res.status(500).json({ message: err.message });
-    });
+router.get('/:id', checkActionTicketExists, (req, res) => {
+  res.status(200).json(req.action);
 });
 
 /**
@@ -265,32 +261,22 @@ router.post('/', validateSubjectBody, (req, res, next) => {
  *                  "updated_at": "2022-01-26T22:33:34.945Z"
  */
 
-router.put('/:id', validateSubjectBody, (req, res) => {
-  const changes = req.body;
-  if (changes) {
+router.put(
+  '/:id',
+  validateSubjectBody,
+  checkActionTicketExists,
+  (req, res, next) => {
+    const changes = req.body;
     const id = req.params.id;
-    Actions.findById(id)
-      .then(
-        Actions.update(id, changes)
-          .then((updated) => {
-            res
-              .status(200)
-              .json({ message: 'ticket updated', changes: updated[0] });
-          })
-          .catch((err) => {
-            res.status(500).json({
-              message: "couldn't update ticket",
-              error: err.message,
-            });
-          })
-      )
-      .catch((err) => {
-        res.status(404).json({
-          message: 'could not find ticket',
-          error: err.message,
-        });
-      });
+
+    Actions.update(id, changes)
+      .then((updated) => {
+        res
+          .status(200)
+          .json({ message: 'ticket updated', changes: updated[0] });
+      })
+      .catch(next);
   }
-});
+);
 
 module.exports = router;
