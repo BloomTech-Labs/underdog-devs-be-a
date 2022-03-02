@@ -1,11 +1,11 @@
 const db = require('../../data/db-config');
 
-async function add(newApplication) {
-  return await db('application_tickets').insert(newApplication);
+function add(newApplication) {
+  return db('application_tickets').insert(newApplication);
 }
 
-async function getPendingTickets() {
-  return await db('application_tickets as a')
+function getPendingTickets() {
+  return db('application_tickets as a')
     .join('profiles as p', 'a.profile_id', 'p.profile_id')
     .join('roles as r', 'r.role_id', 'p.role_id')
     .select(
@@ -21,8 +21,8 @@ async function getPendingTickets() {
     .where('a.approved', false);
 }
 
-async function getPendingTicketsByRole(role_name) {
-  return await db('application_tickets as a')
+function getPendingTicketsByRole(role_name) {
+  return db('application_tickets as a')
     .join('profiles as p', 'a.profile_id', 'p.profile_id')
     .join('roles as r', 'r.role_id', 'p.role_id')
     .select(
@@ -37,15 +37,15 @@ async function getPendingTicketsByRole(role_name) {
     .where('r.role_name', role_name);
 }
 
-async function getTicketById(profile_id) {
-  return await db('application_tickets as a')
+function getTicketById(profile_id) {
+  return db('application_tickets as a')
     .select('*')
     .where('a.profile_id', profile_id)
     .first();
 }
 
-async function getMentorIntake(profile_id) {
-  return await db('application_tickets as a')
+function getMentorIntake(profile_id) {
+  return db('application_tickets as a')
     .join('profiles as p', 'a.profile_id', 'p.profile_id')
     .join('mentor_intake as m', 'a.profile_id', 'm.profile_id')
     .join('roles as r', 'p.role_id', 'r.role_id')
@@ -54,8 +54,8 @@ async function getMentorIntake(profile_id) {
     .first();
 }
 
-async function getMenteeIntake(profile_id) {
-  return await db('application_tickets as a')
+function getMenteeIntake(profile_id) {
+  return db('application_tickets as a')
     .join('profiles as p', 'a.profile_id', 'p.profile_id')
     .join('mentee_intake as m', 'a.profile_id', 'm.profile_id')
     .join('roles as r', 'p.role_id', 'r.role_id')
@@ -75,26 +75,27 @@ async function getMenteeIntake(profile_id) {
       'r.role_name',
       'a.approved'
     )
-    .where('p.profile_id', profile_id);
+    .where('p.profile_id', profile_id)
+    .first();
 }
 
-async function insertMenteeIntake(newMenteeIntake) {
-  return await db('mentee_intake').insert(newMenteeIntake);
+function insertMenteeIntake(newMenteeIntake) {
+  return db('mentee_intake').insert(newMenteeIntake);
 }
 
-async function insertMentorIntake(newMentorIntake) {
-  return await db('mentor_intake').insert(newMentorIntake);
+function insertMentorIntake(newMentorIntake) {
+  return db('mentor_intake').insert(newMentorIntake);
 }
 
-async function updateTicket(application_id, changes) {
-  return await db('application_tickets')
+function updateTicket(application_id, changes) {
+  return db('application_tickets')
     .where('application_id', application_id)
     .first()
     .update(changes);
 }
 
-async function updateApplicationNotes(application_id, noteChanges) {
-  return await db('application_tickets')
+function updateApplicationNotes(application_id, noteChanges) {
+  return db('application_tickets')
     .where('application_id', application_id)
     .first()
     .update('application_notes', noteChanges, [
