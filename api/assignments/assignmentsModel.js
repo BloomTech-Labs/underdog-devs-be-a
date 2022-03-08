@@ -1,7 +1,28 @@
 const db = require('../../data/db-config');
 
 const findAll = async () => {
-  return await db('assignments');
+  const mentees = await db
+    // select all ('*') here is more than necessary, but was left for now under the assumption that some profile information that does not yet exist will eventually (e.g. interests, tech stack, etc). can be pared down as necessary once the profile information gets solidified
+    .select('*')
+    .from('profiles as p')
+    .where('p.role_id', '=', '4');
+
+  const assignments = await db
+    .select('a.mentor_id', 'a.mentee_id')
+    .from('assignments as a')
+    .join('profiles as p', 'p.profile_id', 'a.mentee_id');
+
+  for (let i = 0; i < mentees.length; i++) {
+    mentees[i]['matched'] = false;
+
+    for (let j = 0; j < assignments.length; j++) {
+      if (assignments[j]['mentee_id'] === mentees[i]['profile_id']) {
+        mentees[i]['matched'] = true;
+      }
+    }
+  }
+
+  return mentees;
 };
 
 const findById = async (assignment_id) => {
