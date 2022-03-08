@@ -1,18 +1,18 @@
 const db = require('../../data/db-config');
 
-const findAll = async () => {
-  return await db('profiles');
+const findAll = () => {
+  return db('profiles');
 };
 
 const findBy = (filter) => {
   return db('profiles').where(filter);
 };
 
-const findById = async (profile_id) => {
+const findById = (profile_id) => {
   return db('profiles').where({ profile_id }).first().select('*');
 };
 
-const create = async (profile) => {
+const create = (profile) => {
   return db('profiles').insert(profile).returning('*');
 };
 
@@ -24,20 +24,20 @@ const update = (id, profile) => {
     .returning('*');
 };
 
-const updateIsActive = (profile_id, status) => {
+const updateIsActive = async (profile_id, status) => {
   const oppositeStatus = !status;
   db('profiles')
     .where({ profile_id })
     .update({
       is_active: oppositeStatus,
     })
-    .then(() => {
-      return db('profiles').select('is_active');
+    .then(async () => {
+      return await db('profiles').select('is_active');
     });
 };
 
-const remove = async (id) => {
-  return await db('profiles').where({ id }).del();
+const remove = (id) => {
+  return db('profiles').where({ id }).del();
 };
 
 const findOrCreateProfile = async (profileObj) => {

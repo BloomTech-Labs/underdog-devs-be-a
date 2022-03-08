@@ -21,7 +21,7 @@ const authRequired = async (req, res, next) => {
     const authHeader = req.headers.authorization || '';
     const match = authHeader.match(/Bearer (.+)/);
     if (!match) {
-      return next({
+      next({
         status: 401,
         message: 'Missing idToken',
       });
@@ -35,19 +35,20 @@ const authRequired = async (req, res, next) => {
     );
     const jwtUserObj = makeProfileObj(oktaData.claims);
     const profile = await Profiles.findOrCreateProfile(jwtUserObj);
+
     if (profile) {
       req.profile = profile;
     } else {
-      return next({
+      next({
         status: 401,
         message: 'Unable to process idToken',
       });
     }
 
     // Proceed with request if token is valid
-    return next();
+    next();
   } catch (err) {
-    return next({
+    next({
       status: err.status || 500,
       message: err.message || 'Internal Server Error',
     });

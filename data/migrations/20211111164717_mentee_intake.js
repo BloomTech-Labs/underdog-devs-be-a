@@ -17,6 +17,10 @@ exports.up = function (knex) {
       table.string('state');
       table.string('first_name').notNullable();
       table.string('last_name').notNullable();
+      table.string('location');
+      table.boolean('lives_in_us');
+      table.string('tech_stack');
+      table.string('your_hope');
       table.boolean('formerly_incarcerated').notNullable();
       table.boolean('underrepresented_group').notNullable();
       table.boolean('low_income').notNullable();

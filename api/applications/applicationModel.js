@@ -1,8 +1,7 @@
 const db = require('../../data/db-config');
 
-async function add(newApplication) {
-  const ticket = await db('application_tickets').insert(newApplication);
-  return ticket;
+function add(newApplication) {
+  return db('application_tickets').insert(newApplication);
 }
 
 function getPendingTickets() {
@@ -76,17 +75,16 @@ function getMenteeIntake(profile_id) {
       'r.role_name',
       'a.approved'
     )
-    .where('p.profile_id', profile_id);
+    .where('p.profile_id', profile_id)
+    .first();
 }
 
-async function insertMenteeIntake(newMenteeIntake) {
-  const form = await db('mentee_intake').insert(newMenteeIntake);
-  return form;
+function insertMenteeIntake(newMenteeIntake) {
+  return db('mentee_intake').insert(newMenteeIntake);
 }
 
-async function insertMentorIntake(newMentorIntake) {
-  const form = await db('mentor_intake').insert(newMentorIntake);
-  return form;
+function insertMentorIntake(newMentorIntake) {
+  return db('mentor_intake').insert(newMentorIntake);
 }
 
 function updateTicket(application_id, changes) {

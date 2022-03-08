@@ -8,24 +8,24 @@ const findBy = (filter) => {
   return db('action_tickets').where(filter);
 };
 
-const findById = async (action_ticket_id) => {
-  return db('action_tickets').where({ action_ticket_id }).first().select('*');
+const findById = (action_ticket_id) => {
+  return db('action_tickets').where({ action_ticket_id }).first();
 };
 
-const create = async (actions) => {
-  return db('action_tickets').insert(actions).returning('*');
+const create = (action) => {
+  return db('action_tickets').insert(action).returning('*');
 };
 
-const update = (id, actions) => {
+const update = (id, action) => {
   return db('action_tickets')
     .where({ action_ticket_id: id })
     .first()
-    .update(actions)
+    .update(action)
     .returning('*');
 };
 
-const remove = async (id) => {
-  return await db('action_tickets').where({ id }).del();
+const remove = (id) => {
+  return db('action_tickets').where({ id }).del();
 };
 
 const findOrCreateActions = async (actionsObj) => {
