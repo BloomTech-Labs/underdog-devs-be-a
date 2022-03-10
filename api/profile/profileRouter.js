@@ -12,7 +12,7 @@ validateUser;
 
 // gets current user profile
 
-router.get('/current_user_profile/', authRequired, async (req, res, next) => {
+router.get('/current_user/', authRequired, async (req, res, next) => {
   try {
     const resp = req.profile;
     res.status(200).json(resp);
