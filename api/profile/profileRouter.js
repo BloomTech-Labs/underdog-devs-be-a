@@ -15,8 +15,8 @@ router.get('/current_user_profile/', authRequired, async (req, res, next) => {
   try {
     const resp = await Profiles.mentorApplicationData(req.profile.profile_id);
     res.status(200).json(resp);
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next({ status: 500, message: err.message });
   }
 });
 
@@ -85,12 +85,7 @@ router.get('/', authRequired, adminRequired, function (req, res, next) {
       res.status(200).json(profiles);
     })
     .catch((err) => {
-      console.log(err);
-      // res.status(500).json({ message: err.message });
-      next({
-        status: 500,
-        message: err.message,
-      });
+      next({ status: 500, message: err.message });
     });
 });
 
@@ -136,15 +131,11 @@ router.get('/:id', authRequired, adminRequired, function (req, res, next) {
       if (profile) {
         res.status(200).json(profile);
       } else {
-        res.status(404).json({ error: 'ProfileNotFound' });
+        next({ status: 404, message: 'ProfileNotFound' });
       }
     })
     .catch((err) => {
-      // res.status(500).json({ error: err.message });
-      next({
-        status: 500,
-        message: err.message,
-      });
+      next({ status: 500, message: err.message });
     });
 });
 
@@ -198,27 +189,14 @@ router.post('/', authRequired, async (req, res, next) => {
               .json({ message: 'profile created', profile: profile[0] })
           );
         } else {
-          // res.status(400).json({ message: 'profile already exists' });
-          next({
-            status: 400,
-            message: 'profile already exists',
-          });
+          next({ status: 400, message: 'profile already exists' });
         }
       });
     } catch (e) {
-      // console.error(e);
-      // res.status(500).json({ message: e.message });
-      next({
-        status: 500,
-        message: e.message,
-      });
+      next({ status: 500, message: e.message });
     }
   } else {
-    // res.status(404).json({ message: 'Profile missing' });
-    next({
-      status: 404,
-      message: 'Profile missing',
-    });
+    next({ status: 404, message: 'Profile missing' });
   }
 });
 /**
@@ -267,21 +245,17 @@ router.put('/', authRequired, (req, res, next) => {
               .status(200)
               .json({ message: 'profile created', profile: updated[0] });
           })
-          .catch((err) => {
-            res.status(500).json({
+          .catch(() => {
+            next({
+              status: 500,
               message: `Could not update profile '${id}'`,
-              error: err.message,
             });
           })
       )
-      .catch((err) => {
-        // res.status(404).json({
-        //   message: `Could not find profile '${id}'`,
-        //   error: err.message,
-        // });
+      .catch(() => {
         next({
           status: 404,
-          message: err.message,
+          message: `Could not find profile '${id}'`,
         });
       });
   }
@@ -337,10 +311,6 @@ router.put(
         res.status(200).json({ message: 'profile is now inactive' });
       }
     } catch (err) {
-      // res.status(500).json({
-      //   message: `Could not update active status of profile with with ID: ${profile_id}`,
-      //   error: err.message,
-      // });
       next({
         status: 500,
         message: `Could not update active status of profile with with ID: ${profile_id}`,
@@ -363,7 +333,7 @@ router.get('/match/:id', authRequired, (req, res, next) => {
       });
     })
     .catch((err) => {
-      next(err);
+      next({ status: 500, message: err.message });
     });
 });
 

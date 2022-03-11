@@ -151,10 +151,7 @@ router.get('/', authRequired, async (req, res, next) => {
 
     return res.status(200).json(filteredResources);
   } catch (err) {
-    next({
-      status: 500,
-      message: err.message,
-    });
+    next({ status: 500, message: err.message });
   }
 });
 
@@ -205,10 +202,7 @@ router.get(
       const resource = req._resource;
       return res.status(200).json(resource);
     } catch (err) {
-      next({
-        status: 500,
-        message: err.message,
-      });
+      next({ status: 500, message: err.message });
     }
   }
 );
@@ -268,10 +262,7 @@ router.post(
         resource: postResponse,
       });
     } catch (err) {
-      next({
-        status: 500,
-        message: err.message,
-      });
+      next({ status: 500, message: err.message });
     }
   }
 );
@@ -362,10 +353,7 @@ router.put(
         resource: updatedResource,
       });
     } catch (err) {
-      next({
-        status: 500,
-        message: err.message,
-      });
+      next({ status: 500, message: err.message });
     }
   }
 );
@@ -428,10 +416,7 @@ router.delete(
         message: `Resource #${resource_id} deleted, successfully!`,
       });
     } catch (err) {
-      next({
-        status: 500,
-        message: err.message,
-      });
+      next({ status: 500, message: err.message });
     }
   }
 );

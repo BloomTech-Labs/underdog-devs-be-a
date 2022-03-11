@@ -14,7 +14,6 @@ router.get('/', authRequired, adminRequired, (req, res, next) => {
       res.status(200).json(roles);
     })
     .catch((err) => {
-      // res.status(500).json({ message: err.message });
       next({ status: 500, message: err.message });
     });
 });
@@ -27,12 +26,10 @@ router.get('/:profile_id', validateUser, (req, res, next) => {
       if (profile) {
         res.status(200).json({ role_id: profile.role_id });
       } else {
-        // res.status(404).json({ error: 'Profile not found, check ID' });
         next({ status: 404, message: 'Profile not found, check ID' });
       }
     })
     .catch((err) => {
-      // res.status(500).json({ error: err.message });
       next({ status: 500, message: err.message });
     });
 });
@@ -53,7 +50,6 @@ router.put(
       data.message = "Profile's role has been successfully updated";
       res.status(200).json(data);
     } catch (err) {
-      // res.status(500).json({ message: err.message });
       next({ status: 500, message: err.message });
     }
   }
