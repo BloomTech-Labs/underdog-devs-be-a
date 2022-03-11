@@ -6,21 +6,21 @@ exports.up = function (knex) {
             table.increments('review_id').notNullable().unique().primary();
             table.string('review').notNullable();
             table
-                .integer('mentor_intake_id')
+                .string('mentor_id')
                 .unsigned()
                 .notNullable()
-                .references('mentor_intake_id')
-                .inTable('mentor_intake')
-                .onDelete('RESTRICT')
-                .onUpdate('RESTRICT');
+                .references('profile_id')
+                .inTable('profiles')
+                .onDelete('CASCADE')
+                .onUpdate('CASCADE');
             table
-                .integer('mentee_intake_id')
+                .string('mentee_id')
                 .unsigned()
                 .notNullable()
-                .references('mentee_intake_id')
-                .inTable('mentee_intake')
-                .onDelete('RESTRICT')
-                .onUpdate('RESTRICT');
+                .references('profile_id')
+                .inTable('profiles')
+                .onDelete('CASCADE')
+                .onUpdate('CASCADE');
 
         });
 };
