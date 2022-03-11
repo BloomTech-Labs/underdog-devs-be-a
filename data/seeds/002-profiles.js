@@ -40,4 +40,4 @@ exports.seed = function (knex) {
     });
 };
 
-exports.profiles = { profiles }
+exports.profiles = { profiles };
