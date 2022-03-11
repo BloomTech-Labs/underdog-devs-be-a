@@ -96,7 +96,7 @@ describe('Profile Router', () => {
       });
 
       it('returns a profile object', () => {
-        const expected = profiles[1];
+        const expected = profiles.profiles[1];
         const actual = res.body;
 
         expect(actual).toMatchObject(expected);
