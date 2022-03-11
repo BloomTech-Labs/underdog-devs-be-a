@@ -62,24 +62,24 @@ const cacheSignUpData = async (req, res, next) => {
       next();
     }
   } catch (err) {
-    return next({
-      status: 422,
-      message: err,
-    });
+    next(err);
   }
 };
 
 const checkApplicationExists = async (req, res, next) => {
   const application = await getTicketById(req.params.id);
-
-  if (application) {
-    req.application = application;
-    next();
-  } else {
-    next({
-      status: 404,
-      message: `no applications with profile_id: ${req.params.id} were found`,
-    });
+  try {
+    if (application) {
+      req.application = application;
+      next();
+    } else {
+      next({
+        status: 404,
+        message: `no applications with profile_id: ${req.params.id} were found`,
+      });
+    }
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -122,15 +122,18 @@ const checkRole = async (req, res, next) => {
 
 const findProfile = async (req, res, next) => {
   const profile = await findById(req.params.id);
-
-  if (profile) {
-    req.profile = profile;
-    next();
-  } else {
-    next({
-      status: 404,
-      message: `no profiles with profile_id: ${req.params.id} were found`,
-    });
+  try {
+    if (profile) {
+      req.profile = profile;
+      next();
+    } else {
+      next({
+        status: 404,
+        message: `no profiles with profile_id: ${req.params.id} were found`,
+      });
+    }
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -140,10 +143,8 @@ const validateApplicationTicket = async (req, res, next) => {
     await applicationTicketSchema.validate(payload);
     return next();
   } catch (err) {
-    return next({
-      status: 400,
-      message: err.errors[0],
-    });
+    // return next(err.errors[0]);
+    next(err);
   }
 };
 
@@ -153,10 +154,8 @@ const validateMenteeIntakeData = async (req, res, next) => {
     await menteeApplicationSchema.validate(payload);
     return next();
   } catch (err) {
-    return next({
-      status: 400,
-      message: err.errors[0],
-    });
+    // return next(err.errors[0]);
+    next(err);
   }
 };
 
@@ -166,10 +165,8 @@ const validateMentorIntakeData = async (req, res, next) => {
     await mentorApplicationSchema.validate(payload);
     return next();
   } catch (err) {
-    return next({
-      status: 400,
-      message: err.errors[0],
-    });
+    // return next(err.errors[0]);
+    next(err);
   }
 };
 

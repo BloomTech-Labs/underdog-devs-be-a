@@ -16,7 +16,9 @@ router.get('/', authRequired, adminRequired, (req, res, next) => {
     .then((meetings) => {
       res.status(200).json(meetings);
     })
-    .catch(next);
+    .catch((err) => {
+      next({ status: 500, message: err.message });
+    });
 });
 
 // get all the meetings a profile_id has scheduled
@@ -36,7 +38,9 @@ router.get(
           res.status(404).json({ error: 'Meetings not found' });
         }
       })
-      .catch(next);
+      .catch((err) => {
+        next({ status: 500, message: err.message });
+      });
   }
 );
 
@@ -50,7 +54,9 @@ router.get('/my-meetings', authRequired, async (req, res, next) => {
     .then((meetings) => {
       res.status(200).json(meetings);
     })
-    .catch(next);
+    .catch((err) => {
+      next({ status: 500, message: err.message });
+    });
 });
 
 //create a meeting
@@ -127,7 +133,9 @@ router.get('/:meeting_id', authRequired, validMeetingID, (req, res, next) => {
     .then((meeting) => {
       res.status(200).json(meeting);
     })
-    .catch(next);
+    .catch((err) => {
+      next({ status: 500, message: err.message });
+    });
 });
 
 ///////////////////////////MIDDLEWARE///////////////////////////////
@@ -140,9 +148,7 @@ function validMeetingID(req, res, next) {
       req.meeting = meeting;
       next();
     } else {
-      res.status(400).json({
-        message: 'Meeting_id Not Found',
-      });
+      next({ status: 400, message: 'Meeting_id Not Found' });
     }
   });
 }

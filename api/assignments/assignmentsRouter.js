@@ -13,7 +13,9 @@ router.get('/', authRequired, adminRequired, (req, res, next) => {
     .then((assignments) => {
       res.status(200).json(assignments);
     })
-    .catch(next);
+    .catch((err) => {
+      next({ status: 500, message: err.message });
+    });
 });
 
 // get all the mentees a mentor has by the mentor's id
@@ -35,7 +37,9 @@ router.get(
             .json({ error: 'Assignment Not Found, Check mentor ID' });
         }
       })
-      .catch(next);
+      .catch((err) => {
+        next({ status: 500, message: err.message });
+      });
   }
 );
 
@@ -58,7 +62,9 @@ router.get(
             .json({ error: 'Assignment Not Found, Check mentee ID' });
         }
       })
-      .catch(next);
+      .catch((err) => {
+        next({ status: 500, message: err.message });
+      });
   }
 );
 
@@ -75,7 +81,9 @@ router.get('/mymentors', authRequired, (req, res, next) => {
         res.status(404).json({ error: 'Mentors not found' });
       }
     })
-    .catch(next);
+    .catch((err) => {
+      next({ status: 500, message: err.message });
+    });
 });
 
 //get current users mentees
@@ -91,7 +99,9 @@ router.get('/mymentees', authRequired, (req, res, next) => {
         res.status(404).json({ error: 'Mentees not found' });
       }
     })
-    .catch(next);
+    .catch((err) => {
+      next({ status: 500, message: err.message });
+    });
 });
 
 // create a new assignment between a mentor and mentee
@@ -170,7 +180,9 @@ router.get(
       .then((assigns) => {
         res.status(200).json(assigns);
       })
-      .catch(next);
+      .catch((err) => {
+        next({ status: 500, message: err.message });
+      });
   }
 );
 
