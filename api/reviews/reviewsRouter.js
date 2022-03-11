@@ -8,7 +8,7 @@ const authRequired = require('../middleware/authRequired');
 
 //Get all reviews
 
-router.get('/reviews', authRequired, adminRequired, (req, res) => {
+router.get('/', authRequired, adminRequired, (req, res) => {
   Review.findAll()
     .then((reviews) => {
       res.status(200).json(reviews);
@@ -22,7 +22,7 @@ router.get('/reviews', authRequired, adminRequired, (req, res) => {
 //Get all reviews by mentor's id
 
 router.get(
-  '/reviews/mentor/:id',
+  '/mentor/:id',
   authRequired,
   validProfileID,
   adminRequired,
@@ -63,7 +63,7 @@ router.get('/myreviews', authRequired, (req, res) => {
 //Create a new review for mentee
 
 router.post(
-  '/reviews',
+  '/',
   authRequired,
   validNewReview,
   adminRequired,
