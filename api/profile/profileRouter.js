@@ -27,17 +27,20 @@ router.get('/current_user_profile/', authRequired, async (req, res, next) => {
  *    Profile:
  *      type: object
  *      required:
- *        - id
+ *        - profile_id
  *        - email
- *        - name
+ *        - first_name
+ *        - last_name
  *        - avatarUrl
  *      properties:
- *        id:
+ *        profile_id:
  *          type: string
  *          description: This is a foreign key (the okta user ID)
  *        email:
  *          type: string
- *        name:
+ *        first_name:
+ *          type: string
+ *        last_name:
  *          type: string
  *        avatarUrl:
  *          type: string
@@ -45,7 +48,8 @@ router.get('/current_user_profile/', authRequired, async (req, res, next) => {
  *      example:
  *        id: '00uhjfrwdWAQvD8JV4x6'
  *        email: 'frank@example.com'
- *        name: 'Frank Martinez'
+ *        first_name: 'Frank'
+ *        last_name: 'Martinez'
  *        avatarUrl: 'https://s3.amazonaws.com/uifaces/faces/twitter/hermanobrother/128.jpg'
  *
  * /profiles:
@@ -55,7 +59,7 @@ router.get('/current_user_profile/', authRequired, async (req, res, next) => {
  *    security:
  *      - okta: []
  *    tags:
- *      - profile
+ *      - profiles
  *    responses:
  *      200:
  *        description: array of profiles
@@ -66,13 +70,15 @@ router.get('/current_user_profile/', authRequired, async (req, res, next) => {
  *              items:
  *                $ref: '#/components/schemas/Profile'
  *              example:
- *                - id: '00uhjfrwdWAQvD8JV4x6'
+ *                - profile_id: '00uhjfrwdWAQvD8JV4x6'
  *                  email: 'frank@example.com'
- *                  name: 'Frank Martinez'
+ *                  first_ame: 'Frank'
+ *                  last_name: 'Martinez'
  *                  avatarUrl: 'https://s3.amazonaws.com/uifaces/faces/twitter/hermanobrother/128.jpg'
- *                - id: '013e4ab94d96542e791f'
+ *                - profile_id: '013e4ab94d96542e791f'
  *                  email: 'cathy@example.com'
- *                  name: 'Cathy Warmund'
+ *                  first_name: 'Cathy'
+ *                  last_name: 'Warmund'
  *                  avatarUrl: 'https://s3.amazonaws.com/uifaces/faces/twitter/geneseleznev/128.jpg'
  *      401:
  *        $ref: '#/components/responses/UnauthorizedError'
@@ -94,7 +100,7 @@ router.get('/', authRequired, adminRequired, function (req, res) {
  * @swagger
  * components:
  *  parameters:
- *    profileId:
+ *    profile_id:
  *      name: id
  *      in: path
  *      description: ID of the profile to return
@@ -103,16 +109,16 @@ router.get('/', authRequired, adminRequired, function (req, res) {
  *      schema:
  *        type: string
  *
- * /profile/{id}:
+ * /profiles/{id}:
  *  get:
  *    description: Find profiles by ID
  *    summary: Returns a single profile
  *    security:
  *      - okta: []
  *    tags:
- *      - profile
+ *      - profiles
  *    parameters:
- *      - $ref: '#/components/parameters/profileId'
+ *      - $ref: '#/components/parameters/profile_id'
  *    responses:
  *      200:
  *        description: A profile object
@@ -126,7 +132,7 @@ router.get('/', authRequired, adminRequired, function (req, res) {
  *        description: 'Profile not found'
  */
 router.get('/:id', authRequired, adminRequired, function (req, res) {
-  const id = String(req.params.id);
+  const id = String(req.params.profile_id);
   Profiles.findById(id)
     .then((profile) => {
       if (profile) {
@@ -142,13 +148,13 @@ router.get('/:id', authRequired, adminRequired, function (req, res) {
 
 /**
  * @swagger
- * /profile:
+ * /profiles:
  *  post:
  *    summary: Add a profile
  *    security:
  *      - okta: []
  *    tags:
- *      - profile
+ *      - profiles
  *    requestBody:
  *      description: Profile object to to be added
  *      content:
@@ -179,7 +185,7 @@ router.get('/:id', authRequired, adminRequired, function (req, res) {
 router.post('/', authRequired, async (req, res) => {
   const profile = req.body;
   if (profile) {
-    const id = profile.id || 0;
+    const id = profile.profile_id || 0;
     try {
       await Profiles.findById(id).then(async (pf) => {
         if (pf == undefined) {
@@ -203,13 +209,13 @@ router.post('/', authRequired, async (req, res) => {
 });
 /**
  * @swagger
- * /profile:
+ * /profiles:
  *  put:
  *    summary: Update a profile
  *    security:
  *      - okta: []
  *    tags:
- *      - profile
+ *      - profiles
  *    requestBody:
  *      description: Profile object to to be updated
  *      content:
@@ -232,7 +238,7 @@ router.post('/', authRequired, async (req, res) => {
  *                  type: string
  *                  description: A message about the result
  *                  example: profile created
- *                profile:
+ *                profiles:
  *                  $ref: '#/components/schemas/Profile'
  */
 router.put('/', authRequired, (req, res) => {
@@ -264,13 +270,13 @@ router.put('/', authRequired, (req, res) => {
 });
 /**
  * @swagger
- * profile/is_active/:profile_id:
+ * /profiles/is_active/:profile_id:
  *  put:
  *    summary: Update a is_active filed in for the profile table.
  *    security:
  *      - okta: [authRequired,superAdminRequired,validateUser]
  *    tags:
- *      - profile
+ *      - profiles
  *    requestBody:
  *      description: Profile object to updated is_active
  *      content:
@@ -293,7 +299,7 @@ router.put('/', authRequired, (req, res) => {
  *                  type: string
  *                  description: A message about the result
  *                  example: profile created
- *                profile:
+ *                profiles:
  *                  $ref: '#/components/schemas/Profile'
  */
 // Activates or deactivates a user depending on what their current is_active status is
