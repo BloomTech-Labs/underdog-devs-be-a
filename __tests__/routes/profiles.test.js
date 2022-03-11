@@ -4,7 +4,7 @@ const db = require('../../data/db-config');
 const authRequired = require('../../api/middleware/authRequired');
 const profileRouter = require('../../api/profile/profileRouter');
 const handleError = require('../../api/middleware/handleError');
-const { profileList } = require('../../data/seeds/002-profiles');
+const { profiles } = require('../../data/seeds/002-profiles');
 
 // Reset the test database before and after running tests
 
@@ -34,7 +34,7 @@ jest.mock('../../api/middleware/permissionsRequired', () => ({
 
 const app = express();
 app.use(express.json());
-app.use(['/profile', '/profiles'], profileRouter);
+app.use(['/profiles'], profileRouter);
 app.use(handleError);
 
 // Declare Tests
@@ -70,18 +70,18 @@ describe('Profile Router', () => {
     });
 
     it('returns a list of profiles', () => {
-      const expected = [...profileList];
+      const expected = [...profiles.profiles];
       const actual = res.body;
 
       expect(actual).toMatchObject(expected);
     });
   });
 
-  describe('[GET] /profile/:id', () => {
+  describe('[GET] /profiles/:id', () => {
     describe('success', () => {
       let res;
       beforeAll(async () => {
-        res = await request(app).get('/profile/00ultwew80Onb2vOT4x6');
+        res = await request(app).get('/profiles/00ultwew80Onb2vOT4x6');
       });
 
       it('requires authentication', () => {
@@ -96,7 +96,7 @@ describe('Profile Router', () => {
       });
 
       it('returns a profile object', () => {
-        const expected = profileList[1];
+        const expected = profiles[1];
         const actual = res.body;
 
         expect(actual).toMatchObject(expected);
@@ -133,9 +133,9 @@ describe('Profile Router', () => {
     });
   });
 
-  describe('[POST] /profile', () => {
+  describe('[POST] /profiles', () => {
     const postNewUser = (userInfo) =>
-      request(app).post('/profile').send(userInfo);
+      request(app).post('/profiles').send(userInfo);
 
     describe('success', () => {
       let res;
@@ -375,7 +375,7 @@ describe('Profile Router', () => {
     });
   });
 
-  describe('[PUT] /profile', () => {
+  describe('[PUT] /profiles', () => {
     describe('success', () => {
       let res;
       beforeAll(async () => {
@@ -383,7 +383,7 @@ describe('Profile Router', () => {
           profile_id: 'super-update',
           email: 'super-update@maildrop.cc',
         };
-        res = await request(app).put('/profile').send(validReqBody);
+        res = await request(app).put('/profiles').send(validReqBody);
       });
 
       it('requires authentication', () => {
