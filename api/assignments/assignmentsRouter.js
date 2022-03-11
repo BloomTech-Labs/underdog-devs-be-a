@@ -197,7 +197,8 @@ function validAssignID(req, res, next) {
         req.assignment = assignment;
         next();
       } else {
-        res.status(400).json({
+        next({
+          status: 400,
           message: 'Invalid assignment ID',
         });
       }
@@ -214,7 +215,8 @@ function validProfileID(req, res, next) {
         req.profile = profile;
         next();
       } else {
-        res.status(400).json({
+        next({
+          status: 400,
           message: 'Invalid ID',
         });
       }
@@ -231,11 +233,13 @@ function validNewAssign(req, res, next) {
       message: 'Missing Assignment Data',
     });
   } else if (!assign.mentor_id) {
-    res.status(400).json({
+    next({
+      status: 400,
       message: 'Missing mentor_id field',
     });
   } else if (!assign.mentee_id) {
-    res.status(400).json({
+    next({
+      status: 400,
       message: 'Missing mentee_id field',
     });
   } else {
