@@ -11,14 +11,12 @@ const {
 
 // get all meetings
 
-router.get('/', authRequired, adminRequired, (req, res) => {
+router.get('/', authRequired, adminRequired, (req, res, next) => {
   Meeting.findAll()
     .then((meetings) => {
       res.status(200).json(meetings);
     })
-    .catch((err) => {
-      res.status(500).json({ error: err.message });
-    });
+    .catch(next);
 });
 
 // get all the meetings a profile_id has scheduled
@@ -28,7 +26,7 @@ router.get(
   authRequired,
   validProfileID,
   adminRequired,
-  (req, res) => {
+  (req, res, next) => {
     const id = req.params.profile_id;
     Meeting.findByProfileId(id)
       .then((meetings) => {
@@ -38,15 +36,13 @@ router.get(
           res.status(404).json({ error: 'Meetings not found' });
         }
       })
-      .catch((err) => {
-        res.status(500).json({ error: err.message });
-      });
+      .catch(next);
   }
 );
 
 // get all the meetings the current user has
 
-router.get('/my-meetings', authRequired, async (req, res) => {
+router.get('/my-meetings', authRequired, async (req, res, next) => {
   const token = req.headers.authorization;
   const user = jwt(token);
   const id = user.sub;
@@ -54,9 +50,7 @@ router.get('/my-meetings', authRequired, async (req, res) => {
     .then((meetings) => {
       res.status(200).json(meetings);
     })
-    .catch((err) => {
-      res.status(500).json({ error: err.message });
-    });
+    .catch(next);
 });
 
 //create a meeting
@@ -127,15 +121,13 @@ router.delete(
 
 // get a meeting by meeting_id
 
-router.get('/:meeting_id', authRequired, validMeetingID, (req, res) => {
+router.get('/:meeting_id', authRequired, validMeetingID, (req, res, next) => {
   const id = req.params.meeting_id;
   Meeting.findByMeetingId(id)
     .then((meeting) => {
       res.status(200).json(meeting);
     })
-    .catch((err) => {
-      res.status(500).json({ error: err.message });
-    });
+    .catch(next);
 });
 
 ///////////////////////////MIDDLEWARE///////////////////////////////
