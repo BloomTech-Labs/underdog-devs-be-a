@@ -112,7 +112,7 @@ router.get('/', authRequired, adminRequired, (req, res, next) => {
       res.status(200).json(roleTickets);
     })
     .catch((err) => {
-      next(err);
+      next({ status: 500, message: err.message });
     });
 });
 
@@ -164,7 +164,7 @@ router.get(
       const roleTicket = req.roleTicket;
       return res.status(200).json(roleTicket);
     } catch (err) {
-      return next(err);
+      next({ status: 500, message: err.message });
     }
   }
 );
@@ -231,7 +231,7 @@ router.post(
         roleTicket: postResponse,
       });
     } catch (err) {
-      return next(err);
+      next({ status: 500, message: err.message });
     }
   }
 );
@@ -321,7 +321,7 @@ router.put(
         roleTicket: updatedRoleTicket,
       });
     } catch (err) {
-      return next(err);
+      next({ status: 500, message: err.message });
     }
   }
 );
@@ -384,7 +384,7 @@ router.delete(
         message: `Role Ticket #${role_ticket_id} deleted, succesfully!`,
       });
     } catch (err) {
-      return next(err);
+      next({ status: 500, message: err.message });
     }
   }
 );

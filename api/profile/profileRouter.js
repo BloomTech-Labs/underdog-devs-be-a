@@ -79,14 +79,18 @@ router.get('/current_user_profile/', authRequired, async (req, res, next) => {
  *      403:
  *        $ref: '#/components/responses/UnauthorizedError'
  */
-router.get('/', authRequired, adminRequired, function (req, res) {
+router.get('/', authRequired, adminRequired, function (req, res, next) {
   Profiles.findAll()
     .then((profiles) => {
       res.status(200).json(profiles);
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).json({ message: err.message });
+      // res.status(500).json({ message: err.message });
+      next({
+        status: 500,
+        message: err.message,
+      });
     });
 });
 
@@ -125,7 +129,7 @@ router.get('/', authRequired, adminRequired, function (req, res) {
  *      404:
  *        description: 'Profile not found'
  */
-router.get('/:id', authRequired, adminRequired, function (req, res) {
+router.get('/:id', authRequired, adminRequired, function (req, res, next) {
   const id = String(req.params.id);
   Profiles.findById(id)
     .then((profile) => {
@@ -136,7 +140,11 @@ router.get('/:id', authRequired, adminRequired, function (req, res) {
       }
     })
     .catch((err) => {
-      res.status(500).json({ error: err.message });
+      // res.status(500).json({ error: err.message });
+      next({
+        status: 500,
+        message: err.message,
+      });
     });
 });
 
@@ -176,7 +184,7 @@ router.get('/:id', authRequired, adminRequired, function (req, res) {
  *                profile:
  *                  $ref: '#/components/schemas/Profile'
  */
-router.post('/', authRequired, async (req, res) => {
+router.post('/', authRequired, async (req, res, next) => {
   const profile = req.body;
   if (profile) {
     const id = profile.id || 0;
@@ -190,15 +198,27 @@ router.post('/', authRequired, async (req, res) => {
               .json({ message: 'profile created', profile: profile[0] })
           );
         } else {
-          res.status(400).json({ message: 'profile already exists' });
+          // res.status(400).json({ message: 'profile already exists' });
+          next({
+            status: 400,
+            message: 'profile already exists',
+          });
         }
       });
     } catch (e) {
-      console.error(e);
-      res.status(500).json({ message: e.message });
+      // console.error(e);
+      // res.status(500).json({ message: e.message });
+      next({
+        status: 500,
+        message: e.message,
+      });
     }
   } else {
-    res.status(404).json({ message: 'Profile missing' });
+    // res.status(404).json({ message: 'Profile missing' });
+    next({
+      status: 404,
+      message: 'Profile missing',
+    });
   }
 });
 /**
@@ -235,7 +255,7 @@ router.post('/', authRequired, async (req, res) => {
  *                profile:
  *                  $ref: '#/components/schemas/Profile'
  */
-router.put('/', authRequired, (req, res) => {
+router.put('/', authRequired, (req, res, next) => {
   const profile = req.body;
   if (profile) {
     const id = profile.profile_id || 0;
@@ -255,9 +275,13 @@ router.put('/', authRequired, (req, res) => {
           })
       )
       .catch((err) => {
-        res.status(404).json({
-          message: `Could not find profile '${id}'`,
-          error: err.message,
+        // res.status(404).json({
+        //   message: `Could not find profile '${id}'`,
+        //   error: err.message,
+        // });
+        next({
+          status: 404,
+          message: err.message,
         });
       });
   }
@@ -302,7 +326,7 @@ router.put(
   authRequired,
   superAdminRequired,
   validateUser,
-  async (req, res) => {
+  async (req, res, next) => {
     const { profile_id } = req.params;
     try {
       const profile = await Profiles.findById(profile_id);
@@ -313,9 +337,13 @@ router.put(
         res.status(200).json({ message: 'profile is now inactive' });
       }
     } catch (err) {
-      res.status(500).json({
+      // res.status(500).json({
+      //   message: `Could not update active status of profile with with ID: ${profile_id}`,
+      //   error: err.message,
+      // });
+      next({
+        status: 500,
         message: `Could not update active status of profile with with ID: ${profile_id}`,
-        error: err.message,
       });
     }
   }
