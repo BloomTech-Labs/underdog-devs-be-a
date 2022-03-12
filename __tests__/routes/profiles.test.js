@@ -153,8 +153,8 @@ describe('Profile Router', () => {
         expect(authRequired).toBeCalled();
       });
 
-      it('responds with status 201', async () => {
-        const expected = 201;
+      it('responds with status 200', async () => {
+        const expected = 200;
         const actual = res.status;
 
         expect(actual).toBe(expected);
