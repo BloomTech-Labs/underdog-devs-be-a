@@ -195,15 +195,16 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 ###### Meetings schema:
 
     {
-        "meeting_id": 4,
-        "created_at": "2021-11-08T19:21:16.551Z",
-        "updated_at": "2021-11-08T19:21:16.551Z",
-        "meeting_topic": "Resume Help",
-        "meeting_date": "2021-12-04",
-        "meeting_time": "4pm PCT - 5pm PCT",
-        "host_id": "9",
-        "attendee_id": "7",
-        "meeting_notes": "Remember to bring your resume"
+        meeting_id: 2,
+        created_at: 2022-03-12T00:42:20.382Z,
+        updated_at: 2022-03-12T00:42:20.382Z,
+        meeting_topic: 'lorem dipz um',
+        meeting_start_date: 1640353440,
+        meeting_end_date: 1640354210, 
+        host_id: '7',
+        attendee_id: '00ultx74kMUmEW8054x6',
+        meeting_notes: 'Remember to bring a smile',
+        meeting_missed: 'Pending'
     }
 
 | Method | Endpoint                        | Required Request Body                                                             | Returns                                           | User Auth |
