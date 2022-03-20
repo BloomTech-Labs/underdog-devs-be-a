@@ -185,31 +185,6 @@ describe('Profile Router', () => {
     });
 
     describe('failure', () => {
-      // describe('missing profile_id', () => {
-      //   let res;
-      //   beforeAll(async () => {
-      //     res = await postNewUser({
-      //       first_name: 'Firstname',
-      //       last_name: 'Lastname',
-      //       email: 'realemail@maildrop.cc',
-      //     });
-      //   });
-
-      //   it('responds with status 400', () => {
-      //     const expected = 400;
-      //     const actual = res.status;
-
-      //     expect(actual).toBe(expected);
-      //   });
-
-      //   it('returns message "profile_id is required"', () => {
-      //     const expected = /profile_id is required/i;
-      //     const actual = res.body.message;
-
-      //     expect(actual).toMatch(expected);
-      //   });
-      // });
-
       describe('invalid first name', () => {
         describe('missing', () => {
           let res;
