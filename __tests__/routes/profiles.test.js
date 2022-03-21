@@ -34,7 +34,7 @@ jest.mock('../../api/middleware/permissionsRequired', () => ({
 
 const app = express();
 app.use(express.json());
-app.use(['/profiles'], profileRouter);
+app.use('/profile', profileRouter);
 app.use(handleError);
 
 // Declare Tests
@@ -52,10 +52,10 @@ describe('Sanity Checks', () => {
 });
 
 describe('Profile Router', () => {
-  describe('[GET] /profiles', () => {
+  describe('[GET] /profile', () => {
     let res;
     beforeAll(async () => {
-      res = await request(app).get('/profiles');
+      res = await request(app).get('/profile');
     });
 
     it('requires authentication', () => {
@@ -77,11 +77,11 @@ describe('Profile Router', () => {
     });
   });
 
-  describe('[GET] /profiles/:id', () => {
+  describe('[GET] /profile/:id', () => {
     describe('success', () => {
       let res;
       beforeAll(async () => {
-        res = await request(app).get('/profiles/00ultwew80Onb2vOT4x6');
+        res = await request(app).get('/profile/00ultwew80Onb2vOT4x6');
       });
 
       it('requires authentication', () => {
@@ -109,7 +109,7 @@ describe('Profile Router', () => {
 
         let res;
         beforeAll(async () => {
-          res = await request(app).get(`/profiles/${badID}`);
+          res = await request(app).get(`/profile/${badID}`);
         });
 
         it('requires authentication', () => {
@@ -133,9 +133,9 @@ describe('Profile Router', () => {
     });
   });
 
-  describe('[POST] /profiles', () => {
+  describe('[POST] /profile', () => {
     const postNewUser = (userInfo) =>
-      request(app).post('/profiles').send(userInfo);
+      request(app).post('/profile').send(userInfo);
 
     describe('success', () => {
       let res;
@@ -350,7 +350,7 @@ describe('Profile Router', () => {
     });
   });
 
-  describe('[PUT] /profiles', () => {
+  describe('[PUT] /profile', () => {
     describe('success', () => {
       let res;
       beforeAll(async () => {
@@ -358,7 +358,7 @@ describe('Profile Router', () => {
           profile_id: 'super-update',
           email: 'super-update@maildrop.cc',
         };
-        res = await request(app).put('/profiles').send(validReqBody);
+        res = await request(app).put('/profile').send(validReqBody);
       });
 
       it('requires authentication', () => {
