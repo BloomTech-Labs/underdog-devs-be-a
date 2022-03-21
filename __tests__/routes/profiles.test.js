@@ -196,14 +196,14 @@ describe('Profile Router', () => {
             });
           });
 
-          it('responds with status 400', () => {
+          it.skip('responds with status 400', () => {
             const expected = 400;
             const actual = res.status;
 
             expect(actual).toBe(expected);
           });
 
-          it('returns message "first_name is required"', () => {
+          it.skip('returns message "first_name is required"', () => {
             const expected = /first_name is required/i;
             const actual = res.body.message;
 
@@ -224,14 +224,14 @@ describe('Profile Router', () => {
             });
           });
 
-          it('responds with status 400', () => {
+          it.skip('responds with status 400', () => {
             const expected = 400;
             const actual = res.status;
 
             expect(actual).toBe(expected);
           });
 
-          it('returns message "first_name must be between 2-50 chars"', () => {
+          it.skip('returns message "first_name must be between 2-50 chars"', () => {
             const expected = /first_name must be between 2-50 char/i;
             const actual = res.body.message;
 
@@ -251,14 +251,14 @@ describe('Profile Router', () => {
             });
           });
 
-          it('responds with status 400', () => {
+          it.skip('responds with status 400', () => {
             const expected = 400;
             const actual = res.status;
 
             expect(actual).toBe(expected);
           });
 
-          it('returns message "last_name is required"', () => {
+          it.skip('returns message "last_name is required"', () => {
             const expected = /last_name is required/i;
             const actual = res.body.message;
 
@@ -279,14 +279,14 @@ describe('Profile Router', () => {
             });
           });
 
-          it('responds with status 400', () => {
+          it.skip('responds with status 400', () => {
             const expected = 400;
             const actual = res.status;
 
             expect(actual).toBe(expected);
           });
 
-          it('returns message "last_name must be between 2-50 chars"', () => {
+          it.skip('returns message "last_name must be between 2-50 chars"', () => {
             const expected = /last_name must be between 2-50 char/i;
             const actual = res.body.message;
 
@@ -306,14 +306,14 @@ describe('Profile Router', () => {
             });
           });
 
-          it('responds with status 400', () => {
+          it.skip('responds with status 400', () => {
             const expected = 400;
             const actual = res.status;
 
             expect(actual).toBe(expected);
           });
 
-          it('returns message "email is required"', () => {
+          it.skip('returns message "email is required"', () => {
             const expected = /email is required/i;
             const actual = res.body.message;
 
@@ -332,14 +332,14 @@ describe('Profile Router', () => {
             });
           });
 
-          it('responds with status 400', () => {
+          it.skip('responds with status 400', () => {
             const expected = 400;
             const actual = res.status;
 
             expect(actual).toBe(expected);
           });
 
-          it('returns message "email must be validly formatted"', () => {
+          it.skip('returns message "email must be validly formatted"', () => {
             const expected = /email must be validly formatted/i;
             const actual = res.body.message;
 
