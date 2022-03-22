@@ -52,14 +52,14 @@ router.get('/current_user_profile/', authRequired, async (req, res, next) => {
  *        last_name: 'Martinez'
  *        avatarUrl: 'https://s3.amazonaws.com/uifaces/faces/twitter/hermanobrother/128.jpg'
  *
- * /profiles:
+ * /profile:
  *  get:
  *    description: Returns a list of profiles
  *    summary: Get a list of all profiles
  *    security:
  *      - okta: []
  *    tags:
- *      - profiles
+ *      - profile
  *    responses:
  *      200:
  *        description: array of profiles
@@ -109,14 +109,14 @@ router.get('/', authRequired, adminRequired, function (req, res) {
  *      schema:
  *        type: string
  *
- * /profiles/{id}:
+ * /profile/{id}:
  *  get:
  *    description: Find profiles by ID
  *    summary: Returns a single profile
  *    security:
  *      - okta: []
  *    tags:
- *      - profiles
+ *      - profile
  *    parameters:
  *      - $ref: '#/components/parameters/profile_id'
  *    responses:
@@ -148,13 +148,13 @@ router.get('/:id', authRequired, adminRequired, function (req, res) {
 
 /**
  * @swagger
- * /profiles:
+ * /profile:
  *  post:
  *    summary: Add a profile
  *    security:
  *      - okta: []
  *    tags:
- *      - profiles
+ *      - profile
  *    requestBody:
  *      description: Profile object to to be added
  *      content:
@@ -168,7 +168,7 @@ router.get('/:id', authRequired, adminRequired, function (req, res) {
  *        $ref: '#/components/responses/UnauthorizedError'
  *      404:
  *        description: 'Profile not found'
- *      200:
+ *      200: //! caught 200 --> should be 201 for creation of new
  *        description: A profile object
  *        content:
  *          application/json:
@@ -209,13 +209,13 @@ router.post('/', authRequired, async (req, res) => {
 });
 /**
  * @swagger
- * /profiles:
+ * /profile:
  *  put:
  *    summary: Update a profile
  *    security:
  *      - okta: []
  *    tags:
- *      - profiles
+ *      - profile
  *    requestBody:
  *      description: Profile object to to be updated
  *      content:
@@ -238,7 +238,7 @@ router.post('/', authRequired, async (req, res) => {
  *                  type: string
  *                  description: A message about the result
  *                  example: profile created
- *                profiles:
+ *                profile:
  *                  $ref: '#/components/schemas/Profile'
  */
 router.put('/', authRequired, (req, res) => {
@@ -270,13 +270,13 @@ router.put('/', authRequired, (req, res) => {
 });
 /**
  * @swagger
- * /profiles/is_active/:profile_id:
+ * /profile/is_active/:profile_id:
  *  put:
  *    summary: Update a is_active filed in for the profile table.
  *    security:
  *      - okta: [authRequired,superAdminRequired,validateUser]
  *    tags:
- *      - profiles
+ *      - profile
  *    requestBody:
  *      description: Profile object to updated is_active
  *      content:
@@ -299,7 +299,7 @@ router.put('/', authRequired, (req, res) => {
  *                  type: string
  *                  description: A message about the result
  *                  example: profile created
- *                profiles:
+ *                profile:
  *                  $ref: '#/components/schemas/Profile'
  */
 // Activates or deactivates a user depending on what their current is_active status is
