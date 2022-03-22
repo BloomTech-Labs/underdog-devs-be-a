@@ -168,7 +168,7 @@ router.get('/:id', authRequired, adminRequired, function (req, res) {
  *        $ref: '#/components/responses/UnauthorizedError'
  *      404:
  *        description: 'Profile not found'
- *      200: //! caught 200 --> should be 201 for creation of new
+ *      201:
  *        description: A profile object
  *        content:
  *          application/json:
