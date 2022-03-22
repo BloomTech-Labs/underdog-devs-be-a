@@ -8,20 +8,16 @@ const findBy = (filter) => {
   return db('notes').where(filter);
 };
 
-const findById = (profile_id) => {
-  return db('notes').where({ profile_id }).first().select('*');
+const findById = (note_id) => {
+  return db('notes').where({ note_id }).first().select('*');
 };
 
-const create = (profile) => {
-  return db('notes').insert(profile).returning('*');
+const create = (note) => {
+  return db('notes').insert(note).returning('*');
 };
 
-const update = (id, profile) => {
-  return db('notes')
-    .where({ note_id: id })
-    .first()
-    .update(profile)
-    .returning('*');
+const update = (id, note) => {
+  return db('notes').where({ note_id: id }).first().update(note).returning('*');
 };
 
 const remove = (id) => {

@@ -49,15 +49,10 @@ router.post('/', async (req, res, next) => {
 
 router.put('/:note_id', async (req, res, next) => {
   try {
-    res.status(501).json({ message: 'put by noted_id not ready' });
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.delete('/:note_id', async (req, res, next) => {
-  try {
-    res.status(501).json({ message: 'delete by note_id not ready' });
+    const note_id = req.params.note_id;
+    const content = req.body.content;
+    const updatedNote = await Notes.update(note_id, { content });
+    res.status(201).json(updatedNote);
   } catch (error) {
     next(error);
   }
