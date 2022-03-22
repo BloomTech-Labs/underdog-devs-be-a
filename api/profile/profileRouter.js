@@ -27,20 +27,17 @@ router.get('/current_user_profile/', authRequired, async (req, res, next) => {
  *    Profile:
  *      type: object
  *      required:
- *        - profile_id
+ *        - id
  *        - email
- *        - first_name
- *        - last_name
+ *        - name
  *        - avatarUrl
  *      properties:
- *        profile_id:
+ *        id:
  *          type: string
  *          description: This is a foreign key (the okta user ID)
  *        email:
  *          type: string
- *        first_name:
- *          type: string
- *        last_name:
+ *        name:
  *          type: string
  *        avatarUrl:
  *          type: string
@@ -70,15 +67,13 @@ router.get('/current_user_profile/', authRequired, async (req, res, next) => {
  *              items:
  *                $ref: '#/components/schemas/Profile'
  *              example:
- *                - profile_id: '00uhjfrwdWAQvD8JV4x6'
+ *                - id: '00uhjfrwdWAQvD8JV4x6'
  *                  email: 'frank@example.com'
- *                  first_ame: 'Frank'
- *                  last_name: 'Martinez'
+ *                  name: 'Frank Martinez'
  *                  avatarUrl: 'https://s3.amazonaws.com/uifaces/faces/twitter/hermanobrother/128.jpg'
- *                - profile_id: '013e4ab94d96542e791f'
+ *                - id: '013e4ab94d96542e791f'
  *                  email: 'cathy@example.com'
- *                  first_name: 'Cathy'
- *                  last_name: 'Warmund'
+ *                  name: 'Cathy Warmund'
  *                  avatarUrl: 'https://s3.amazonaws.com/uifaces/faces/twitter/geneseleznev/128.jpg'
  *      401:
  *        $ref: '#/components/responses/UnauthorizedError'
@@ -132,7 +127,7 @@ router.get('/', authRequired, adminRequired, function (req, res) {
  *        description: 'Profile not found'
  */
 router.get('/:id', authRequired, adminRequired, function (req, res) {
-  const id = String(req.params.profile_id);
+  const id = String(req.params.id);
   Profiles.findById(id)
     .then((profile) => {
       if (profile) {
@@ -185,7 +180,7 @@ router.get('/:id', authRequired, adminRequired, function (req, res) {
 router.post('/', authRequired, async (req, res) => {
   const profile = req.body;
   if (profile) {
-    const id = profile.profile_id || 0;
+    const id = profile.id || 0;
     try {
       await Profiles.findById(id).then(async (pf) => {
         if (pf == undefined) {
