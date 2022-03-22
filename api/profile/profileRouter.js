@@ -49,7 +49,7 @@ router.get('/current_user/', authRequired, async (req, res, next) => {
  *        name: 'Frank Martinez'
  *        avatarUrl: 'https://s3.amazonaws.com/uifaces/faces/twitter/hermanobrother/128.jpg'
  *
- * /profiles:
+ * /profile:
  *  get:
  *    description: Returns a list of profiles
  *    summary: Get a list of all profiles
@@ -95,7 +95,7 @@ router.get('/', authRequired, adminRequired, function (req, res) {
  * @swagger
  * components:
  *  parameters:
- *    profileId:
+ *    profile_id:
  *      name: id
  *      in: path
  *      description: ID of the profile to return
@@ -113,7 +113,7 @@ router.get('/', authRequired, adminRequired, function (req, res) {
  *    tags:
  *      - profile
  *    parameters:
- *      - $ref: '#/components/parameters/profileId'
+ *      - $ref: '#/components/parameters/profile_id'
  *    responses:
  *      200:
  *        description: A profile object
@@ -163,7 +163,7 @@ router.get('/:id', authRequired, adminRequired, function (req, res) {
  *        $ref: '#/components/responses/UnauthorizedError'
  *      404:
  *        description: 'Profile not found'
- *      200:
+ *      201:
  *        description: A profile object
  *        content:
  *          application/json:
@@ -265,7 +265,7 @@ router.put('/', authRequired, (req, res) => {
 });
 /**
  * @swagger
- * profile/is_active/:profile_id:
+ * /profile/is_active/:profile_id:
  *  put:
  *    summary: Update a is_active filed in for the profile table.
  *    security:
