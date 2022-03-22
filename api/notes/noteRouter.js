@@ -9,6 +9,9 @@ const router = express.Router();
 // } = require('../middleware/permissionsRequired');
 // const { validateUser } = require('../middleware/generalMiddleware');
 
+/*
+need middlewares
+**/
 router.get('/', async (req, res, next) => {
   try {
     const notes = await Notes.findAll();
@@ -18,6 +21,9 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+/*
+need middlewares
+**/
 router.get('/:note_id', async (req, res, next) => {
   try {
     const note = await Notes.findBy({ note_id: req.params.note_id });
@@ -27,6 +33,23 @@ router.get('/:note_id', async (req, res, next) => {
   }
 });
 
+/*
+need middlewares
+**/
+router.get('/mentee/:profile_id_mentee', async (req, res, next) => {
+  try {
+    const note = await Notes.findBy({
+      profile_id_mentee: req.params.profile_id_mentee,
+    });
+    res.status(200).json(note);
+  } catch (error) {
+    next(error);
+  }
+});
+
+/*
+need middlewares
+**/
 router.post('/', async (req, res, next) => {
   try {
     const newNote = {
@@ -47,6 +70,9 @@ router.post('/', async (req, res, next) => {
   }
 });
 
+/*
+need middlewares
+**/
 router.put('/:note_id', async (req, res, next) => {
   try {
     const note_id = req.params.note_id;
