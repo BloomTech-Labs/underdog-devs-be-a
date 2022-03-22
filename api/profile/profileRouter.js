@@ -45,8 +45,7 @@ router.get('/current_user_profile/', authRequired, async (req, res, next) => {
  *      example:
  *        id: '00uhjfrwdWAQvD8JV4x6'
  *        email: 'frank@example.com'
- *        first_name: 'Frank'
- *        last_name: 'Martinez'
+ *        name: 'Frank Martinez'
  *        avatarUrl: 'https://s3.amazonaws.com/uifaces/faces/twitter/hermanobrother/128.jpg'
  *
  * /profile:
