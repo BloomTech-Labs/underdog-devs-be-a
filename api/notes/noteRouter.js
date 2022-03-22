@@ -1,7 +1,7 @@
 const express = require('express');
-// const authRequired = require('../middleware/authRequired');
 const Notes = require('./noteModel');
 const router = express.Router();
+const authRequired = require('../middleware/authRequired');
 // const {
 //   adminRequired,
 //   superAdminRequired,
@@ -13,7 +13,7 @@ const {
   checkUpdateInfo,
 } = require('../middleware/notesMiddleware');
 
-router.get('/', async (req, res, next) => {
+router.get('/', authRequired, async (req, res, next) => {
   try {
     const notes = await Notes.findAll();
     res.status(200).json(notes);
@@ -22,27 +22,36 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.get('/:note_id', checkNoteExists, async (req, res, next) => {
-  try {
-    const note = req.body.retrievedNote;
-    res.status(200).json(note);
-  } catch (error) {
-    next(error);
+router.get(
+  '/:note_id',
+  authRequired,
+  checkNoteExists,
+  async (req, res, next) => {
+    try {
+      const note = req.body.retrievedNote;
+      res.status(200).json(note);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
-router.get('/mentee/:profile_id_mentee', async (req, res, next) => {
-  try {
-    const note = await Notes.findBy({
-      profile_id_mentee: req.params.profile_id_mentee,
-    });
-    res.status(200).json(note);
-  } catch (error) {
-    next(error);
+router.get(
+  '/mentee/:profile_id_mentee',
+  authRequired,
+  async (req, res, next) => {
+    try {
+      const note = await Notes.findBy({
+        profile_id_mentee: req.params.profile_id_mentee,
+      });
+      res.status(200).json(note);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
-router.post('/', checkBodyIsComplete, async (req, res, next) => {
+router.post('/', authRequired, checkBodyIsComplete, async (req, res, next) => {
   try {
     const newNote = {
       content_type: req.body.content_type,
@@ -63,6 +72,7 @@ router.post('/', checkBodyIsComplete, async (req, res, next) => {
 
 router.put(
   '/:note_id',
+  authRequired,
   checkNoteExists,
   checkUpdateInfo,
   async (req, res, next) => {
