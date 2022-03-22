@@ -2,17 +2,18 @@ const express = require('express');
 // const authRequired = require('../middleware/authRequired');
 const Notes = require('./noteModel');
 const router = express.Router();
-// const axios = require('axios');
 // const {
 //   adminRequired,
 //   superAdminRequired,
 // } = require('../middleware/permissionsRequired');
 // const { validateUser } = require('../middleware/generalMiddleware');
-const { noteIdRequired } = require('../middleware/notesMiddleware');
-/*
-need middlewares
-**/
-router.get('/', noteIdRequired, async (req, res, next) => {
+const {
+  checkNoteExists,
+  checkBodyIsComplete,
+  checkUpdateInfo,
+} = require('../middleware/notesMiddleware');
+
+router.get('/', async (req, res, next) => {
   try {
     const notes = await Notes.findAll();
     res.status(200).json(notes);
@@ -21,21 +22,15 @@ router.get('/', noteIdRequired, async (req, res, next) => {
   }
 });
 
-/*
-need middlewares
-**/
-router.get('/:note_id', async (req, res, next) => {
+router.get('/:note_id', checkNoteExists, async (req, res, next) => {
   try {
-    const note = await Notes.findBy({ note_id: req.params.note_id });
+    const note = req.body.retrievedNote;
     res.status(200).json(note);
   } catch (error) {
     next(error);
   }
 });
 
-/*
-need middlewares
-**/
 router.get('/mentee/:profile_id_mentee', async (req, res, next) => {
   try {
     const note = await Notes.findBy({
@@ -47,13 +42,9 @@ router.get('/mentee/:profile_id_mentee', async (req, res, next) => {
   }
 });
 
-/*
-need middlewares
-**/
-router.post('/', async (req, res, next) => {
+router.post('/', checkBodyIsComplete, async (req, res, next) => {
   try {
     const newNote = {
-      //   note_id: req.body.note_id,
       content_type: req.body.content_type,
       content: req.body.content,
       level: req.body.level,
@@ -70,18 +61,20 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-/*
-need middlewares
-**/
-router.put('/:note_id', async (req, res, next) => {
-  try {
-    const note_id = req.params.note_id;
-    const content = req.body.content;
-    const updatedNote = await Notes.update(note_id, { content });
-    res.status(201).json(updatedNote);
-  } catch (error) {
-    next(error);
+router.put(
+  '/:note_id',
+  checkNoteExists,
+  checkUpdateInfo,
+  async (req, res, next) => {
+    try {
+      const note_id = req.params.note_id;
+      const content = req.body.content;
+      const updatedNote = await Notes.update(note_id, { content });
+      res.status(201).json(updatedNote);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 module.exports = router;
