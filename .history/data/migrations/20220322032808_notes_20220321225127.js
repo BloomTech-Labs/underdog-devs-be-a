@@ -2,11 +2,7 @@ exports.up = (knex) => {
   return knex.schema
     .raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"')
     .createTable('notes', function (table) {
-      table
-        .uuid('note_id')
-        .unique()
-        .primary()
-        .defaultTo(knex.raw('uuid_generate_v4()'));
+      table.uuid('note_id').notNullable().unique().primary();
       table.string('content_type').notNullable();
       table.text('content').notNullable();
       table.string('level').notNullable();
