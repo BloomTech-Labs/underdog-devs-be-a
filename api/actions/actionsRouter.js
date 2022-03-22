@@ -110,12 +110,60 @@ const {
  *                  created_at: "2022-01-26 15:33:34.945832-07"
  *                  updated_at: "2022-01-26 15:33:34.945832-07"
  */
-router.get('/', (req, res, next) => {
-  Actions.findAll()
-    .then((actions) => {
-      res.status(200).json(actions);
-    })
-    .catch(next);
+const dummyData = [
+  {
+    action_ticket_id: 1,
+    submitted_by: '7',
+    subject_id: '10',
+    issue: 'Spencer missed his 2nd weekly session, may be dropped?',
+    comments: null,
+    pending: true,
+    resolved: false,
+    strike: true,
+    created_at: '2022-03-11T22:34:47.791Z',
+    updated_at: '2022-03-11T22:34:47.791Z',
+  },
+  {
+    action_ticket_id: 2,
+    submitted_by: '11',
+    subject_id: '00u13oned0U8XP8Mb4x7',
+    issue:
+      "My mentor isn't really helping me learn, could I seek reassignment?",
+    comments: null,
+    pending: true,
+    resolved: false,
+    strike: false,
+    created_at: '2022-03-11T22:34:47.791Z',
+    updated_at: '2022-03-11T22:34:47.791Z',
+  },
+  {
+    action_ticket_id: 3,
+    submitted_by: '00u13oned0U8XP8Mb4x7',
+    subject_id: '11',
+    issue:
+      'Mentee and I have not been getting along, I suggest a reassignment for best outcome.',
+    comments: null,
+    pending: true,
+    resolved: false,
+    strike: false,
+    created_at: '2022-03-11T22:34:47.791Z',
+    updated_at: '2022-03-11T22:34:47.791Z',
+  },
+  {
+    action_ticket_id: 4,
+    submitted_by: '9',
+    subject_id: '12',
+    issue: 'Has not turned in their assignments.',
+    comments: null,
+    pending: true,
+    resolved: false,
+    strike: true,
+    created_at: '2022-03-11T22:34:47.791Z',
+    updated_at: '2022-03-11T22:34:47.791Z',
+  },
+];
+router.get('/', (req, res) => {
+  res.status(200).json(dummyData);
 });
 
 /**
