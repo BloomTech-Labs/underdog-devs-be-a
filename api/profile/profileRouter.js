@@ -10,10 +10,11 @@ const {
 const { validateUser } = require('../middleware/generalMiddleware');
 validateUser;
 
-// this will be modified to get profiles from the mentee_intake table once the seed data is cleaned up a bit and the profile_ids in the mentee intake tabler are updated and usable.
-router.get('/current_user_profile/', authRequired, async (req, res, next) => {
+// gets current user profile
+
+router.get('/current_user/', authRequired, async (req, res, next) => {
   try {
-    const resp = await Profiles.mentorApplicationData(req.profile.profile_id);
+    const resp = req.profile;
     res.status(200).json(resp);
   } catch (error) {
     next(error);

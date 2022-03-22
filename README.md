@@ -66,12 +66,13 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 
 | Method | Endpoint                  | Required Request Body | Returns                           | User Auth    |
 | ------ | ------------------------- | --------------------- | --------------------------------- | ------------ |
-| GET    | `/profile`               | -                     | `get all profiles`                | `Admin`      |
-| GET    | `/profile/:id`           | -                     | `get profile by id`               | `Admin`      |
-| POST   | `/profile`               | `first/last, email`   | `create new profile`              |              |
-| PUT    | `/profile/:id`           | `first/last, email`   | `update a profile by profile id`  |              |
-| PUT    | `/profile/roles`         | `role`                | `update a profiles role`          | `Admin`      |
-| PUT    | `/profile/is_active/:id` | -                     | `activates/deactivates a profile` | `SuperAdmin` |
+| GET    | `/profile`                | -                     | `get all profiles`                | `Admin`      |
+| GET    | `/profile/:id`            | -                     | `get profile by id`               | `Admin`      |
+| GET    | `/profile/current_user`   | -                     | `get current profile`             |              |
+| POST   | `/profile`                | `first/last, email`   | `create new profile`              |              |
+| PUT    | `/profile/:id`            | `first/last, email`   | `update a profile by profile id`  |              |
+| PUT    | `/profile/roles`          | `role`                | `update a profiles role`          | `Admin`      |
+| PUT    | `/profile/is_active/:id`  | -                     | `activates/deactivates a profile` | `SuperAdmin` |
 
 ## Applications / Mentee-Mentor Intakes
 
