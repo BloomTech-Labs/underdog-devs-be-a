@@ -21,7 +21,7 @@ const swaggerUIOptions = {
 
 //###[  Routers ]###
 const indexRouter = require('./index/indexRouter');
-const profileRouter = require('./profile/profileRouter'); //! change to plural naming
+const profileRouter = require('./profile/profileRouter');
 const dsRouter = require('./dsService/dsRouter');
 const assignmentsRouter = require('./assignments/assignmentsRouter');
 const applicationRouter = require('./applications/applicationRouter');
@@ -59,7 +59,7 @@ app.use(cookieParser());
 
 // application routes
 app.use('/', indexRouter);
-app.use(['/profile', '/profiles'], profileRouter);
+app.use('/profile', profileRouter);
 app.use('/data', dsRouter);
 app.use('/assignments', assignmentsRouter);
 app.use('/application', applicationRouter);
