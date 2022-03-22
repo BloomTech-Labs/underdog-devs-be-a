@@ -8,11 +8,11 @@ const router = express.Router();
 //   superAdminRequired,
 // } = require('../middleware/permissionsRequired');
 // const { validateUser } = require('../middleware/generalMiddleware');
-
+const { noteIdRequired } = require('../middleware/notesMiddleware');
 /*
 need middlewares
 **/
-router.get('/', async (req, res, next) => {
+router.get('/', noteIdRequired, async (req, res, next) => {
   try {
     const notes = await Notes.findAll();
     res.status(200).json(notes);
