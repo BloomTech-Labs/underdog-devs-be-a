@@ -68,7 +68,7 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 | ------ | ------------------------- | --------------------- | --------------------------------- | ------------ |
 | GET    | `/profile`                | -                     | `get all profiles`                | `Admin`      |
 | GET    | `/profile/:id`            | -                     | `get profile by id`               | `Admin`      |
-| GET    | `/profiles/current_user`  | -                     | `get current profile`             |              |
+| GET    | `/profile/current_user`   | -                     | `get current profile`             |              |
 | POST   | `/profile`                | `first/last, email`   | `create new profile`              |              |
 | PUT    | `/profile/:id`            | `first/last, email`   | `update a profile by profile id`  |              |
 | PUT    | `/profile/roles`          | `role`                | `update a profiles role`          | `Admin`      |
