@@ -6,7 +6,7 @@ exports.up = (knex) => {
         .uuid('note_id')
         .unique()
         .primary()
-        .defaultTo(knex.raw('uuid_generate_v4()'));
+        .defaultTo(knex.schema.raw('uuid_generate_v4()'));
       table.string('content_type').notNullable();
       table.text('content').notNullable();
       table.string('level').notNullable();
