@@ -10,12 +10,14 @@ exports.seed = function (knex) {
           review: 'positive',
           mentor_id: '00u13oned0U8XP8Mb4x7',
           mentee_id: 12,
+          rating: false,
         },
         {
           review_id: 2,
           review: 'negative',
           mentor_id: '00u13oned0U8XP8Mb4x7',
           mentee_id: 10,
+          rating: true,
         },
         {
           review_id: 3,
