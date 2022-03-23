@@ -60,7 +60,7 @@ app.use(cookieParser());
 
 // application routes
 app.use('/', indexRouter);
-app.use(['/profile', '/profiles'], profileRouter);
+app.use('/profile', profileRouter);
 app.use('/data', dsRouter);
 app.use('/assignments', assignmentsRouter);
 app.use('/application', applicationRouter);

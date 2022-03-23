@@ -62,7 +62,7 @@ const cacheSignUpData = async (req, res, next) => {
       next();
     }
   } catch (err) {
-    return next({
+    next({
       status: 422,
       message: err,
     });
@@ -140,7 +140,7 @@ const validateApplicationTicket = async (req, res, next) => {
     await applicationTicketSchema.validate(payload);
     return next();
   } catch (err) {
-    return next({
+    next({
       status: 400,
       message: err.errors[0],
     });
@@ -153,7 +153,7 @@ const validateMenteeIntakeData = async (req, res, next) => {
     await menteeApplicationSchema.validate(payload);
     return next();
   } catch (err) {
-    return next({
+    next({
       status: 400,
       message: err.errors[0],
     });
@@ -166,7 +166,7 @@ const validateMentorIntakeData = async (req, res, next) => {
     await mentorApplicationSchema.validate(payload);
     return next();
   } catch (err) {
-    return next({
+    next({
       status: 400,
       message: err.errors[0],
     });
