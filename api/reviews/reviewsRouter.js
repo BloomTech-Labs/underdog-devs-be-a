@@ -7,48 +7,47 @@ const authRequired = require('../middleware/authRequired');
 
 //Get all reviews
 
-router.get('/', authRequired, adminRequired, (req, res) => {
+router.get('/', authRequired, adminRequired, (req, res, next) => {
   Review.findAll()
     .then((reviews) => {
       res.status(200).json(reviews);
     })
     .catch((err) => {
-      console.log(err);
-      res.status(500).json({ message: err.message });
+      next({ status: 500, message: err.message });
     });
 });
 
 //Get all reviews by mentor's id
 
-router.get('/mentor/:id', authRequired, validProfileID, (req, res) => {
+router.get('/mentor/:id', authRequired, validProfileID, (req, res, next) => {
   const id = req.params.id;
   Review.findByMentorId(id)
     .then((reviews) => {
       if (reviews) {
         res.status(200).json(reviews);
       } else {
-        res.status(404).json({ error: 'Reviews Not Found, Check mentor ID' });
+        next({ status: 404, message: 'Reviews Not Found, Check mentor ID' });
       }
     })
     .catch((err) => {
-      res.status(500).json({ error: err.message });
+      next({ status: 500, message: err.message });
     });
 });
 
 //get all mentee reviews by mentee_id
 
-router.get('/mentee/:id', authRequired, validProfileID, (req, res) => {
+router.get('/mentee/:id', authRequired, validProfileID, (req, res, next) => {
   const id = req.params.id;
   Review.findByMenteeId(id)
     .then((reviews) => {
       if (reviews) {
         res.status(200).json(reviews);
       } else {
-        res.status(404).json({ error: 'Reviews Not Found, Check mentor ID' });
+        next({ status: 404, message: 'Reviews Not Found, Check mentee ID' });
       }
     })
     .catch((err) => {
-      res.status(500).json({ error: err.message });
+      next({ status: 500, message: err.message });
     });
 });
 
@@ -63,8 +62,9 @@ function validProfileID(req, res, next) {
         req.profile = profile;
         next();
       } else {
-        res.status(400).json({
-          message: 'Invalid ID',
+        next({
+          status: 400,
+          message: 'Invalid Profile ID',
         });
       }
     })
