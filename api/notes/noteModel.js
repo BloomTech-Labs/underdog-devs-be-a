@@ -21,7 +21,7 @@ const update = (id, note) => {
 };
 
 const remove = (id) => {
-  return db('notes').where({ id }).del();
+  return db('notes').where({ note_id: id }).del();
 };
 
 module.exports = {
