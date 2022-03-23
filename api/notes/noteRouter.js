@@ -87,20 +87,25 @@ router.put(
   }
 );
 
-router.delete('/:note_id', checkNoteExists, async (req, res, next) => {
-  try {
-    const deleted = await Notes.remove(req.params.note_id);
-    if (deleted) {
-      res.status(200).json({ message: 'Note successfully deleted' });
-    } else {
-      next({
-        status: 500,
-        message: 'Could not delete',
-      });
+router.delete(
+  '/:note_id',
+  authRequired,
+  checkNoteExists,
+  async (req, res, next) => {
+    try {
+      const deleted = await Notes.remove(req.params.note_id);
+      if (deleted) {
+        res.status(200).json({ message: 'Note successfully deleted' });
+      } else {
+        next({
+          status: 500,
+          message: 'Could not delete',
+        });
+      }
+    } catch (error) {
+      next(error);
     }
-  } catch (error) {
-    next(error);
   }
-});
+);
 
 module.exports = router;
