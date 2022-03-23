@@ -2,11 +2,7 @@ const express = require('express');
 const Notes = require('./noteModel');
 const router = express.Router();
 const authRequired = require('../middleware/authRequired');
-// const {
-//   adminRequired,
-//   superAdminRequired,
-// } = require('../middleware/permissionsRequired');
-// const { validateUser } = require('../middleware/generalMiddleware');
+
 const {
   checkNoteExists,
   checkBodyIsComplete,
