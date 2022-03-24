@@ -2,11 +2,7 @@ exports.up = (knex) => {
   return knex.schema
     .raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"')
     .createTable('notes', function (table) {
-      table
-        .uuid('note_id')
-        .unique()
-        .primary()
-        .defaultTo(knex.raw('uuid_generate_v4()'));
+      table.increments('note_id').primary();
       table.string('content_type').notNullable();
       table.text('content').notNullable();
       table.string('level').notNullable();
@@ -16,6 +12,14 @@ exports.up = (knex) => {
       table.string('profile_id_mentor').notNullable();
       table.string('profile_id_mentee').notNullable();
       table.timestamps(true, true);
+      table
+        .foreign('profile_id_mentor')
+        .references('profile_id')
+        .inTable('profiles');
+      table
+        .foreign('profile_id_mentee')
+        .references('profile_id')
+        .inTable('profiles');
     });
 };
 
