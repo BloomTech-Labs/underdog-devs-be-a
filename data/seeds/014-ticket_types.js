@@ -5,7 +5,7 @@ const types = [
   { ticket_type: 'role' },
 ];
 exports.seed = function (knex) {
-  return knex('table_name')
+  return knex('ticket_types')
     .del()
     .then(function () {
       return knex('ticket_types').insert(types);
