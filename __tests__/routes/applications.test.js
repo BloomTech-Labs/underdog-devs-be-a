@@ -165,9 +165,11 @@ describe('Application Router', () => {
     describe('success', () => {
       const validProfileID = 10;
       let res;
+      // let user;
       beforeAll(async () => {
+        // user = request(app).post();
         res = await request(app).get(
-          `/application/profileId/${validProfileID}`
+          `/application/profileID/${validProfileID}`
         );
       });
 
@@ -181,13 +183,13 @@ describe('Application Router', () => {
       it('returns application(s) for a given user', () => {
         const expected = {
           application_id: 6,
-          created_at: '2022-01-28T23:38:28.256Z',
-          first_name: 'User',
-          last_name: '10',
+          // created_at: '2022-01-28T23:38:28.256Z',
+          // first_name: 'Johnny',
+          // last_name: 'Donuts', //! will not have necessary info if they change their name - test will fail for no reason!
           profile_id: '10',
-          role_name: 'mentee',
+          // role_name: 'mentee',
         };
-        const actual = res.body.application;
+        const actual = res.body;
 
         expect(actual).toMatchObject(expected);
       });
