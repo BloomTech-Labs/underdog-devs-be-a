@@ -141,12 +141,12 @@ describe('Application Router', () => {
         const invalidRoleName = 'bad-role';
         let res;
         beforeAll(async () => {
-          res = await request(app).get(`/application/${invalidRoleName}`);
+          res = await request(app).get(`/application/role/${invalidRoleName}`);
         });
 
         it('responds with status 404', () => {
           const expected = 404;
-          const actual = res.status;
+          const actual = res;
 
           expect(actual).toBe(expected);
         });
