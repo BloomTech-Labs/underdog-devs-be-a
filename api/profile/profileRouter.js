@@ -12,11 +12,13 @@ validateUser;
 
 // gets current user profile
 
-router.get('/current_user/', authRequired, async (req, res, next) => {
+router.get('/current_user_profile/', authRequired, async (req, res, next) => {
   try {
-    const resp = req.profile;
-    res.status(200).json(resp);
-  } catch (err) {
+    req.profile.attendance_rate = await Profiles.CheckAverageAttendance(
+      req.profile.profile_id
+    );
+    res.status(200).json(req.profile);
+  } catch (error) {
     next({ status: 500, message: err.message });
   }
 });
@@ -127,10 +129,13 @@ router.get('/', authRequired, adminRequired, function (req, res, next) {
  */
 router.get('/:id', authRequired, adminRequired, function (req, res, next) {
   const id = String(req.params.id);
+  const attendance_average = Profiles.CheckAverageAttendance(id);
   Profiles.findById(id)
     .then((profile) => {
       if (profile) {
-        res.status(200).json(profile);
+        res
+          .status(200)
+          .json({ ...profile, attendance_rate: attendance_average });
       } else {
         next({ status: 404, message: 'ProfileNotFound' });
       }
