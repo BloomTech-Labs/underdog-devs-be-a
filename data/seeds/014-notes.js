@@ -6,8 +6,8 @@ const notes = [
     visible_to_admin: true,
     visible_to_moderator: true,
     visible_to_mentor: true,
-    profile_id_mentor: '00ultx74kMUmEW8054x6',
-    profile_id_mentee: '00ultwqjtqt4VCcS24x6',
+    mentor_id: '00ultx74kMUmEW8054x6',
+    mentee_id: '00ultwqjtqt4VCcS24x6',
   },
   {
     content_type: 'type a',
@@ -16,8 +16,8 @@ const notes = [
     visible_to_admin: true,
     visible_to_moderator: true,
     visible_to_mentor: true,
-    profile_id_mentor: '00ultx74kMUmEW8054x6',
-    profile_id_mentee: '00ultwqjtqt4VCcS24x6',
+    mentor_id: '00ultx74kMUmEW8054x6',
+    mentee_id: '00ultwqjtqt4VCcS24x6',
   },
   {
     content_type: 'type 3a',
@@ -26,8 +26,8 @@ const notes = [
     visible_to_admin: true,
     visible_to_moderator: true,
     visible_to_mentor: true,
-    profile_id_mentor: '00ultx74kMUmEW8054x6',
-    profile_id_mentee: '00ultwqjtqt4VCcS24x6',
+    mentor_id: '00ultx74kMUmEW8054x6',
+    mentee_id: '00ultwqjtqt4VCcS24x6',
   },
   {
     content_type: 'type bb',
@@ -36,8 +36,8 @@ const notes = [
     visible_to_admin: true,
     visible_to_moderator: true,
     visible_to_mentor: true,
-    profile_id_mentor: '00ultx74kMUmEW8054x6',
-    profile_id_mentee: '00ultwqjtqt4VCcS24x6',
+    mentor_id: '00ultx74kMUmEW8054x6',
+    mentee_id: '00ultwqjtqt4VCcS24x6',
   },
   {
     content_type: 'type aa',
@@ -46,8 +46,8 @@ const notes = [
     visible_to_admin: true,
     visible_to_moderator: true,
     visible_to_mentor: true,
-    profile_id_mentor: '00ultx74kMUmEW8054x6',
-    profile_id_mentee: '00ultwqjtqt4VCcS24x6',
+    mentor_id: '00ultx74kMUmEW8054x6',
+    mentee_id: '00ultwqjtqt4VCcS24x6',
   },
 ];
 exports.seed = function (knex) {
