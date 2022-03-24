@@ -18,7 +18,7 @@ router.get('/current_user_profile/', authRequired, async (req, res, next) => {
       req.profile.profile_id
     );
     res.status(200).json(req.profile);
-  } catch (error) {
+  } catch (err) {
     next({ status: 500, message: err.message });
   }
 });

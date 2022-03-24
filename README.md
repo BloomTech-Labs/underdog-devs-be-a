@@ -337,3 +337,35 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 | GET    | `/progress`             | -                     | `get all available progress tags`           | `mentor`  |
 | GET    | `/progress/:profile_id` | -                     | `get a specific profile's current progress` | -         |
 | PUT    | `/progress/:profile_id` | `progress_id`         | `update a profile's progress`               | `admin`   |
+
+###### Notes schema:
+
+    {
+        "note_id": 0e166d39-d970-4fd3-a474-32446d70d88a,
+        "content_type": type here,
+        "content": note text,
+        "level": low - high,
+        "visible_to_admin": true,
+        "visible_to_moderator": false,
+        "visible_to_mentor": true,
+        "profile_id_mentor": mentor id,
+        "profile_id_mentee": mentee id,
+        "created_at": timestamp with time zone,
+        "updated_at": timestamp with time zone
+    }
+
+| Method | Endpoint                            | Required Request Body                           | Returns                           | User Auth |
+| ------ | ----------------------------------- | ----------------------------------------------- | --------------------------------- | --------- |
+| GET    | `/notes`                            | -                                               | `get all notes`                   | -         |
+| GET    | `/notes/:note_id`                   | `note_id`(params)                               | `get note by note_id`             | -         |
+| GET    | `/notes/mentee/:profile_id_mentee`  | `profile_id_mentee`(params)                     | `get notes by profile_id_mentee`  | -         |
+| POST   | `/notes`                            | `content_type`,
+                                                 `content`,
+                                                 `level`,
+                                                 `visible_to_admin`,
+                                                 `visible_to_moderator`,
+                                                 `visible_to_mentor`,
+                                                 `profile_id_mentor`,
+                                                 `profile_id_mentee`                             | `added note`                      | -         |
+| PUT    | `/notes/:note_id`                   | `note_id`(params), `field to change in body`    | `updated note`                    | -         |
+| DELETE | `/notes/:note_id`                   | `note_id`(params)                               | `remove note by note_id`          | -         |
