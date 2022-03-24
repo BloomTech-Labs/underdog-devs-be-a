@@ -8,14 +8,13 @@ const authRequired = require('../middleware/authRequired');
 
 //get all assignments
 
-router.get('/', authRequired, adminRequired, (req, res) => {
+router.get('/', authRequired, adminRequired, (req, res, next) => {
   Assignment.findAll()
     .then((assignments) => {
       res.status(200).json(assignments);
     })
     .catch((err) => {
-      console.log(err);
-      res.status(500).json({ message: err.message });
+      next({ status: 500, message: err.message });
     });
 });
 
@@ -26,7 +25,7 @@ router.get(
   authRequired,
   validProfileID,
   adminRequired,
-  (req, res) => {
+  (req, res, next) => {
     const id = req.params.id;
     Assignment.findByMentorId(id)
       .then((mentees) => {
@@ -39,7 +38,7 @@ router.get(
         }
       })
       .catch((err) => {
-        res.status(500).json({ error: err.message });
+        next({ status: 500, message: err.message });
       });
   }
 );
@@ -51,7 +50,7 @@ router.get(
   authRequired,
   validProfileID,
   adminRequired,
-  (req, res) => {
+  (req, res, next) => {
     const id = req.params.id;
     Assignment.findByMenteeId(id)
       .then((mentors) => {
@@ -64,14 +63,14 @@ router.get(
         }
       })
       .catch((err) => {
-        res.status(500).json({ error: err.message });
+        next({ status: 500, message: err.message });
       });
   }
 );
 
 //get current users mentors
 
-router.get('/mymentors', authRequired, (req, res) => {
+router.get('/mymentors', authRequired, (req, res, next) => {
   const token = req.headers.authorization;
   const User = jwt(token);
   Assignment.findByMenteeId(User.sub)
@@ -83,13 +82,13 @@ router.get('/mymentors', authRequired, (req, res) => {
       }
     })
     .catch((err) => {
-      res.status(500).json({ error: err.message });
+      next({ status: 500, message: err.message });
     });
 });
 
 //get current users mentees
 
-router.get('/mymentees', authRequired, (req, res) => {
+router.get('/mymentees', authRequired, (req, res, next) => {
   const token = req.headers.authorization;
   const User = jwt(token);
   Assignment.findByMentorId(User.sub)
@@ -101,7 +100,7 @@ router.get('/mymentees', authRequired, (req, res) => {
       }
     })
     .catch((err) => {
-      res.status(500).json({ error: err.message });
+      next({ status: 500, message: err.message });
     });
 });
 
@@ -170,16 +169,22 @@ router.delete(
 
 // get assignment by assignment id
 
-router.get('/:id', authRequired, validAssignID, adminRequired, (req, res) => {
-  const id = req.params.id;
-  Assignment.findById(id)
-    .then((assigns) => {
-      res.status(200).json(assigns);
-    })
-    .catch((err) => {
-      res.status(500).json({ error: err.message });
-    });
-});
+router.get(
+  '/:id',
+  authRequired,
+  validAssignID,
+  adminRequired,
+  (req, res, next) => {
+    const id = req.params.id;
+    Assignment.findById(id)
+      .then((assigns) => {
+        res.status(200).json(assigns);
+      })
+      .catch((err) => {
+        next({ status: 500, message: err.message });
+      });
+  }
+);
 
 ///////////////////////////MIDDLEWARE///////////////////////////////
 
@@ -192,7 +197,8 @@ function validAssignID(req, res, next) {
         req.assignment = assignment;
         next();
       } else {
-        res.status(400).json({
+        next({
+          status: 400,
           message: 'Invalid assignment ID',
         });
       }
@@ -209,7 +215,8 @@ function validProfileID(req, res, next) {
         req.profile = profile;
         next();
       } else {
-        res.status(400).json({
+        next({
+          status: 400,
           message: 'Invalid ID',
         });
       }
@@ -226,11 +233,13 @@ function validNewAssign(req, res, next) {
       message: 'Missing Assignment Data',
     });
   } else if (!assign.mentor_id) {
-    res.status(400).json({
+    next({
+      status: 400,
       message: 'Missing mentor_id field',
     });
   } else if (!assign.mentee_id) {
-    res.status(400).json({
+    next({
+      status: 400,
       message: 'Missing mentee_id field',
     });
   } else {

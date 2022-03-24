@@ -17,7 +17,7 @@ module.exports = {
         description: 'Everything about your status',
       },
       {
-        name: 'profile',
+        name: 'profiles',
         description: 'Operations for profile',
       },
       {
