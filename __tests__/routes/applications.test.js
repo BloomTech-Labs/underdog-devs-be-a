@@ -211,7 +211,7 @@ describe('Application Router', () => {
         });
 
         it('returns error "profile id XX not found"', () => {
-          const expected = `profile_id ${invalidProfileID} not found`;
+          const expected = /no applications/i;
           const actual = res.body.message;
 
           expect(actual).toMatch(expected);
