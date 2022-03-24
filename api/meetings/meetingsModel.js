@@ -1,5 +1,10 @@
 const db = require('../../data/db-config');
 
+//  `select * from meetings `
+// left join profiles
+// on meetings.host_id = profiles.profile_id;
+// SQL query to find names;
+
 const findAll = async () => {
   return await db('meetings');
 };
