@@ -12,45 +12,37 @@ function findByMentorId(id) {
   return db
     .select(
       'r.review_id',
-      'r.mentor_id',
+      'r.review',
+      'r.mentee_id',
       'p.email',
       'p.first_name',
       'p.last_name',
-      'p.role_id',
-      'p.created_at',
-      'p.pending'
+      'p.role_id'
     )
     .from('reviews as r')
-    .join('profiles as p', 'p.profile_id', '=', 'a.mentor_id')
-    .where({ mentee_id: id });
+    .join('profiles as p', 'p.profile_id', '=', 'r.mentee_id')
+    .where({ mentor_id: id });
 }
 
 function findByMenteeId(id) {
   return db
     .select(
       'r.review_id',
+      'r.review',
       'r.mentor_id',
       'p.email',
       'p.first_name',
       'p.last_name',
-      'p.role_id',
-      'p.created_at',
-      'p.pending'
+      'p.role_id'
     )
     .from('reviews as r')
-    .join('profiles as p', 'p.profile_id', '=', 'a.mentor_id')
+    .join('profiles as p', 'p.profile_id', '=', 'r.mentor_id')
     .where({ mentee_id: id });
-}
-
-async function addReview(review) {
-  const newReview = await db('reviews').insert(review);
-  return newReview;
 }
 
 module.exports = {
   findAll,
   findById,
   findByMentorId,
-  addReview,
   findByMenteeId,
 };
