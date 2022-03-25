@@ -24,7 +24,7 @@ exports.up = function (knex) {
       table.string('meeting_notes').defaultTo(null);
       table.enu('meeting_missed', ['Missed','Pending','Attended'])
         .notNullable()
-        .defaultTo('Pending')
+        .defaultTo('Pending');
     });
 };
 

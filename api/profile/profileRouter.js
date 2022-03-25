@@ -127,23 +127,28 @@ router.get('/', authRequired, adminRequired, function (req, res, next) {
  *      404:
  *        description: 'Profile not found'
  */
-router.get('/:id', authRequired, adminRequired, function (req, res, next) {
-  const id = String(req.params.id);
-  const attendance_average = Profiles.CheckAverageAttendance(id);
-  Profiles.findById(id)
-    .then((profile) => {
-      if (profile) {
-        res
-          .status(200)
-          .json({ ...profile, attendance_rate: attendance_average });
-      } else {
-        next({ status: 404, message: 'ProfileNotFound' });
-      }
-    })
-    .catch((err) => {
-      next({ status: 500, message: err.message });
-    });
-});
+router.get(
+  '/:id',
+  authRequired,
+  adminRequired,
+  async function (req, res, next) {
+    const id = String(req.params.id);
+    const attendance_average = await Profiles.CheckAverageAttendance(id);
+    Profiles.findById(id)
+      .then((profile) => {
+        if (profile) {
+          res
+            .status(200)
+            .json({ ...profile, attendance_rate: attendance_average });
+        } else {
+          next({ status: 404, message: 'ProfileNotFound' });
+        }
+      })
+      .catch((err) => {
+        next({ status: 500, message: err.message });
+      });
+  }
+);
 
 /**
  * @swagger
