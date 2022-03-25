@@ -341,15 +341,15 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 ###### Notes schema:
 
     {
-        "note_id": 0e166d39-d970-4fd3-a474-32446d70d88a,
+        "note_id": 0e166d39-d970-4fd3-a474-32446d70d88a (PK),
         "content_type": type here,
         "content": note text,
         "level": low - high,
         "visible_to_admin": true,
         "visible_to_moderator": false,
         "visible_to_mentor": true,
-        "profile_id_mentor": mentor id,
-        "profile_id_mentee": mentee id,
+        "mentor_id": profile_id of mentor(FK),
+        "mentee_id": profile_id of mentee(FK),
         "created_at": timestamp with time zone,
         "updated_at": timestamp with time zone
     }
@@ -358,14 +358,13 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 | ------ | ----------------------------------- | ----------------------------------------------- | --------------------------------- | --------- |
 | GET    | `/notes`                            | -                                               | `get all notes`                   | -         |
 | GET    | `/notes/:note_id`                   | `note_id`(params)                               | `get note by note_id`             | -         |
-| GET    | `/notes/mentee/:profile_id_mentee`  | `profile_id_mentee`(params)                     | `get notes by profile_id_mentee`  | -         |
+| GET    | `/notes/mentee/:mentee_id`          | `mentee_id`(params)                             | `get notes by mentee_id`          | -         |
 | POST   | `/notes`                            | `content_type`,
                                                  `content`,
                                                  `level`,
                                                  `visible_to_admin`,
-                                                 `visible_to_moderator`,
                                                  `visible_to_mentor`,
-                                                 `profile_id_mentor`,
-                                                 `profile_id_mentee`                             | `added note`                      | -         |
+                                                 `mentor_id`,
+                                                 `mentee_id`                                     | `added note`                      | -         |
 | PUT    | `/notes/:note_id`                   | `note_id`(params), `field to change in body`    | `updated note`                    | -         |
 | DELETE | `/notes/:note_id`                   | `note_id`(params)                               | `remove note by note_id`          | -         |
