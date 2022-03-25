@@ -14,7 +14,7 @@ validateUser;
 
 router.get('/current_user_profile/', authRequired, async (req, res, next) => {
   try {
-    req.profile.attendance_rate = await Profiles.CheckAverageAttendance(
+    req.profile.attendance_rate = await Profiles.checkAverageAttendance(
       req.profile.profile_id
     );
     res.status(200).json(req.profile);
@@ -133,7 +133,7 @@ router.get(
   adminRequired,
   async function (req, res, next) {
     const id = String(req.params.id);
-    const attendance_average = await Profiles.CheckAverageAttendance(id);
+    const attendance_average = await Profiles.checkAverageAttendance(id);
     Profiles.findById(id)
       .then((profile) => {
         if (profile) {
