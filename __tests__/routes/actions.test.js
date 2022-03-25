@@ -146,13 +146,6 @@ describe('Actions Router', () => {
           expect(actual).toBe(expected);
         }); //? this needs to be 404 i think?
 
-        it.skip('responds with incorrect id', () => {
-          const expected = 987654321;
-          const actual = res;
-
-          expect(actual).toBe(expected);
-        }); //! i dont think we actually need this one;
-
         it('returns message ":id does not exist"', () => {
           const expected = /does not exist/i;
           const actual = res.body.message;
