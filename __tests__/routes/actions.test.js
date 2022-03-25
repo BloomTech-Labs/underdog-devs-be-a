@@ -178,7 +178,7 @@ describe('Actions Router', () => {
         expect(actual).toBe(expected);
       });
 
-      it('Upon success, pending yeilds TRUE', () => {
+      it('Upon success, pending yields TRUE', () => {
         const expected = true;
         const actual = res.body.pending;
 
