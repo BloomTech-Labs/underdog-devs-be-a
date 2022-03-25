@@ -5,8 +5,8 @@ exports.up = function (knex) {
       table.increments('meeting_id').notNullable().unique().primary();
       table.timestamps(true, true);
       table.string('meeting_topic').notNullable();
-      table.date('meeting_date').notNullable();
-      table.string('meeting_time').notNullable();
+      table.integer('meeting_start_date').notNullable().unsigned();
+      table.integer('meeting_end_date').notNullable().unsigned();
       table
         .string('host_id')
         .references('profile_id')
@@ -22,6 +22,9 @@ exports.up = function (knex) {
         .onDelete('RESTRICT')
         .notNullable();
       table.string('meeting_notes').defaultTo(null);
+      table.enu('meeting_missed', ['Missed','Pending','Attended'])
+        .notNullable()
+        .defaultTo('Pending')
     });
 };
 
