@@ -38,8 +38,7 @@ function findByMentorId(id) {
       'p.first_name',
       'p.last_name',
       'p.role_id',
-      'p.created_at',
-      'p.pending'
+      'p.created_at'
     )
     .from('assignments as a')
     .join('profiles as p', 'p.profile_id', '=', 'a.mentee_id')
@@ -55,8 +54,7 @@ function findByMenteeId(id) {
       'p.first_name',
       'p.last_name',
       'p.role_id',
-      'p.created_at',
-      'p.pending'
+      'p.created_at'
     )
     .from('assignments as a')
     .join('profiles as p', 'p.profile_id', '=', 'a.mentor_id')
