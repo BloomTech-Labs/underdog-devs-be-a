@@ -207,7 +207,6 @@ describe('Actions Router', () => {
         const expected =
           'You must submit an issue property as a string of text in your request';
         expect(actual).toEqual(expected);
-        console.log('res.body:', res.body);
       });
     });
   });
