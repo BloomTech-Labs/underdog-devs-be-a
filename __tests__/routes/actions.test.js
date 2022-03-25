@@ -221,7 +221,7 @@ describe('Actions Router', () => {
       });
       it('returns requested edits', () => {
         const expected = { ...validActionUpdate };
-        const actual = res.body.changes;
+        const actual = res.body;
 
         expect(actual).toMatchObject(expected);
       });
