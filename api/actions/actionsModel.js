@@ -1,50 +1,52 @@
-const db = require('../../data/db-config');
+// TODO: Refactor these function to fetch data from tickets table instead of action_tickets table
 
-const findAll = () => {
-  return db('action_tickets');
-};
+// const db = require('../../data/db-config');
 
-const findBy = (filter) => {
-  return db('action_tickets').where(filter);
-};
+// const findAll = () => {
+//   return db('action_tickets');
+// };
 
-const findById = (action_ticket_id) => {
-  return db('action_tickets').where({ action_ticket_id }).first();
-};
+// const findBy = (filter) => {
+//   return db('action_tickets').where(filter);
+// };
 
-const create = (action) => {
-  return db('action_tickets').insert(action).returning('*');
-};
+// const findById = (action_ticket_id) => {
+//   return db('action_tickets').where({ action_ticket_id }).first();
+// };
 
-const update = (id, action) => {
-  return db('action_tickets')
-    .where({ action_ticket_id: id })
-    .first()
-    .update(action)
-    .returning('*');
-};
+// const create = (action) => {
+//   return db('action_tickets').insert(action).returning('*');
+// };
 
-const remove = (id) => {
-  return db('action_tickets').where({ id }).del();
-};
+// const update = (id, action) => {
+//   return db('action_tickets')
+//     .where({ action_ticket_id: id })
+//     .first()
+//     .update(action)
+//     .returning('*');
+// };
 
-const findOrCreateActions = async (actionsObj) => {
-  const foundActions = await findById(actionsObj.id).then((actions) => actions);
-  if (foundActions) {
-    return foundActions;
-  } else {
-    return await create(actionsObj).then((newActions) => {
-      return newActions ? newActions[0] : newActions;
-    });
-  }
-};
+// const remove = (id) => {
+//   return db('action_tickets').where({ id }).del();
+// };
 
-module.exports = {
-  findAll,
-  findBy,
-  findById,
-  create,
-  update,
-  remove,
-  findOrCreateActions,
-};
+// const findOrCreateActions = async (actionsObj) => {
+//   const foundActions = await findById(actionsObj.id).then((actions) => actions);
+//   if (foundActions) {
+//     return foundActions;
+//   } else {
+//     return await create(actionsObj).then((newActions) => {
+//       return newActions ? newActions[0] : newActions;
+//     });
+//   }
+// };
+
+// module.exports = {
+//   findAll,
+//   findBy,
+//   findById,
+//   create,
+//   update,
+//   remove,
+//   findOrCreateActions,
+// };

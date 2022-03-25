@@ -14,7 +14,7 @@ const dummyData = [
     host_id: '7',
     attendee_id: '00ultx74kMUmEW8054x6',
     meeting_notes: 'Remember to bring a smile',
-    meeting_missed: 'Missed'
+    meeting_missed: 'Missed',
   },
   {
     meeting_topic: 'Resume Help',

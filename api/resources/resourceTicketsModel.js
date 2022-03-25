@@ -1,40 +1,42 @@
-const db = require('../../data/db-config');
+//Todo: Refactor these function to be fetching data from tickets table instead of resource-tickets table
 
-const findAll = async () => {
-  return await db('resource_tickets');
-};
+// const db = require('../../data/db-config');
 
-const findByTicketId = async (resource_ticket_id) => {
-  return db
-    .select('*')
-    .from('resource_tickets')
-    .where({ resource_ticket_id })
-    .first();
-};
+// const findAll = async () => {
+//   return await db('resource_tickets');
+// };
 
-const getByProfileId = async (profile_id) => {
-  return db('resource_tickets').where('submitted_by', profile_id);
-};
+// const findByTicketId = async (resource_ticket_id) => {
+//   return db
+//     .select('*')
+//     .from('resource_tickets')
+//     .where({ resource_ticket_id })
+//     .first();
+// };
 
-const Create = async (id, newTicket) => {
-  newTicket.submitted_by = id;
-  const ticket = await db('resource_tickets').insert(newTicket);
-  return ticket;
-};
+// const getByProfileId = async (profile_id) => {
+//   return db('resource_tickets').where('submitted_by', profile_id);
+// };
 
-const Update = async (resource_ticket_id, changes) => {
-  return db('resource_tickets').where({ resource_ticket_id }).update(changes);
-};
+// const Create = async (id, newTicket) => {
+//   newTicket.submitted_by = id;
+//   const ticket = await db('resource_tickets').insert(newTicket);
+//   return ticket;
+// };
 
-const Delete = async (resource_ticket_id) => {
-  return db('resource_tickets').where({ resource_ticket_id }).del();
-};
+// const Update = async (resource_ticket_id, changes) => {
+//   return db('resource_tickets').where({ resource_ticket_id }).update(changes);
+// };
 
-module.exports = {
-  findAll,
-  findByTicketId,
-  getByProfileId,
-  Create,
-  Update,
-  Delete,
-};
+// const Delete = async (resource_ticket_id) => {
+//   return db('resource_tickets').where({ resource_ticket_id }).del();
+// };
+
+// module.exports = {
+//   findAll,
+//   findByTicketId,
+//   getByProfileId,
+//   Create,
+//   Update,
+//   Delete,
+// };
