@@ -193,8 +193,22 @@ describe('Actions Router', () => {
       });
     });
     describe('failure', () => {
-      it.todo('unable to POST new action');
-      it.todo('responds with "you do not have permissions here"');
+      const invalidNewAction = {};
+      let res;
+
+      beforeAll(async () => {
+        res = await request(app)
+          .post('/actions')
+          .send({ ...invalidNewAction });
+      });
+
+      it('returns error if no issue key submitted', () => {
+        const actual = res.body.message;
+        const expected =
+          'You must submit an issue property as a string of text in your request';
+        expect(actual).toEqual(expected);
+        console.log('res.body:', res.body);
+      });
     });
   });
 
