@@ -341,7 +341,7 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 ###### Notes schema:
 
     {
-        "note_id": 0e166d39-d970-4fd3-a474-32446d70d88a (PK),
+        "note_id": 1 (PK, integer),
         "content_type": type here,
         "content": note text,
         "level": low - high,

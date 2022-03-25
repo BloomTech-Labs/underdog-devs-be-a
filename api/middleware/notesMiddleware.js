@@ -19,15 +19,23 @@ const checkNoteExists = async (req, res, next) => {
 };
 
 const checkBodyIsComplete = (req, res, next) => {
+  const {
+    content_type,
+    content,
+    level,
+    visible_to_admin,
+    visible_to_mentor,
+    mentor_id,
+    mentee_id,
+  } = req.body;
   if (
-    !req.body.content_type ||
-    !req.body.content ||
-    !req.body.level ||
-    !req.body.visible_to_admin ||
-    !req.body.visible_to_moderator ||
-    !req.body.visible_to_mentor ||
-    !req.body.profile_id_mentor ||
-    !req.body.profile_id_mentee
+    !content_type ||
+    !content ||
+    !level ||
+    !visible_to_admin ||
+    !visible_to_mentor ||
+    !mentor_id ||
+    !mentee_id
   ) {
     next({
       status: 400,
