@@ -37,6 +37,10 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 | ------ | -------- | ------------ | -------------------------- |
 | GET    | `/`      | -            | `{ api: "up", timestamp }` |
 
+## Codes
+[Status Codes]()
+Please see [this file](./__tests__/README.md) for more info
+
 ## User Authorization
 
 ###### Except for non-logged in features, users must be logged in to access all endpoints
