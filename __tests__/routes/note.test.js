@@ -95,7 +95,6 @@ describe('Notes Router', () => {
     it('responds with non empty object', async () => {
       const expected = /some text here/;
       const actual = res.text;
-      console.log(res.text);
       expect(actual).toMatch(expected);
     });
   });
@@ -141,5 +140,40 @@ describe('Notes Router', () => {
       const actual = res.status;
       expect(actual).toBe(expected);
     });
+  });
+});
+
+describe('[PUT] /notes', () => {
+  let resPost, resPut;
+  beforeAll(async () => {
+    //step 1 - post a new note
+    resPost = await request(app).post('/notes').send({
+      content_type: 'type a',
+      content: 'some text here',
+      level: 'low',
+      visible_to_admin: true,
+      visible_to_moderator: true,
+      visible_to_mentor: true,
+      mentor_id: '00u13omswyZM1xVya4x7',
+      mentee_id: '00u13oned0U8XP8Mb4x7',
+    });
+
+    //step 2 - put the note
+
+    resPut = await request(app).put(`/notes/${resPost.body[0].note_id}`).send({
+      content: 'new content',
+    });
+  });
+
+  it('requires authentication', () => {
+    expect(authRequired).toBeCalled();
+  });
+
+  //step 3 - assertion
+  it('content to match new content', async () => {
+    console.log(resPost.body[0].note_id);
+    const expected = /new content/;
+    const actual = resPut.text;
+    expect(actual).toMatch(expected);
   });
 });
