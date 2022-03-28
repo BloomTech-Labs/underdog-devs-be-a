@@ -32,19 +32,6 @@ const app = express();
 app.use(express.json());
 app.use('/notes', notesRouter);
 app.use(handleError);
-
-/**
-tets cases
-
-admin can retrieve all note
-admin can retrieve note per id
-
-mentor can retrieve notes
-mentor can retrieve notes per assigned mentee
-mentor can 
-
-*/
-
 describe('Sanity Checks', () => {
   test('matchers are working', () => {
     expect(true).toBe(true);
@@ -77,6 +64,7 @@ describe('Notes Router', () => {
   });
 
   describe('[GET] /notes/note_id', () => {
+    describe;
     let res;
     beforeAll(async () => {
       res = await request(app).get('/notes/1');
@@ -141,39 +129,74 @@ describe('Notes Router', () => {
       expect(actual).toBe(expected);
     });
   });
-});
 
-describe('[PUT] /notes', () => {
-  let resPost, resPut;
-  beforeAll(async () => {
-    //step 1 - post a new note
-    resPost = await request(app).post('/notes').send({
-      content_type: 'type a',
-      content: 'some text here',
-      level: 'low',
-      visible_to_admin: true,
-      visible_to_moderator: true,
-      visible_to_mentor: true,
-      mentor_id: '00u13omswyZM1xVya4x7',
-      mentee_id: '00u13oned0U8XP8Mb4x7',
+  describe('[PUT] /notes', () => {
+    let resPost, resPut;
+    beforeAll(async () => {
+      //step 1 - post a new note
+      resPost = await request(app).post('/notes').send({
+        content_type: 'type a',
+        content: 'some text here',
+        level: 'low',
+        visible_to_admin: true,
+        visible_to_moderator: true,
+        visible_to_mentor: true,
+        mentor_id: '00u13omswyZM1xVya4x7',
+        mentee_id: '00u13oned0U8XP8Mb4x7',
+      });
+
+      //step 2 - put the note
+      resPut = await request(app)
+        .put(`/notes/${resPost.body[0].note_id}`)
+        .send({
+          content: 'new content',
+        });
     });
 
-    //step 2 - put the note
+    it('requires authentication', () => {
+      expect(authRequired).toBeCalled();
+    });
 
-    resPut = await request(app).put(`/notes/${resPost.body[0].note_id}`).send({
-      content: 'new content',
+    //step 3 - assertion
+    it('content to match new content', async () => {
+      console.log(resPost.body[0].note_id);
+      const expected = /new content/;
+      const actual = resPut.text;
+      expect(actual).toMatch(expected);
     });
   });
 
-  it('requires authentication', () => {
-    expect(authRequired).toBeCalled();
-  });
+  describe('[DELETE] /notes', () => {
+    let resPost, resDelete;
+    beforeAll(async () => {
+      //step 1 - post a new note
+      resPost = await request(app).post('/notes').send({
+        content_type: 'type a',
+        content: 'some text here',
+        level: 'low',
+        visible_to_admin: true,
+        visible_to_moderator: true,
+        visible_to_mentor: true,
+        mentor_id: '00u13omswyZM1xVya4x7',
+        mentee_id: '00u13oned0U8XP8Mb4x7',
+      });
 
-  //step 3 - assertion
-  it('content to match new content', async () => {
-    console.log(resPost.body[0].note_id);
-    const expected = /new content/;
-    const actual = resPut.text;
-    expect(actual).toMatch(expected);
+      //step 2 - put the note
+      resDelete = await request(app).delete(
+        `/notes/${resPost.body[0].note_id}`
+      );
+    });
+
+    it('requires authentication', () => {
+      expect(authRequired).toBeCalled();
+    });
+
+    //step 3 - assertion
+    it('content to match new content', async () => {
+      console.log(resPost.body[0].note_id);
+      const expected = 200;
+      const actual = resDelete.status;
+      expect(actual).toBe(expected);
+    });
   });
 });
