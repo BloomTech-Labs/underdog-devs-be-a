@@ -343,6 +343,7 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
     {
         "note_id": 1 (PK, integer),
         "content_type": type here,
+        "status": ["in progress", "resolved", "no action needed", "escalated"]
         "content": note text,
         "level": low - high,
         "visible_to_admin": true,
@@ -358,7 +359,8 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 | GET    | `/notes`                            | -                                               | `get all notes`                   | -         |
 | GET    | `/notes/:note_id`                   | `note_id`(params)                               | `get note by note_id`             | -         |
 | GET    | `/notes/mentee/:mentee_id`          | `mentee_id`(params)                             | `get notes by mentee_id`          | -         |
-| POST   | `/notes`                            | `content_type`,
+| POST   | `/notes`                            | `content_type`,                                 | `newly created note`              | -         |
+                                                 `status`,
                                                  `content`,
                                                  `level`,
                                                  `visible_to_admin`,

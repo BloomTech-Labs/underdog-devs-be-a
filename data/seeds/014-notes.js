@@ -1,6 +1,7 @@
 const notes = [
   {
     content_type: 'type a',
+    status: 'in progress',
     content: 'expect some text here',
     level: 'low',
     visible_to_admin: true,
@@ -10,6 +11,7 @@ const notes = [
   },
   {
     content_type: 'type a',
+    status: 'resolved',
     content: 'expect some text here',
     level: 'low',
     visible_to_admin: true,
@@ -19,6 +21,7 @@ const notes = [
   },
   {
     content_type: 'type 3a',
+    status: 'no action needed',
     content: 'expect some text here',
     level: 'low',
     visible_to_admin: true,
@@ -28,6 +31,7 @@ const notes = [
   },
   {
     content_type: 'type bb',
+    status: 'escalated',
     content: 'expect some text here',
     level: 'low',
     visible_to_admin: true,
@@ -37,6 +41,7 @@ const notes = [
   },
   {
     content_type: 'type aa',
+    status: 'in progress',
     content: 'expect some text here',
     level: 'low',
     visible_to_admin: true,

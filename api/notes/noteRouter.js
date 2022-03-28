@@ -47,6 +47,7 @@ router.post('/', authRequired, checkBodyIsComplete, async (req, res, next) => {
   try {
     const newNote = {
       content_type: req.body.content_type,
+      status: req.body.status,
       content: req.body.content,
       level: req.body.level,
       visible_to_admin: req.body.visible_to_admin,

@@ -3,6 +3,14 @@ exports.up = (knex) => {
     .raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"')
     .createTable('notes', function (table) {
       table.increments('note_id').primary().notNullable();
+      table
+        .enu('status', [
+          'in progress',
+          'resolved',
+          'no action needed',
+          'escalated',
+        ])
+        .notNullable();
       table.string('content_type').notNullable();
       table.text('content').notNullable();
       table.string('level').notNullable();

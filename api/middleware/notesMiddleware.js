@@ -21,6 +21,7 @@ const checkNoteExists = async (req, res, next) => {
 const checkBodyIsComplete = (req, res, next) => {
   const {
     content_type,
+    status,
     content,
     level,
     visible_to_admin,
@@ -30,6 +31,7 @@ const checkBodyIsComplete = (req, res, next) => {
   } = req.body;
   if (
     !content_type ||
+    !status ||
     !content ||
     !level ||
     !visible_to_admin ||
