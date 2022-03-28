@@ -64,139 +64,154 @@ describe('Notes Router', () => {
   });
 
   describe('[GET] /notes/note_id', () => {
-    describe;
-    let res;
-    beforeAll(async () => {
-      res = await request(app).get('/notes/1');
-    });
+    describe('succeed', () => {
+      let res;
+      beforeAll(async () => {
+        res = await request(app).get('/notes/1');
+      });
 
-    it('requires authentication', () => {
-      expect(authRequired).toBeCalled();
-    });
+      it('requires authentication', () => {
+        expect(authRequired).toBeCalled();
+      });
 
-    it('responds with status 200', async () => {
-      const expected = 200;
-      const actual = res.status;
-      expect(actual).toBe(expected);
-    });
+      it('responds with status 200', async () => {
+        const expected = 200;
+        const actual = res.status;
+        expect(actual).toBe(expected);
+      });
 
-    it('responds with non empty object', async () => {
-      const expected = /some text here/;
-      const actual = res.text;
-      expect(actual).toMatch(expected);
-    });
-  });
-
-  describe('[GET] /notes/note_id with 404 error', () => {
-    let res;
-    beforeAll(async () => {
-      res = await request(app).get('/notes/100');
-    });
-
-    it('requires authentication', () => {
-      expect(authRequired).toBeCalled();
-    });
-
-    it('responds with status 200', async () => {
-      const expected = 404;
-      const actual = res.status;
-      expect(actual).toBe(expected);
-    });
-  });
-
-  describe('[POST] /notes', () => {
-    let res;
-    beforeAll(async () => {
-      res = await request(app).post('/notes').send({
-        content_type: 'type a',
-        content: 'expect some text here',
-        level: 'low',
-        visible_to_admin: true,
-        visible_to_moderator: true,
-        visible_to_mentor: true,
-        mentor_id: '00u13omswyZM1xVya4x7',
-        mentee_id: '00u13oned0U8XP8Mb4x7',
+      it('responds with non empty object', async () => {
+        const expected = /some text here/;
+        const actual = res.text;
+        expect(actual).toMatch(expected);
       });
     });
 
-    it('requires authentication', () => {
-      expect(authRequired).toBeCalled();
-    });
+    describe('failed 404 error', () => {
+      let res;
+      beforeAll(async () => {
+        res = await request(app).get('/notes/100');
+      });
 
-    it('responds with status 201', async () => {
-      const expected = 201;
-      const actual = res.status;
-      expect(actual).toBe(expected);
+      it('requires authentication', () => {
+        expect(authRequired).toBeCalled();
+      });
+
+      it('responds with status 200', async () => {
+        const expected = 404;
+        const actual = res.status;
+        expect(actual).toBe(expected);
+      });
+    });
+  });
+  describe('[POST] /notes', () => {
+    describe('succeed', () => {
+      let res;
+      beforeAll(async () => {
+        res = await request(app).post('/notes').send({
+          content_type: 'type a',
+          content: 'expect some text here',
+          level: 'low',
+          visible_to_admin: true,
+          visible_to_moderator: true,
+          visible_to_mentor: true,
+          mentor_id: '00u13omswyZM1xVya4x7',
+          mentee_id: '00u13oned0U8XP8Mb4x7',
+        });
+      });
+
+      it('requires authentication', () => {
+        expect(authRequired).toBeCalled();
+      });
+
+      it('responds with status 201', async () => {
+        const expected = 201;
+        const actual = res.status;
+        expect(actual).toBe(expected);
+      });
+    });
+    describe('failed', () => {
+      expect(1).toBe(2);
     });
   });
 
   describe('[PUT] /notes', () => {
-    let resPost, resPut;
-    beforeAll(async () => {
-      //step 1 - post a new note
-      resPost = await request(app).post('/notes').send({
-        content_type: 'type a',
-        content: 'some text here',
-        level: 'low',
-        visible_to_admin: true,
-        visible_to_moderator: true,
-        visible_to_mentor: true,
-        mentor_id: '00u13omswyZM1xVya4x7',
-        mentee_id: '00u13oned0U8XP8Mb4x7',
+    describe('succeed', () => {
+      let resPost, resPut;
+      beforeAll(async () => {
+        //step 1 - post a new note
+        resPost = await request(app).post('/notes').send({
+          content_type: 'type a',
+          content: 'some text here',
+          level: 'low',
+          visible_to_admin: true,
+          visible_to_moderator: true,
+          visible_to_mentor: true,
+          mentor_id: '00u13omswyZM1xVya4x7',
+          mentee_id: '00u13oned0U8XP8Mb4x7',
+        });
+
+        //step 2 - put the note
+        resPut = await request(app)
+          .put(`/notes/${resPost.body[0].note_id}`)
+          .send({
+            content: 'new content',
+          });
       });
 
-      //step 2 - put the note
-      resPut = await request(app)
-        .put(`/notes/${resPost.body[0].note_id}`)
-        .send({
-          content: 'new content',
-        });
-    });
+      it('requires authentication', () => {
+        expect(authRequired).toBeCalled();
+      });
 
-    it('requires authentication', () => {
-      expect(authRequired).toBeCalled();
+      //step 3 - assertion
+      it('content to match new content', async () => {
+        console.log(resPost.body[0].note_id);
+        const expected = /new content/;
+        const actual = resPut.text;
+        expect(actual).toMatch(expected);
+      });
     });
-
-    //step 3 - assertion
-    it('content to match new content', async () => {
-      console.log(resPost.body[0].note_id);
-      const expected = /new content/;
-      const actual = resPut.text;
-      expect(actual).toMatch(expected);
+    describe('failed', () => {
+      expect(1).toBe(2);
     });
   });
 
   describe('[DELETE] /notes', () => {
-    let resPost, resDelete;
-    beforeAll(async () => {
-      //step 1 - post a new note
-      resPost = await request(app).post('/notes').send({
-        content_type: 'type a',
-        content: 'some text here',
-        level: 'low',
-        visible_to_admin: true,
-        visible_to_moderator: true,
-        visible_to_mentor: true,
-        mentor_id: '00u13omswyZM1xVya4x7',
-        mentee_id: '00u13oned0U8XP8Mb4x7',
+    describe('succeed', () => {
+      let resPost, resDelete;
+      beforeAll(async () => {
+        //step 1 - post a new note
+        resPost = await request(app).post('/notes').send({
+          content_type: 'type a',
+          content: 'some text here',
+          level: 'low',
+          visible_to_admin: true,
+          visible_to_moderator: true,
+          visible_to_mentor: true,
+          mentor_id: '00u13omswyZM1xVya4x7',
+          mentee_id: '00u13oned0U8XP8Mb4x7',
+        });
+
+        //step 2 - put the note
+        resDelete = await request(app).delete(
+          `/notes/${resPost.body[0].note_id}`
+        );
       });
 
-      //step 2 - put the note
-      resDelete = await request(app).delete(
-        `/notes/${resPost.body[0].note_id}`
-      );
-    });
+      it('requires authentication', () => {
+        expect(authRequired).toBeCalled();
+      });
 
-    it('requires authentication', () => {
-      expect(authRequired).toBeCalled();
+      //step 3 - assertion
+      it('content to match new content', async () => {
+        console.log(resPost.body[0].note_id);
+        const expected = 200;
+        const actual = resDelete.status;
+        expect(actual).toBe(expected);
+      });
     });
-
-    //step 3 - assertion
-    it('content to match new content', async () => {
-      console.log(resPost.body[0].note_id);
-      const expected = 200;
-      const actual = resDelete.status;
-      expect(actual).toBe(expected);
+    describe('failed', () => {
+      expect(1).toBe(2);
     });
   });
 });
