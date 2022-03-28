@@ -56,8 +56,8 @@ router.post('/', authRequired, checkBodyIsComplete, async (req, res, next) => {
       visible_to_admin: req.body.visible_to_admin,
       visible_to_moderator: req.body.visible_to_moderator,
       visible_to_mentor: req.body.visible_to_mentor,
-      profile_id_mentor: req.body.profile_id_mentor,
-      profile_id_mentee: req.body.profile_id_mentee,
+      mentor_id: req.body.mentor_id,
+      mentee_id: req.body.mentee_id,
     };
     const createdNote = await Notes.create(newNote);
     res.status(201).json(createdNote);

@@ -26,8 +26,8 @@ const checkBodyIsComplete = (req, res, next) => {
     !req.body.visible_to_admin ||
     !req.body.visible_to_moderator ||
     !req.body.visible_to_mentor ||
-    !req.body.profile_id_mentor ||
-    !req.body.profile_id_mentee
+    !req.body.mentor_id ||
+    !req.body.mentee_id
   ) {
     next({
       status: 400,
