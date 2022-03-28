@@ -346,7 +346,6 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
         "content": note text,
         "level": low - high,
         "visible_to_admin": true,
-        "visible_to_moderator": false,
         "visible_to_mentor": true,
         "mentor_id": profile_id of mentor(FK),
         "mentee_id": profile_id of mentee(FK),
