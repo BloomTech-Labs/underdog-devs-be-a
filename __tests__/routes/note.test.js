@@ -75,4 +75,31 @@ describe('Notes Router', () => {
       expect(actual).toBe(expected);
     });
   });
+
+  describe('[GET] /notes/note_id', () => {
+    let res;
+    beforeAll(async () => {
+      res = await request(app).get('/notes/1');
+    });
+
+    it('requires authentication', () => {
+      expect(authRequired).toBeCalled();
+    });
+
+    it('responds with status 200', async () => {
+      const expected = 200;
+      const actual = res.status;
+
+      console.log(res.text);
+      expect(actual).toBe(expected);
+    });
+
+    it('responds with non empty object', async () => {
+      const expected = /some text here/;
+      const actual = res.text;
+
+      console.log(actual);
+      expect(actual).toMatch(expected);
+    });
+  });
 });
