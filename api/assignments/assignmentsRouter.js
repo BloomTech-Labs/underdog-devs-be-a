@@ -198,7 +198,7 @@ function validAssignID(req, res, next) {
         next();
       } else {
         next({
-          status: 404,
+          status: 400,
           message: 'Invalid assignment ID',
         });
       }
@@ -216,7 +216,7 @@ function validProfileID(req, res, next) {
         next();
       } else {
         next({
-          status: 404,
+          status: 400,
           message: 'Invalid ID',
         });
       }
