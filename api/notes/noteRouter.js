@@ -7,6 +7,7 @@ const {
   checkNoteExists,
   checkBodyIsComplete,
   checkUpdateInfo,
+  checkProfileIdExists,
 } = require('../middleware/notesMiddleware');
 
 router.get('/', authRequired, async (req, res, next) => {
@@ -33,12 +34,13 @@ router.get(
 );
 
 router.get(
-  '/mentee/:profile_id_mentee',
+  '/mentee/:mentee_id',
   authRequired,
+  checkProfileIdExists,
   async (req, res, next) => {
     try {
       const note = await Notes.findBy({
-        profile_id_mentee: req.params.profile_id_mentee,
+        mentee_id: req.params.mentee_id,
       });
       res.status(200).json(note);
     } catch (error) {
@@ -51,10 +53,10 @@ router.post('/', authRequired, checkBodyIsComplete, async (req, res, next) => {
   try {
     const newNote = {
       content_type: req.body.content_type,
+      status: req.body.status,
       content: req.body.content,
       level: req.body.level,
       visible_to_admin: req.body.visible_to_admin,
-      visible_to_moderator: req.body.visible_to_moderator,
       visible_to_mentor: req.body.visible_to_mentor,
       mentor_id: req.body.mentor_id,
       mentee_id: req.body.mentee_id,

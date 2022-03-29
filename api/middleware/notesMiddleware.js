@@ -1,4 +1,5 @@
 const Notes = require('../notes/noteModel');
+const Profile_Model = require('../profile/profileModel');
 
 const checkNoteExists = async (req, res, next) => {
   try {
@@ -18,16 +19,44 @@ const checkNoteExists = async (req, res, next) => {
   }
 };
 
+const checkProfileIdExists = async (req, res, next) => {
+  try {
+    const profile = await Profile_Model.findById({
+      profile_id: req.params.mentee_id,
+    });
+    if (!profile) {
+      next({
+        status: 404,
+        message: 'mentee_id not found',
+      });
+    } else {
+      next();
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 const checkBodyIsComplete = (req, res, next) => {
+  const {
+    content_type,
+    status,
+    content,
+    level,
+    visible_to_admin,
+    visible_to_mentor,
+    mentor_id,
+    mentee_id,
+  } = req.body;
   if (
-    !req.body.content_type ||
-    !req.body.content ||
-    !req.body.level ||
-    !req.body.visible_to_admin ||
-    !req.body.visible_to_moderator ||
-    !req.body.visible_to_mentor ||
-    !req.body.mentor_id ||
-    !req.body.mentee_id
+    !content_type ||
+    !status ||
+    !content ||
+    !level ||
+    !visible_to_admin ||
+    !visible_to_mentor ||
+    !mentor_id ||
+    !mentee_id
   ) {
     next({
       status: 400,
@@ -53,4 +82,5 @@ module.exports = {
   checkNoteExists,
   checkBodyIsComplete,
   checkUpdateInfo,
+  checkProfileIdExists,
 };
