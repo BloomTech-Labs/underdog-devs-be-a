@@ -32,6 +32,8 @@ const resourceTicketRouter = require('./resources/resourceTicketsRouter');
 const rolesRouter = require('./roles/rolesRouter');
 const progressionRouter = require('./progession/progressionRouter');
 const roleTicketsRouter = require('./roleTickets/roleTicketsRouter');
+const noteRouter = require('./notes/noteRouter');
+const reviewsRouter = require('./reviews/reviewsRouter');
 
 const app = express();
 
@@ -59,7 +61,7 @@ app.use(cookieParser());
 
 // application routes
 app.use('/', indexRouter);
-app.use(['/profile', '/profiles'], profileRouter);
+app.use('/profile', profileRouter);
 app.use('/data', dsRouter);
 app.use('/assignments', assignmentsRouter);
 app.use('/application', applicationRouter);
@@ -70,6 +72,8 @@ app.use('/resource-tickets', resourceTicketRouter);
 app.use('/roles', rolesRouter);
 app.use('/progress', progressionRouter);
 app.use('/role-tickets', roleTicketsRouter);
+app.use('/notes', noteRouter);
+app.use('/reviews', reviewsRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

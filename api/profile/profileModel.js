@@ -68,6 +68,24 @@ async function menteeApplicationData(profile_id) {
   return person;
 }
 
+async function CheckAverageAttendance(profile_id) {
+  const meetings = await db('meetings')
+    .whereNot('meeting_missed', 'Pending')
+    .andWhere('attendee_id', profile_id);
+  if (meetings.length > 0) {
+    const average =
+      1.0 -
+      1.0 /
+        (meetings.length /
+          meetings.filter((meeting) => meeting.meeting_missed === 'Missed')
+            .length);
+    await update(profile_id, { attendance_rate: average });
+    return average;
+  } else {
+    return 'no meetings present';
+  }
+}
+
 module.exports = {
   findAll,
   findBy,
@@ -79,4 +97,5 @@ module.exports = {
   updateIsActive,
   mentorApplicationData,
   menteeApplicationData,
+  CheckAverageAttendance,
 };
