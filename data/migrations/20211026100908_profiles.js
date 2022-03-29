@@ -13,15 +13,12 @@ exports.up = (knex) => {
         .default(5)
         .references('role_id')
         .inTable('roles')
-        .onDelete('RESTRICT')
-        .onUpdate('RESTRICT');
+        .onDelete('CASCADE')
+        .onUpdate('CASCADE');
       table.timestamps(true, true);
       table.boolean('is_active');
       table.string('progress_status');
-      table.float('attendance_rate')
-      .notNullable()
-      .unsigned()
-      .default(1.0)
+      table.float('attendance_rate').notNullable().unsigned().default(1.0);
     });
 };
 
