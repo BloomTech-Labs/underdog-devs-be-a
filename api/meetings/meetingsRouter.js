@@ -155,7 +155,7 @@ function validMeetingID(req, res, next) {
       req.meeting = meeting;
       next();
     } else {
-      next({ status: 400, message: 'Meeting_id Not Found' });
+      next({ status: 404, message: 'Meeting_id Not Found' });
     }
   });
 }
