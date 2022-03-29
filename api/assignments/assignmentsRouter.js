@@ -216,7 +216,7 @@ function validProfileID(req, res, next) {
         next();
       } else {
         next({
-          status: 400,
+          status: 404,
           message: 'Invalid ID',
         });
       }
