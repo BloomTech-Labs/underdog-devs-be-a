@@ -1,7 +1,11 @@
 const db = require('../../data/db-config');
 
 const findAll = async () => {
-  return await db('meetings');
+  //returns names and profile info based on the host
+  const meetings = await db('meetings as m')
+    .join('profiles as p', 'm.host_id', 'p.profile_id')
+    .select('m.*', 'p.first_name', ' p.last_name', 'p.email');
+  return meetings;
 };
 
 const findByMeetingId = async (meeting_id) => {
