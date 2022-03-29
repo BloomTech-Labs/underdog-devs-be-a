@@ -12,8 +12,6 @@ Please see [documentation](https://github.com/mdn/content/blob/main/files/en-us/
 | 200 | Responding Properly | Used for Sucess messages that don't do anything else but respond successfully |
 | 201 | Created | Used for [POST] to denote that something was created |
 
-- {{HTTPStatus(100, "100 Continue")}}
-   - : th
 
 ### Failed Responses: (400 - 499)
 | Code | Constant                        | Reason Phrase                   |
