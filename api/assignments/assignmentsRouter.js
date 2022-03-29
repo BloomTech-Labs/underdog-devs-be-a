@@ -198,7 +198,7 @@ function validAssignID(req, res, next) {
         next();
       } else {
         next({
-          status: 400,
+          status: 404,
           message: 'Invalid assignment ID',
         });
       }
