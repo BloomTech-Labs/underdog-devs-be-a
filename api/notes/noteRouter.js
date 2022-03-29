@@ -32,32 +32,28 @@ router.get(
   }
 );
 
-router.get(
-  '/mentee/:profile_id_mentee',
-  authRequired,
-  async (req, res, next) => {
-    try {
-      const note = await Notes.findBy({
-        profile_id_mentee: req.params.profile_id_mentee,
-      });
-      res.status(200).json(note);
-    } catch (error) {
-      next(error);
-    }
+router.get('/mentee/:mentee_id', authRequired, async (req, res, next) => {
+  try {
+    const note = await Notes.findBy({
+      mentee_id: req.params.mentee_id,
+    });
+    res.status(200).json(note);
+  } catch (error) {
+    next(error);
   }
-);
+});
 
 router.post('/', authRequired, checkBodyIsComplete, async (req, res, next) => {
   try {
     const newNote = {
       content_type: req.body.content_type,
+      status: req.body.status,
       content: req.body.content,
       level: req.body.level,
       visible_to_admin: req.body.visible_to_admin,
-      visible_to_moderator: req.body.visible_to_moderator,
       visible_to_mentor: req.body.visible_to_mentor,
-      profile_id_mentor: req.body.profile_id_mentor,
-      profile_id_mentee: req.body.profile_id_mentee,
+      mentor_id: req.body.mentor_id,
+      mentee_id: req.body.mentee_id,
     };
     const createdNote = await Notes.create(newNote);
     res.status(201).json(createdNote);
