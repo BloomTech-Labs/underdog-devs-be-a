@@ -1,7 +1,12 @@
 ! Please do not alter this file unless you have expressed consent from the Product Release Managers !
 
-# Testing your Components
-This is to be a standard for endpoint codes coming from the BACKEND. 
+# Summary
+This is to be a standard for Response Codes from backend endpoints. Response codes range from
+ - Sucess ( 200 - 299 )
+ - Redirect ( 300 - 399 )
+ - Client Errors ( 400 - 499 )
+ - Server Errors ( 500 - 599 )
+**400 & 500 Errors are General/Unknown Errors -- all others have known causes**
 
 ## Status Codes:
 Please see [documentation](https://github.com/mdn/content/blob/main/files/en-us/web/http/status/index.md?plain=1) if you have questions about implementation
