@@ -68,7 +68,7 @@ async function menteeApplicationData(profile_id) {
   return person;
 }
 
-async function CheckAverageAttendance(profile_id) {
+async function checkAverageAttendance(profile_id) {
   const meetings = await db('meetings')
     .whereNot('meeting_missed', 'Pending')
     .andWhere('attendee_id', profile_id);
@@ -97,5 +97,5 @@ module.exports = {
   updateIsActive,
   mentorApplicationData,
   menteeApplicationData,
-  CheckAverageAttendance,
+  checkAverageAttendance,
 };
