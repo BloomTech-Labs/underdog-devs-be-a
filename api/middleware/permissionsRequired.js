@@ -10,7 +10,7 @@ const superAdminRequired = async (req, res, next) => {
         next();
       } else {
         next({
-          status: 500,
+          status: 401,
           message: 'invalid credentials / not superadmin',
         });
       }
