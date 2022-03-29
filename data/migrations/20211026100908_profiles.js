@@ -21,7 +21,7 @@ exports.up = (knex) => {
       table.float('attendance_rate')
       .notNullable()
       .unsigned()
-      .default(1.0)
+      .default(1.0);
     });
 };
 
