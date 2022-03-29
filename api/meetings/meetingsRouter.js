@@ -169,7 +169,7 @@ function validProfileID(req, res, next) {
         req.profile = profile;
         next();
       } else {
-        res.status(400).json({
+        res.status(404).json({
           message: 'Invalid ID',
         });
       }
