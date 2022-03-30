@@ -8,7 +8,7 @@ exports.up = (knex) => {
       table.string('last_name');
       table.string('location');
       table.string('company');
-      table.string('tech_stack');
+      table.specificType('tech_stack', 'text ARRAY');
       table
         .integer('role_id')
         .unsigned()
