@@ -34,6 +34,7 @@ const progressionRouter = require('./progession/progressionRouter');
 const roleTicketsRouter = require('./roleTickets/roleTicketsRouter');
 const noteRouter = require('./notes/noteRouter');
 const reviewsRouter = require('./reviews/reviewsRouter');
+const ticketsRouter = require('./tickets/ticketsRouter');
 
 const app = express();
 
@@ -64,6 +65,7 @@ app.use('/', indexRouter);
 app.use('/profile', profileRouter);
 app.use('/data', dsRouter);
 app.use('/assignments', assignmentsRouter);
+app.use('/tickets', ticketsRouter);
 app.use('/application', applicationRouter);
 app.use('/meetings', meetingsRouter);
 app.use('/actions', actionsRouter);
