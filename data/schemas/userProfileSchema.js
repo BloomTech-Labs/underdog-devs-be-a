@@ -23,8 +23,8 @@ const validateSelfUpdate = yup.object().shape({
     .trim()
     .max(255, '"company" must be shorter than 255 characters'),
     tech_stack: yup
-    .string()
-    .max(255, '"tech_stack" must be shorter than 255 characters'),
+    .array()
+    .of(yup.string().trim().max(255, '"tech_stack" must be shorter than 255 characters')),
 
 }).noUnknown(true).strict(true);
 
