@@ -260,7 +260,7 @@ router.put(
         Profiles.update(user.profile_id, changes)
           .then(async (updated) => {
             await dsService.postProfileUpdate(updated, updated.role_id);
-            res.status(200).json({ updated_profile: updated });
+            res.status(200).json({ updated_profile: updated[0] });
           })
           .catch(() => {
             next({
@@ -288,7 +288,7 @@ router.put('/:id', adminRequired, authRequired, (req, res, next) => {
       Profiles.update(req.params.id, changes)
         .then(async (updated) => {
           await dsService.postProfileUpdate(updated, updated.role_id);
-          res.status(200).json({ updated_profile: updated });
+          res.status(200).json({ updated_profile: updated[0] });
         })
         .catch(() => {
           next({
