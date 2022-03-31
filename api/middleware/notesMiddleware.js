@@ -112,7 +112,11 @@ const checkStatusEnum = (req, res, next) => {
     ) {
       next();
     } else {
-      res.status(4);
+      next({
+        status: 400,
+        message:
+          'status must be : "in progress", "resolved", "no action needed" or "escalated"',
+      });
     }
   } catch (err) {
     next(err);

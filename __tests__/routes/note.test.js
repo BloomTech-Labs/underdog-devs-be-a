@@ -132,6 +132,7 @@ describe('Notes Router', () => {
       });
     });
     describe('failed', () => {
+      //-----------------------------------------------
       describe('case - not enough fields', () => {
         let res;
         beforeAll(async () => {
@@ -153,6 +154,78 @@ describe('Notes Router', () => {
           expect(actual).toMatch(expected);
         });
       });
+      //-----------------------------------------------
+      describe('case - invalid status', () => {
+        let res;
+        beforeAll(async () => {
+          res = await request(app).post('/notes').send({
+            content_type: 'type a',
+            status: 'in progresses',
+            content: 'expect some text here',
+            level: 'low',
+            visible_to_admin: true,
+            visible_to_mentor: true,
+            mentor_id: '00u13omswyZM1xVya4x7',
+            mentee_id: '00u13oned0U8XP8Mb4x7',
+          });
+        });
+
+        it('responds with error message, please include all note data', async () => {
+          const expected = /status must be /i;
+          const actual = res.body.message;
+          expect(actual).toMatch(expected);
+        });
+      });
+      //-------------------------------------------------
+      describe('case - mentor_id not found', () => {
+        let res;
+        beforeAll(async () => {
+          res = await request(app).post('/notes').send({
+            content_type: 'type a',
+            status: 'in progresses',
+            content: 'expect some text here',
+            level: 'low',
+            visible_to_admin: true,
+            visible_to_mentor: true,
+            mentor_id: '00u13omswyZM1xVya4x77',
+            mentee_id: '00u13oned0U8XP8Mb4x7',
+          });
+        });
+
+        it('responds with error message, please include all note data', async () => {
+          const expected = /status must be /i;
+          const actual = res.body.message;
+          expect(actual).toMatch(expected);
+        });
+      });
+      //-------------------------------------------------
+      describe('case - mentee_id not found', () => {
+        let res;
+        beforeAll(async () => {
+          res = await request(app).post('/notes').send({
+            content_type: 'type a',
+            status: 'in progresses',
+            content: 'expect some text here',
+            level: 'low',
+            visible_to_admin: true,
+            visible_to_mentor: true,
+            mentor_id: '00u13omswyZM1xVya4x7',
+            mentee_id: '00u13oned0U8XP8Mb4x77',
+          });
+        });
+
+        it('responds with error message, please include all note data', async () => {
+          const expected = /status must be /i;
+          const actual = res.body.message;
+          expect(actual).toMatch(expected);
+        });
+      });
+      //-------------------------------------------------
+      //-------------------------------------------------
+      //-------------------------------------------------
+      //-------------------------------------------------
+      //-------------------------------------------------
+      //-------------------------------------------------
     });
   });
 

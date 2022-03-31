@@ -9,6 +9,7 @@ const {
   checkUpdateInfo,
   checkMenteeIdExists,
   checkMentorIdExists,
+  checkStatusEnum,
 } = require('../middleware/notesMiddleware');
 
 router.get('/', authRequired, async (req, res, next) => {
@@ -54,6 +55,7 @@ router.post(
   '/',
   authRequired,
   checkBodyIsComplete,
+  checkStatusEnum,
   checkMenteeIdExists,
   checkMentorIdExists,
   async (req, res, next) => {
