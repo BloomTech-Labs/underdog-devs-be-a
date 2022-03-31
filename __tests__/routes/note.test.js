@@ -122,7 +122,6 @@ describe('Notes Router', () => {
       it('responds with non empty object', async () => {
         const expected = 5;
         const actual = res.body.length;
-        // console.log(res.body);
         expect(actual).toBe(expected);
       });
     });
@@ -293,7 +292,6 @@ describe('Notes Router', () => {
       });
 
       it('content to match new content', async () => {
-        console.log(resPost.body[0].note_id);
         const expected = /new content/i;
         const actual = resPut.text;
         expect(actual).toMatch(expected);
@@ -324,7 +322,6 @@ describe('Notes Router', () => {
         });
 
         it('content to match new content', async () => {
-          console.log(resPost.body[0].note_id);
           const expected = /id does not exist/i;
           const actual = resPut.body.message;
           expect(actual).toMatch(expected);
@@ -359,7 +356,6 @@ describe('Notes Router', () => {
       });
 
       it('content to match new content', async () => {
-        console.log(resPost.body[0].note_id);
         const expected = 200;
         const actual = resDelete.status;
         expect(actual).toBe(expected);
