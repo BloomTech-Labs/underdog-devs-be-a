@@ -41,7 +41,7 @@ router.get(
   checkMenteeIdExists,
   async (req, res, next) => {
     try {
-      const note = await Notes.findBy({
+      const note = await Notes.filterBy({
         mentee_id: req.params.mentee_id,
       });
       res.status(200).json(note);

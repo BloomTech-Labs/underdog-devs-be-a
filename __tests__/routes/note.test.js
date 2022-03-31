@@ -58,13 +58,7 @@ describe('Notes Router', () => {
         expect(actual).toBe(expected);
       });
     });
-    describe('failed', () => {
-      describe('case - failed authentication', () => {
-        it.skip('failed authentication test????', () => {
-          expect(1).toBe(2);
-        });
-      });
-    });
+    describe('failed', () => {});
   });
 
   describe('[GET] /notes/note_id', () => {
@@ -107,11 +101,50 @@ describe('Notes Router', () => {
           expect(actual).toBe(expected);
         });
       });
+    });
+  });
 
-      describe('case - no fail to authenticate', () => {
-        it.skip('fail to authenticate', () => {
-          expect(1).toBe(2);
+  describe('[GET] /notes/mentee/mentee_id', () => {
+    describe('succeed', () => {
+      let res;
+      beforeAll(async () => {
+        res = await request(app).get('/notes/mentee/00ultwqjtqt4VCcS24x6');
+      });
+      it('requires authentication', () => {
+        expect(authRequired).toBeCalled();
+      });
+      it('responds with status 200', async () => {
+        const expected = 200;
+        const actual = res.status;
+        expect(actual).toBe(expected);
+      });
+
+      it('responds with non empty object', async () => {
+        const expected = 5;
+        const actual = res.body.length;
+        // console.log(res.body);
+        expect(actual).toBe(expected);
+      });
+    });
+
+    describe('failed', () => {
+      describe('case - failed 404 error', () => {
+        let res;
+        beforeAll(async () => {
+          res = await request(app).get('/notes/mentee/-1');
         });
+        it('requires authentication', () => {
+          expect(authRequired).toBeCalled();
+        });
+        it('responds with status 200', async () => {
+          const expected = 404;
+          const actual = res.status;
+          expect(actual).toBe(expected);
+        });
+      });
+
+      it('sanity', () => {
+        expect(1).toBe(1);
       });
     });
   });
@@ -230,12 +263,6 @@ describe('Notes Router', () => {
           expect(actual).toMatch(expected);
         });
       });
-
-      describe('case - no fail to authenticate', () => {
-        it.skip('fail to authenticate', () => {
-          expect(1).toBe(2);
-        });
-      });
     });
   });
 
@@ -303,16 +330,6 @@ describe('Notes Router', () => {
           expect(actual).toMatch(expected);
         });
       });
-
-      describe('case - when the user submit the same content???', () => {
-        it.skip('(need description)', () => {});
-      });
-
-      describe('case - no id not found', () => {
-        it.skip('fail to authenticate', () => {
-          expect(1).toBe(2);
-        });
-      });
     });
   });
 
@@ -352,7 +369,7 @@ describe('Notes Router', () => {
       describe('case - no id not found', () => {
         let resDelete;
         beforeAll(async () => {
-          resDelete = await request(app).delete(`/notes/99999999`);
+          resDelete = await request(app).delete(`/notes/-1`);
         });
 
         it('requires authentication', () => {
@@ -363,12 +380,6 @@ describe('Notes Router', () => {
           const expected = /id does not exist/i;
           const actual = resDelete.body.message;
           expect(actual).toMatch(expected);
-        });
-      });
-
-      describe('case - no id not found', () => {
-        it.skip('fail to authenticate', () => {
-          expect(1).toBe(2);
         });
       });
     });
