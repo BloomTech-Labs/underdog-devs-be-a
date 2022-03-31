@@ -19,15 +19,38 @@ const checkNoteExists = async (req, res, next) => {
   }
 };
 
-const checkProfileIdExists = async (req, res, next) => {
+const helper_checkProfileIdExists = async (profile_id) => {
+  const profile = await Profile_Model.findById(profile_id);
+  return Boolean(profile);
+};
+
+const checkMenteeIdExists = async (req, res, next) => {
   try {
-    const profile = await Profile_Model.findById({
-      profile_id: req.params.mentee_id,
-    });
-    if (!profile) {
+    const boolean = await helper_checkProfileIdExists(
+      req.params.mentee_id || req.body.mentee_id
+    );
+    if (!boolean) {
       next({
         status: 404,
         message: 'mentee_id not found',
+      });
+    } else {
+      next();
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+const checkMentorIdExists = async (req, res, next) => {
+  try {
+    const boolean = await helper_checkProfileIdExists(
+      req.params.mentee_id || req.body.mentee_id
+    );
+    if (!boolean) {
+      next({
+        status: 404,
+        message: 'mentor_id not found',
       });
     } else {
       next();
@@ -78,9 +101,29 @@ const checkUpdateInfo = (req, res, next) => {
   }
 };
 
+const checkStatusEnum = (req, res, next) => {
+  try {
+    const status = req.body.status.toLowerCase().trim();
+    if (
+      status === 'in progress' ||
+      status === 'resolved' ||
+      status === 'no action needed' ||
+      status === 'escalated'
+    ) {
+      next();
+    } else {
+      res.status(4);
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   checkNoteExists,
   checkBodyIsComplete,
   checkUpdateInfo,
-  checkProfileIdExists,
+  checkMenteeIdExists,
+  checkMentorIdExists,
+  checkStatusEnum,
 };
