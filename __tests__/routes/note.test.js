@@ -85,7 +85,7 @@ describe('Notes Router', () => {
       });
 
       it('responds with non empty object', async () => {
-        const expected = /some text here/;
+        const expected = /some text here/i;
         const actual = res.text;
         expect(actual).toMatch(expected);
       });
@@ -267,7 +267,7 @@ describe('Notes Router', () => {
 
       it('content to match new content', async () => {
         console.log(resPost.body[0].note_id);
-        const expected = /new content/;
+        const expected = /new content/i;
         const actual = resPut.text;
         expect(actual).toMatch(expected);
       });
