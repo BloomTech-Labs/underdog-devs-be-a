@@ -5,8 +5,6 @@ const authRequired = require('../../api/middleware/authRequired');
 const handleError = require('../../api/middleware/handleError');
 const notesRouter = require('../../api/notes/noteRouter');
 
-// Reset Test Database Before/After Tests
-
 beforeAll(async () => {
   await db.migrate.rollback();
   await db.migrate.latest();
@@ -25,8 +23,6 @@ jest.mock('../../api/middleware/permissionsRequired', () => ({
   adminRequired: jest.fn((req, res, next) => next()),
   superAdminRequired: jest.fn((req, res, next) => next()),
 }));
-
-// Instantiate Test API
 
 const app = express();
 app.use(express.json());
@@ -67,6 +63,12 @@ describe('Notes Router', () => {
         it.skip('failed authentication test????', () => {
           expect(1).toBe(2);
         });
+      });
+    });
+
+    describe('case - no fail to authenticate', () => {
+      it.skip('fail to authenticate', () => {
+        expect(1).toBe(2);
       });
     });
   });
@@ -111,6 +113,12 @@ describe('Notes Router', () => {
           expect(actual).toBe(expected);
         });
       });
+
+      describe('case - no fail to authenticate', () => {
+        it.skip('fail to authenticate', () => {
+          expect(1).toBe(2);
+        });
+      });
     });
   });
 
@@ -141,7 +149,6 @@ describe('Notes Router', () => {
       });
     });
     describe('failed', () => {
-      //-----------------------------------------------
       describe('case - not enough fields', () => {
         let res;
         beforeAll(async () => {
@@ -163,7 +170,7 @@ describe('Notes Router', () => {
           expect(actual).toMatch(expected);
         });
       });
-      //-----------------------------------------------
+
       describe('case - invalid status', () => {
         let res;
         beforeAll(async () => {
@@ -185,7 +192,7 @@ describe('Notes Router', () => {
           expect(actual).toMatch(expected);
         });
       });
-      //-------------------------------------------------
+
       describe('case - mentor_id not found', () => {
         let res;
         beforeAll(async () => {
@@ -207,7 +214,7 @@ describe('Notes Router', () => {
           expect(actual).toMatch(expected);
         });
       });
-      //-------------------------------------------------
+
       describe('case - mentee_id not found', () => {
         let res;
         beforeAll(async () => {
@@ -229,7 +236,12 @@ describe('Notes Router', () => {
           expect(actual).toMatch(expected);
         });
       });
-      //-------------------------------------------------
+
+      describe('case - no fail to authenticate', () => {
+        it.skip('fail to authenticate', () => {
+          expect(1).toBe(2);
+        });
+      });
     });
   });
 
@@ -267,7 +279,6 @@ describe('Notes Router', () => {
       });
     });
     describe('failed', () => {
-      //--------------------------------------------------
       describe('case - invalid note_id', () => {
         let resPost, resPut;
         beforeAll(async () => {
@@ -298,9 +309,15 @@ describe('Notes Router', () => {
           expect(actual).toMatch(expected);
         });
       });
-      //--------------------------------------------------
+
       describe('case - when the user submit the same content???', () => {
         it.skip('(need description)', () => {});
+      });
+
+      describe('case - no id not found', () => {
+        it.skip('fail to authenticate', () => {
+          expect(1).toBe(2);
+        });
       });
     });
   });
@@ -352,6 +369,12 @@ describe('Notes Router', () => {
           const expected = /id does not exist/i;
           const actual = resDelete.body.message;
           expect(actual).toMatch(expected);
+        });
+      });
+
+      describe('case - no id not found', () => {
+        it.skip('fail to authenticate', () => {
+          expect(1).toBe(2);
         });
       });
     });
