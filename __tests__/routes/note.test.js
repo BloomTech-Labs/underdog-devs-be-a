@@ -46,20 +46,28 @@ describe('Sanity Checks', () => {
 
 describe('Notes Router', () => {
   describe('[GET] /notes', () => {
-    let res;
-    beforeAll(async () => {
-      res = await request(app).get('/notes');
+    describe('succeed', () => {
+      let res;
+      beforeAll(async () => {
+        res = await request(app).get('/notes');
+      });
+
+      it('requires authentication', () => {
+        expect(authRequired).toBeCalled();
+      });
+
+      it('responds with status 200', async () => {
+        const expected = 200;
+        const actual = res.status;
+        expect(actual).toBe(expected);
+      });
     });
-
-    it('requires authentication', () => {
-      expect(authRequired).toBeCalled();
-    });
-
-    it('responds with status 200', async () => {
-      const expected = 200;
-      const actual = res.status;
-
-      expect(actual).toBe(expected);
+    describe('failed', () => {
+      describe('case - failed authentication', () => {
+        it.skip('failed authentication test????', () => {
+          expect(1).toBe(2);
+        });
+      });
     });
   });
 
@@ -86,21 +94,22 @@ describe('Notes Router', () => {
         expect(actual).toMatch(expected);
       });
     });
+    describe('failed', () => {
+      describe('case - failed 404 error', () => {
+        let res;
+        beforeAll(async () => {
+          res = await request(app).get('/notes/100');
+        });
 
-    describe('failed 404 error', () => {
-      let res;
-      beforeAll(async () => {
-        res = await request(app).get('/notes/100');
-      });
+        it('requires authentication', () => {
+          expect(authRequired).toBeCalled();
+        });
 
-      it('requires authentication', () => {
-        expect(authRequired).toBeCalled();
-      });
-
-      it('responds with status 200', async () => {
-        const expected = 404;
-        const actual = res.status;
-        expect(actual).toBe(expected);
+        it('responds with status 200', async () => {
+          const expected = 404;
+          const actual = res.status;
+          expect(actual).toBe(expected);
+        });
       });
     });
   });
@@ -221,11 +230,6 @@ describe('Notes Router', () => {
         });
       });
       //-------------------------------------------------
-      //-------------------------------------------------
-      //-------------------------------------------------
-      //-------------------------------------------------
-      //-------------------------------------------------
-      //-------------------------------------------------
     });
   });
 
@@ -233,7 +237,6 @@ describe('Notes Router', () => {
     describe('succeed', () => {
       let resPost, resPut;
       beforeAll(async () => {
-        //step 1 - post a new note
         resPost = await request(app).post('/notes').send({
           content_type: 'type a',
           status: 'in progress',
@@ -245,7 +248,6 @@ describe('Notes Router', () => {
           mentee_id: '00u13oned0U8XP8Mb4x7',
         });
 
-        //step 2 - put the note
         resPut = await request(app)
           .put(`/notes/${resPost.body[0].note_id}`)
           .send({
@@ -257,7 +259,6 @@ describe('Notes Router', () => {
         expect(authRequired).toBeCalled();
       });
 
-      //step 3 - assertion
       it('content to match new content', async () => {
         console.log(resPost.body[0].note_id);
         const expected = /new content/;
@@ -270,7 +271,6 @@ describe('Notes Router', () => {
       describe('case - invalid note_id', () => {
         let resPost, resPut;
         beforeAll(async () => {
-          //step 1 - post a new note
           resPost = await request(app).post('/notes').send({
             content_type: 'type a',
             status: 'in progress',
@@ -282,7 +282,6 @@ describe('Notes Router', () => {
             mentee_id: '00u13oned0U8XP8Mb4x7',
           });
 
-          //step 2 - put the note
           resPut = await request(app).put(`/notes/9999999`).send({
             content: 'new content',
           });
@@ -292,7 +291,6 @@ describe('Notes Router', () => {
           expect(authRequired).toBeCalled();
         });
 
-        //step 3 - assertion
         it('content to match new content', async () => {
           console.log(resPost.body[0].note_id);
           const expected = /id does not exist/i;
@@ -311,7 +309,6 @@ describe('Notes Router', () => {
     describe('succeed', () => {
       let resPost, resDelete;
       beforeAll(async () => {
-        //step 1 - post a new note
         resPost = await request(app).post('/notes').send({
           content_type: 'type a',
           content: 'some text here',
@@ -324,7 +321,6 @@ describe('Notes Router', () => {
           mentee_id: '00u13oned0U8XP8Mb4x7',
         });
 
-        //step 2 - put the note
         resDelete = await request(app).delete(
           `/notes/${resPost.body[0].note_id}`
         );
@@ -334,7 +330,6 @@ describe('Notes Router', () => {
         expect(authRequired).toBeCalled();
       });
 
-      //step 3 - assertion
       it('content to match new content', async () => {
         console.log(resPost.body[0].note_id);
         const expected = 200;
@@ -343,10 +338,9 @@ describe('Notes Router', () => {
       });
     });
     describe('failed', () => {
-      describe('case - not id not found', () => {
+      describe('case - no id not found', () => {
         let resDelete;
         beforeAll(async () => {
-          //step 2 - put the note
           resDelete = await request(app).delete(`/notes/99999999`);
         });
 
@@ -354,7 +348,6 @@ describe('Notes Router', () => {
           expect(authRequired).toBeCalled();
         });
 
-        //step 3 - assertion
         it('content to match new content', async () => {
           const expected = /id does not exist/i;
           const actual = resDelete.body.message;
