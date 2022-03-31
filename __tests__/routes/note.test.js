@@ -65,12 +65,6 @@ describe('Notes Router', () => {
         });
       });
     });
-
-    describe('case - no fail to authenticate', () => {
-      it.skip('fail to authenticate', () => {
-        expect(1).toBe(2);
-      });
-    });
   });
 
   describe('[GET] /notes/note_id', () => {
