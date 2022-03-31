@@ -299,19 +299,8 @@ describe('Notes Router', () => {
     });
     describe('failed', () => {
       describe('case - invalid note_id', () => {
-        let resPost, resPut;
+        let resPut;
         beforeAll(async () => {
-          resPost = await request(app).post('/notes').send({
-            content_type: 'type a',
-            status: 'in progress',
-            content: 'some text here',
-            level: 'low',
-            visible_to_admin: true,
-            visible_to_mentor: true,
-            mentor_id: '00u13omswyZM1xVya4x7',
-            mentee_id: '00u13oned0U8XP8Mb4x7',
-          });
-
           resPut = await request(app).put(`/notes/9999999`).send({
             content: 'new content',
           });
