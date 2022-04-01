@@ -20,6 +20,7 @@ const checkNoteExists = async (req, res, next) => {
 
 const checkBodyIsComplete = (req, res, next) => {
   const {
+    created_by,
     content_type,
     status,
     content,
@@ -30,6 +31,7 @@ const checkBodyIsComplete = (req, res, next) => {
     mentee_id,
   } = req.body;
   if (
+    !created_by ||
     !content_type ||
     !status ||
     !content ||
