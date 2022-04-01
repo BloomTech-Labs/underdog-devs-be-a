@@ -4,6 +4,13 @@ exports.up = (knex) => {
     .createTable('notes', function (table) {
       table.increments('note_id').primary().notNullable();
       table
+        .string('created_by')
+        .notNullable()
+        .references('profile_id')
+        .inTable('profiles')
+        .onDelete('RESTRICT')
+        .onUpdate('RESTRICT');
+      table
         .enu('status', [
           'in progress',
           'resolved',
