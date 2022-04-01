@@ -17,7 +17,11 @@ module.exports = {
         description: 'Everything about your status',
       },
       {
-        name: 'profiles',
+        name: 'profile',
+        description: 'Operations for profile',
+      },
+      {
+        name: 'assignments',
         description: 'Operations for profile',
       },
       {
@@ -42,11 +46,17 @@ module.exports = {
         },
       },
       responses: {
+        GeneralErr: {
+          description: 'Something wrong in the frontend, not backend.',
+        },
         UnauthorizedError: {
-          description: 'Access token is missing or invalid',
+          description: 'Access token is missing or invalid.',
         },
         BadRequest: {
-          description: 'Bad request. profile already exists',
+          description: 'Bad request. Already exists',
+        },
+        Forbidden: {
+          description: 'You do not have authorization to be here.',
         },
         NotFound: {
           description: 'Not Found',
