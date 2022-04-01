@@ -23,6 +23,7 @@ exports.up = (knex) => {
       table.string('level').notNullable();
       table.boolean('visible_to_admin').notNullable();
       table.boolean('visible_to_mentor').notNullable();
+      table.boolean('visible_to_mentee').notNullable();
       table
         .string('mentor_id')
         .notNullable()
