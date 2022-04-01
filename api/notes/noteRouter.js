@@ -2,10 +2,11 @@ const express = require('express');
 const Notes = require('./noteModel');
 const router = express.Router();
 const authRequired = require('../middleware/authRequired');
+const validation = require('../middleware/validation');
+const notesSchema = require('../../data/schemas/notesSchema');
 
 const {
   checkNoteExists,
-  checkBodyIsComplete,
   checkUpdateInfo,
 } = require('../middleware/notesMiddleware');
 
@@ -43,24 +44,31 @@ router.get('/mentee/:mentee_id', authRequired, async (req, res, next) => {
   }
 });
 
-router.post('/', authRequired, checkBodyIsComplete, async (req, res, next) => {
-  try {
-    const newNote = {
-      content_type: req.body.content_type,
-      status: req.body.status,
-      content: req.body.content,
-      level: req.body.level,
-      visible_to_admin: req.body.visible_to_admin,
-      visible_to_mentor: req.body.visible_to_mentor,
-      mentor_id: req.body.mentor_id,
-      mentee_id: req.body.mentee_id,
-    };
-    const createdNote = await Notes.create(newNote);
-    res.status(201).json(createdNote);
-  } catch (error) {
-    next(error);
+router.post(
+  '/',
+  authRequired,
+  validation(notesSchema),
+  async (req, res, next) => {
+    try {
+      const newNote = {
+        created_by: req.body.created_by,
+        content_type: req.body.content_type,
+        status: req.body.status,
+        content: req.body.content,
+        level: req.body.level,
+        visible_to_admin: req.body.visible_to_admin,
+        visible_to_mentor: req.body.visible_to_mentor,
+        visible_to_mentee: req.body.visible_to_mentee,
+        mentor_id: req.body.mentor_id,
+        mentee_id: req.body.mentee_id,
+      };
+      const createdNote = await Notes.create(newNote);
+      res.status(201).json(createdNote);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 router.put(
   '/:note_id',

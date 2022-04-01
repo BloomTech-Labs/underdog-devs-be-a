@@ -1,16 +1,13 @@
 const yup = require('yup');
 
+//note_id, created_at timestamp, and updated_at timestamp not included in schema because they are generated automatically for each note
 const notesSchema = yup.object({
-  note_id: yup
-    .number()
-    .required('note id required')
-    .integer('note id must be an integer')
-    .positive('note id must be positive'),
   created_by: yup.string().required('profile id required'),
+  content_type: yup.string().required('content type required'),
   status: yup
+    .string()
     .oneOf(['in progress', 'resolved', 'no action needed', 'escalated'])
     .required('status required'),
-  content_type: yup.string().required('content type required'),
   content: yup.string().required('content required'),
   level: yup.string().required('level required'),
   visible_to_admin: yup

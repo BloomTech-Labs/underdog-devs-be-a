@@ -18,36 +18,6 @@ const checkNoteExists = async (req, res, next) => {
   }
 };
 
-const checkBodyIsComplete = (req, res, next) => {
-  const {
-    content_type,
-    status,
-    content,
-    level,
-    visible_to_admin,
-    visible_to_mentor,
-    mentor_id,
-    mentee_id,
-  } = req.body;
-  if (
-    !content_type ||
-    !status ||
-    !content ||
-    !level ||
-    !visible_to_admin ||
-    !visible_to_mentor ||
-    !mentor_id ||
-    !mentee_id
-  ) {
-    next({
-      status: 400,
-      message: 'Please include all note data',
-    });
-  } else {
-    next();
-  }
-};
-
 const checkUpdateInfo = (req, res, next) => {
   if (!req.params.note_id || !req.body) {
     next({
@@ -61,6 +31,5 @@ const checkUpdateInfo = (req, res, next) => {
 
 module.exports = {
   checkNoteExists,
-  checkBodyIsComplete,
   checkUpdateInfo,
 };
