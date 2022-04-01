@@ -27,6 +27,7 @@ const checkBodyIsComplete = (req, res, next) => {
     level,
     visible_to_admin,
     visible_to_mentor,
+    visible_to_mentee,
     mentor_id,
     mentee_id,
   } = req.body;
@@ -38,6 +39,7 @@ const checkBodyIsComplete = (req, res, next) => {
     !level ||
     !visible_to_admin ||
     !visible_to_mentor ||
+    !visible_to_mentee ||
     !mentor_id ||
     !mentee_id
   ) {
