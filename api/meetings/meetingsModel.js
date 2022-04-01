@@ -7,11 +7,12 @@ const findAll = async () => {
     .join('profiles as attendee', 'm.host_id', 'attendee.profile_id')
     .select(
       'm.*',
-      'mentor.first_name',
-      ' mentor.last_name',
-      'mentor.email',
-      'attendee.first_name as attendee-name',
-      'attendee.last_name as attendee-last'
+      'mentor.first_name as mentor.first-name',
+      'mentor.last_name as mentor.last-name',
+      'mentor.email as mentor-email',
+      'attendee.first_name as attendee.first-name',
+      'attendee.last_name as attendee.last-name',
+      'attendee.email as attendee-email'
     );
   return meetings;
 };
