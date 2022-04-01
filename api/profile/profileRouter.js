@@ -77,10 +77,16 @@ router.get('/current_user_profile/', authRequired, async (req, res, next) => {
  *                  email: 'cathy@example.com'
  *                  name: 'Cathy Warmund'
  *                  avatarUrl: 'https://s3.amazonaws.com/uifaces/faces/twitter/geneseleznev/128.jpg'
+ *      400:
+ *        $ref: '#/components/responses/GeneralErr'
  *      401:
  *        $ref: '#/components/responses/UnauthorizedError'
  *      403:
- *        $ref: '#/components/responses/UnauthorizedError'
+ *        $ref: '#/components/responses/Forbidden'
+ *      404:
+ *        $ref: '#/components/responses/NotFound'
+ *      407:
+ *        $ref: '#/components/responses/oktaErr'
  */
 router.get('/', authRequired, adminRequired, function (req, res, next) {
   Profiles.findAll()
@@ -186,7 +192,7 @@ router.get(
  *                profile:
  *                  $ref: '#/components/schemas/Profile'
  */
-router.post('/', authRequired, async (req, res, next) => {
+router.post('/', authRequired, async function (req, res, next) {
   const profile = req.body;
   if (profile) {
     const id = profile.id || 0;
