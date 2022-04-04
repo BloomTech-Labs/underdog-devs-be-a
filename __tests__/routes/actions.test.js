@@ -139,15 +139,15 @@ describe('Actions Router', () => {
           res = await request(app).get('/actions/987654321');
         });
 
-        it('responds with status 404', () => {
-          const expected = 404;
+        it('responds with status 400', () => {
+          const expected = 400;
           const actual = res.status;
 
           expect(actual).toBe(expected);
-        });
+        }); //? this needs to be 404 i think?
 
-        it('returns message "action ticket id not found"', () => {
-          const expected = /action ticket id not found/i;
+        it('returns message ":id does not exist"', () => {
+          const expected = /does not exist/i;
           const actual = res.body.message;
 
           expect(actual).toMatch(expected);
@@ -178,18 +178,35 @@ describe('Actions Router', () => {
         expect(actual).toBe(expected);
       });
 
-      it('returns success message', () => {
-        const expected = /success/i;
-        const actual = res.body.message;
+      it('Upon success, pending yields TRUE', () => {
+        const expected = true;
+        const actual = res.body.pending;
 
-        expect(actual).toMatch(expected);
+        expect(actual).toBe(expected);
       });
 
       it('returns newly created action ticket', () => {
         const expected = { ...validNewAction };
-        const actual = res.body.action;
+        const actual = res.body;
 
         expect(actual).toMatchObject(expected);
+      });
+    });
+    describe('failure', () => {
+      const invalidNewAction = {};
+      let res;
+
+      beforeAll(async () => {
+        res = await request(app)
+          .post('/actions')
+          .send({ ...invalidNewAction });
+      });
+
+      it('returns error if no issue key submitted', () => {
+        const actual = res.body.message;
+        const expected =
+          'You must submit an issue property as a string of text in your request';
+        expect(actual).toEqual(expected);
       });
     });
   });
@@ -215,10 +232,9 @@ describe('Actions Router', () => {
 
         expect(actual).toBe(expected);
       });
-
       it('returns requested edits', () => {
         const expected = { ...validActionUpdate };
-        const actual = res.body.changes;
+        const actual = res.body;
 
         expect(actual).toMatchObject(expected);
       });

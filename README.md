@@ -31,6 +31,10 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 
 # Endpoints
 
+## Response Codes
+[Status Codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#server_error_responses)
+Please see [this file](./__tests__/README.md) for more info.
+
 ## Status
 
 | Method | Endpoint | Request Body | Returns                    |
