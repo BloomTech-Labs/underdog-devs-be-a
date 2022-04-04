@@ -349,7 +349,7 @@ Please see [this file](./__tests__/README.md) for more info.
         "content_type": type here,
         "status": ["in progress", "resolved", "no action needed", "escalated"]
         "content": note text,
-        "level": low - high,
+        "level": low medium or high,
         "visible_to_admin": true,
         "visible_to_mentor": true,
         "mentor_id": profile_id of mentor(FK),
@@ -358,18 +358,18 @@ Please see [this file](./__tests__/README.md) for more info.
         "updated_at": timestamp with time zone
     }
 
-| Method | Endpoint                            | Required Request Body                           | Returns                           | User Auth |
-| ------ | ----------------------------------- | ----------------------------------------------- | --------------------------------- | --------- |
-| GET    | `/notes`                            | -                                               | `get all notes`                   | -         |
-| GET    | `/notes/:note_id`                   | `note_id`(params)                               | `get note by note_id`             | -         |
-| GET    | `/notes/mentee/:mentee_id`          | `mentee_id`(params)                             | `get notes by mentee_id`          | -         |
-| POST   | `/notes`                            | `content_type`,                                 | `newly created note`              | -         |
+| Method | Endpoint                            | Required Request Body                                 | Returns                           | User Auth |
+| ------ | ----------------------------------- | ----------------------------------------------------- | --------------------------------- | --------- |
+| GET    | `/notes`                            | -                                                     | `get all notes`                   | -         |
+| GET    | `/notes/:note_id`                   | `note_id`(params)                                     | `get note by note_id`             | -         |
+| GET    | `/notes/mentee/:mentee_id`          | `mentee_id`(params)                                   | `get notes by mentee_id`          | -         |
+| POST   | `/notes`                            | `content_type`,                                       | `newly created note`              | -         |
                                                  `status`,
                                                  `content`,
                                                  `level`,
                                                  `visible_to_admin`,
                                                  `visible_to_mentor`,
                                                  `mentor_id`,
-                                                 `mentee_id`                                     | `added note`                      | -         |
-| PUT    | `/notes/:note_id`                   | `note_id`(params), `field to change in body`    | `updated note`                    | -         |
-| DELETE | `/notes/:note_id`                   | `note_id`(params)                               | `remove note by note_id`          | -         |
+                                                 `mentee_id`                                           | `added note`                      | -         |
+| PUT    | `/notes/:note_id`                   | `note_id`(params), `status, content, and/or level`    | `updated note`                    | -         |
+| DELETE | `/notes/:note_id`                   | `note_id`(params)                                     | `remove note by note_id`          | -         |

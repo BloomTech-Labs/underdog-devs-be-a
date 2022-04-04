@@ -70,8 +70,19 @@ router.put(
   async (req, res, next) => {
     try {
       const note_id = req.params.note_id;
-      const content = req.body.content;
-      const updatedNote = await Notes.update(note_id, { content });
+      const { status, content, level } = req.body;
+      const updates = {};
+      if (status) {
+        updates.status = status;
+      }
+      if (content) {
+        updates.content = content;
+      }
+      if (level) {
+        updates.level = level;
+      }
+      console.log(updates);
+      const updatedNote = await Notes.update(note_id, updates);
       res.status(201).json(updatedNote);
     } catch (error) {
       next(error);
