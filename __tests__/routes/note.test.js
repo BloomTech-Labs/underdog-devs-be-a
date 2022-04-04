@@ -179,7 +179,6 @@ describe('Notes Router', () => {
         let res;
         beforeAll(async () => {
           res = await request(app).post('/notes').send({
-            // content_type: 'type a',
             status: 'in progress',
             content: 'expect some text here',
             level: 'low',
