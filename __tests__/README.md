@@ -13,6 +13,7 @@ Please see [documentation](https://github.com/mdn/content/blob/main/files/en-us/
 
 ### Successful Responses: (200 - 299)
 | Code | Constant                        | Reason Phrase                   |
+|------|-----------------------------|--------------------------------------------------|
 | 200 | Responding Properly | Used for Sucess messages that don't do anything else but respond successfully |
 | 201 | Created | Used for [POST] to denote that something was created |
 | 299 | Deprecated API | Propsed status code for deprecated API use ONLY |
@@ -20,6 +21,7 @@ Please see [documentation](https://github.com/mdn/content/blob/main/files/en-us/
 
 ### Failed Responses: (400 - 499)
 | Code | Constant                        | Reason Phrase                   |
+|------|-----------------------------|--------------------------------------------------|
 | 400 | Bad Request | Something has gone wrong on the database. |
 | 401 | Unauthorized | User does not have an Authorization Token to enter the server |
 | 403 | Forbidden | User has a means of Auth (token), but not the correct Auth for this endpoint use |
@@ -31,6 +33,7 @@ Please see [documentation](https://github.com/mdn/content/blob/main/files/en-us/
 
 ### Server Issues: (500 - 599)
 | Code | Constant                        | Reason Phrase                   |
+|------|-----------------------------|--------------------------------------------------|
 | 500 | Internal Server Error | The server has encountered a situation it does not know how to handle. |
 | 503 | Service Unavailable | The server is down for maintenance or is overloaded. Please try again later. |
 
@@ -38,6 +41,7 @@ Please see [documentation](https://github.com/mdn/content/blob/main/files/en-us/
 ###### (Probably no need for the below, but could be fun to encorporate somehow...)
 ### Redirect Responses: (300 - 399)
 | Code | Constant                        | Reason Phrase                   |
+|------|---------------------------------|--------------------------------------------------|
 | 302 | Found | The endpoint that is being requested does exist. This is usually followed up with one of the redirects below. |
 | 307 | Temporary Redirect | The endpoint that is being requested is underconstruction. Normally preceeded by a 302. |
 | 308 | Permanent Redirect | The endpoint that is requested here is located in another URI -- used to be here, but not anymore. Please dont change the [POST] endpoint, but your [GET] is incorrect and needs changing. |
@@ -45,6 +49,7 @@ Please see [documentation](https://github.com/mdn/content/blob/main/files/en-us/
 
 ###### Use Cases:
 | Code | Cases |
+|--------|-----------------------------|
 | 200 | General Successful response code. |
 | 201 | Successful response code for newly created request |
 | 299 | Successful, Deprecated Resource |
