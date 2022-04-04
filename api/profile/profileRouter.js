@@ -30,26 +30,29 @@ router.get('/current_user_profile/', authRequired, async (req, res, next) => {
  *    Profile:
  *      type: object
  *      required:
- *        - id
+ *        - profile_id
  *        - email
- *        - name
- *        - avatarUrl
+ *        - role_id
+ *        - attendance_rate
  *      properties:
- *        id:
+ *        profile_id:
  *          type: string
- *          description: This is a foreign key (the okta user ID)
+ *          description: This is a foreign key (the okta user profile_id)
  *        email:
  *          type: string
- *        name:
- *          type: string
- *        avatarUrl:
- *          type: string
- *          description: public url of profile avatar
+ *        role_id:
+ *          type: integer
+ *          description: foreign key from roles table
+ *        attendance_rate:
+ *          type: integer
+ *          description: integer based on meetings attended from the
  *      example:
- *        id: '00uhjfrwdWAQvD8JV4x6'
+ *        profile_id: '00uhjfrwdWAQvD8JV4x6'
  *        email: 'frank@example.com'
- *        name: 'Frank Martinez'
- *        avatarUrl: 'https://s3.amazonaws.com/uifaces/faces/twitter/hermanobrother/128.jpg'
+ *        first_name: 'Frank'
+ *        last_name: 'Martinez'
+ *        role_id: 4
+ *        attendance_rate: 1
  *
  * /profile:
  *  get:
@@ -69,24 +72,26 @@ router.get('/current_user_profile/', authRequired, async (req, res, next) => {
  *              items:
  *                $ref: '#/components/schemas/Profile'
  *              example:
- *                - id: '00uhjfrwdWAQvD8JV4x6'
+ *                - profile_id: '00uhjfrwdWAQvD8JV4x6'
  *                  email: 'frank@example.com'
- *                  name: 'Frank Martinez'
- *                  avatarUrl: 'https://s3.amazonaws.com/uifaces/faces/twitter/hermanobrother/128.jpg'
- *                - id: '013e4ab94d96542e791f'
+ *                  first_name: 'Frank'
+ *                  last_name: 'Martinez'
+ *                - profile_id: '013e4ab94d96542e791f'
  *                  email: 'cathy@example.com'
- *                  name: 'Cathy Warmund'
- *                  avatarUrl: 'https://s3.amazonaws.com/uifaces/faces/twitter/geneseleznev/128.jpg'
+ *                  first_name: 'Cathy'
+ *                  last_name: 'Warmund'
  *      400:
- *        $ref: '#/components/responses/GeneralErr'
+ *        $ref: '#/components/responses/BadRequest'
  *      401:
- *        $ref: '#/components/responses/UnauthorizedError'
+ *        $ref: '#/components/responses/Unauthorized'
  *      403:
  *        $ref: '#/components/responses/Forbidden'
  *      404:
  *        $ref: '#/components/responses/NotFound'
+ *      406:
+ *        $ref: '#/components/responses/UnacceptablePost'
  *      407:
- *        $ref: '#/components/responses/oktaErr'
+ *        $ref: '#/components/responses/OktaErr'
  */
 router.get('/', authRequired, adminRequired, function (req, res, next) {
   Profiles.findAll()
@@ -129,7 +134,7 @@ router.get('/', authRequired, adminRequired, function (req, res, next) {
  *            schema:
  *              $ref: '#/components/schemas/Profile'
  *      401:
- *        $ref: '#/components/responses/UnauthorizedError'
+ *        $ref: '#/components/responses/Unauthorized'
  *      404:
  *        description: 'Profile not found'
  */
@@ -175,7 +180,7 @@ router.get(
  *      400:
  *        $ref: '#/components/responses/BadRequest'
  *      401:
- *        $ref: '#/components/responses/UnauthorizedError'
+ *        $ref: '#/components/responses/Unauthorized'
  *      404:
  *        description: 'Profile not found'
  *      201:
@@ -233,7 +238,7 @@ router.post('/', authRequired, async function (req, res, next) {
  *            $ref: '#/components/schemas/Profile'
  *    responses:
  *      401:
- *        $ref: '#/components/responses/UnauthorizedError'
+ *        $ref: '#/components/responses/Unauthorized'
  *      404:
  *        $ref: '#/components/responses/NotFound'
  *      200:
@@ -294,7 +299,7 @@ router.put('/', authRequired, (req, res, next) => {
  *            $ref: '#/components/schemas/Profile'
  *    responses:
  *      401:
- *        $ref: '#/components/responses/UnauthorizedError'
+ *        $ref: '#/components/responses/Unauthorized'
  *      404:
  *        $ref: '#/components/responses/NotFound'
  *      200:
