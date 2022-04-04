@@ -5,6 +5,11 @@ const authRequired = require('../../api/middleware/authRequired');
 const handleError = require('../../api/middleware/handleError');
 const notesRouter = require('../../api/notes/noteRouter');
 
+const app = express();
+app.use(express.json());
+app.use('/notes', notesRouter);
+app.use(handleError);
+
 beforeAll(async () => {
   await db.migrate.rollback();
   await db.migrate.latest();
@@ -24,10 +29,6 @@ jest.mock('../../api/middleware/permissionsRequired', () => ({
   superAdminRequired: jest.fn((req, res, next) => next()),
 }));
 
-const app = express();
-app.use(express.json());
-app.use('/notes', notesRouter);
-app.use(handleError);
 describe('Sanity Checks', () => {
   test('matchers are working', () => {
     expect(true).toBe(true);
@@ -349,6 +350,7 @@ describe('Notes Router', () => {
         expect(actual).toBe(expected);
       });
     });
+
     describe('failed', () => {
       describe('case - no id not found', () => {
         let resDelete;
