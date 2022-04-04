@@ -46,11 +46,32 @@ module.exports = {
         },
       },
       responses: {
+        BadRequest: {
+          description: '400: Bad request. Client Error.',
+        },
         Unauthorized: {
           description: '401: Access token is missing or invalid.',
         },
-        BadRequest: {
-          description: '400: Bad request. Client Error.',
+        Forbidden: {
+          description: '403: You do not have authorization to be here.',
+        },
+        NotFound: {
+          description: '404: Not Found',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  message: {
+                    type: 'string',
+                    description: `The server has not found the requested'
+                       the URI.`,
+                    example: 'Not Found',
+                  },
+                },
+              },
+            },
+          },
         },
         UnacceptablePost: {
           description: '406: Unacceptable post request.',
@@ -72,26 +93,6 @@ module.exports = {
         OktaErr: {
           status: '499',
           description: '499: Third Party Auth Error.',
-        },
-        Forbidden: {
-          description: '403: You do not have authorization to be here.',
-        },
-        NotFound: {
-          description: '404: Not Found',
-          content: {
-            'application/json': {
-              schema: {
-                type: 'object',
-                properties: {
-                  message: {
-                    type: 'string',
-                    description: 'The server has not found the requested URI. ',
-                    example: 'Not Found',
-                  },
-                },
-              },
-            },
-          },
         },
       },
     },
