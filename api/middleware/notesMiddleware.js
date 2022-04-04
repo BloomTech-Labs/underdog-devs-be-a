@@ -49,10 +49,11 @@ const checkBodyIsComplete = (req, res, next) => {
 };
 
 const checkUpdateInfo = (req, res, next) => {
-  if (!req.params.note_id || !req.body) {
+  const { status, content, level } = req.body;
+  if (!status && !content && !level) {
     next({
       status: 400,
-      message: 'Please include note id and information to be updated',
+      message: 'Please include correct information to be updated',
     });
   } else {
     next();
