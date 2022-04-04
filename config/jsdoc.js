@@ -47,19 +47,16 @@ module.exports = {
       },
       responses: {
         GeneralErr: {
-          description: 'Something wrong in the frontend, not backend.',
+          description: '400: Client Error',
         },
-        UnauthorizedError: {
-          description: 'Access token is missing or invalid.',
+        Unauthorized: {
+          description: '401: Access token is missing or invalid.',
         },
         BadRequest: {
-          description: 'Bad request. Already exists',
+          description: '400: Bad request. Client Error.',
         },
-        Forbidden: {
-          description: 'You do not have authorization to be here.',
-        },
-        NotFound: {
-          description: 'Not Found',
+        UnacceptablePost: {
+          description: '406: Unacceptable post request.',
           content: {
             'application/json': {
               schema: {
@@ -67,7 +64,31 @@ module.exports = {
                 properties: {
                   message: {
                     type: 'string',
-                    description: 'A message about the result',
+                    description: 'When ready to deploy app - change to 404!',
+                    example: 'Cannot post. #Some_field# is probably missing.',
+                  },
+                },
+              },
+            },
+          },
+        },
+        OktaErr: {
+          status: '499',
+          description: '499: Third Party Auth Error.',
+        },
+        Forbidden: {
+          description: '403: You do not have authorization to be here.',
+        },
+        NotFound: {
+          description: '404: Not Found',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  message: {
+                    type: 'string',
+                    description: 'The server has not found the requested URI. ',
                     example: 'Not Found',
                   },
                 },
