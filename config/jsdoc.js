@@ -91,8 +91,23 @@ module.exports = {
           },
         },
         OktaErr: {
-          status: '499',
-          description: '499: Third Party Auth Error.',
+          description: `407: Third Party Auth Error.`,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  message: {
+                    type: 'string',
+                    description: `When ready to deploy app - change to 404!
+                    Generally used as a proxy definition. But we will use this as
+                    a Third Party error`,
+                    example: 'Okta server error - please contact support',
+                  },
+                },
+              },
+            },
+          },
         },
       },
     },
