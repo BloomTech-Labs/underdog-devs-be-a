@@ -26,7 +26,6 @@ const helper_checkProfileIdExists = async (profile_id) => {
 
 const checkMenteeIdExists = async (req, res, next) => {
   try {
-    // console.log('req.params.mentee_id = ', req.params);
     const boolean = await helper_checkProfileIdExists(
       req.params.mentee_id || req.body.mentee_id
     );
