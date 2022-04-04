@@ -10,7 +10,6 @@ const checkNoteExists = async (req, res, next) => {
         message: 'Note with given ID does not exist',
       });
     } else {
-      //appending the already retrieved note to the req body to avoid multiple DB queries
       req.body.retrievedNote = note;
       next();
     }
