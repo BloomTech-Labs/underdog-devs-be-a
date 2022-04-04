@@ -46,9 +46,6 @@ module.exports = {
         },
       },
       responses: {
-        GeneralErr: {
-          description: '400: Client Error',
-        },
         Unauthorized: {
           description: '401: Access token is missing or invalid.',
         },
