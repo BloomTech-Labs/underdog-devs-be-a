@@ -92,51 +92,14 @@ const axios = require('axios');
  *        $ref: '#/components/responses/UnauthorizedError'
  */
 
-// get all pending application tickets
-const dummyData = [
-  {
-    profile_id: '00u13omswyZM1xVya4x7',
-    first_name: 'User',
-    last_name: '6',
-    role_name: 'mentor',
-    created_at: '2022-03-11T22:34:47.794Z',
-    application_id: 5,
-    application_notes: '',
-    email: 'llama006@maildrop.cc',
-  },
-  {
-    profile_id: '10',
-    first_name: 'User',
-    last_name: '10',
-    role_name: 'mentee',
-    created_at: '2022-03-11T22:34:47.794Z',
-    application_id: 6,
-    application_notes: '',
-    email: 'llama0010@maildrop.cc',
-  },
-  {
-    profile_id: '00u13oned0U8XP8Mb4x7',
-    first_name: 'User',
-    last_name: '8',
-    role_name: 'mentee',
-    created_at: '2022-03-11T22:34:47.794Z',
-    application_id: 2,
-    application_notes: '',
-    email: 'llama008@maildrop.cc',
-  },
-  {
-    profile_id: '12',
-    first_name: 'User',
-    last_name: '12',
-    role_name: 'pending',
-    created_at: '2022-03-11T22:34:47.794Z',
-    application_id: 1,
-    application_notes: '',
-    email: 'llama0012@maildrop.cc',
-  },
-];
-router.get('/', authRequired, adminRequired, (req, res) => {
-  res.json(dummyData);
+// get all pending applications
+
+router.get('/', authRequired, adminRequired, (req, res, next) => {
+  Application.getPendingApplications()
+    .then((applicationList) => {
+      res.status(200).json(applicationList);
+    })
+    .catch(next);
 });
 
 /**
@@ -177,38 +140,12 @@ router.get('/', authRequired, adminRequired, (req, res) => {
 
 // get pending application tickets by role
 
-router.get('/:role', authRequired, adminRequired, (req, res) => {
-  if (req.params.role === 'mentor') {
-    res.json([
-      {
-        profile_id: '00u13omswyZM1xVya4x7',
-        first_name: 'User',
-        last_name: '6',
-        role_name: 'mentor',
-        created_at: '2022-03-11T22:34:47.794Z',
-        application_id: 5,
-      },
-    ]);
-  } else {
-    res.json([
-      {
-        profile_id: '00u13oned0U8XP8Mb4x7',
-        first_name: 'User',
-        last_name: '8',
-        role_name: 'mentee',
-        created_at: '2022-03-11T22:34:47.794Z',
-        application_id: 2,
-      },
-      {
-        profile_id: '10',
-        first_name: 'User',
-        last_name: '10',
-        role_name: 'mentee',
-        created_at: '2022-03-11T22:34:47.794Z',
-        application_id: 6,
-      },
-    ]);
-  }
+router.get('/:role', authRequired, adminRequired, (req, res, next) => {
+  Application.getPendingApplicationsByRole(req.params.role)
+    .then((applicationList) => {
+      res.status(200).json(applicationList);
+    })
+    .catch(next);
 });
 
 /**
