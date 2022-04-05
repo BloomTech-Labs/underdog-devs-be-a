@@ -4,7 +4,7 @@ exports.up = function (knex) {
     .createTable('mentee_intake', function (table) {
       table.increments('mentee_intake_id').notNullable().unique().primary();
       table
-        .string('role_id')
+        .integer('role_id')
         .unsigned()
         .notNullable()
         .references('role_id')
