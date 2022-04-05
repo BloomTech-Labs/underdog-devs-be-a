@@ -214,4 +214,16 @@ router.post('/', validateTicket, (req, res, next) => {
     .catch(next);
 });
 
+//PUT endpoint to update ticket status
+router.put('/:ticket_id', (req, res, next) => {
+  const { id } = req.params;
+  const { ticket_status } = req.body;
+  Tickets.updateTicketStatus(id, ticket_status)
+    .then(() => {
+      res
+        .status(200)
+        .json({ message: `Ticket status updated for Ticket with ${id}` });
+    })
+    .catch(next);
+});
 module.exports = router;

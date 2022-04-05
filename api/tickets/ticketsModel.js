@@ -41,9 +41,16 @@ async function add(ticket) {
     .first();
   return db('tickets as t').insert({ ...ticket, ticket_type: ticket_type_id });
 }
+function updateTicketStatus(ticket_id, ticket_status) {
+  return db('tickets')
+    .update({ ticket_status: ticket_status })
+    .where({ ticket_id: ticket_id })
+    .returning('*');
+}
 module.exports = {
   getPendingTickets,
   findById,
   findByTicketType,
   add,
+  updateTicketStatus,
 };
