@@ -11,7 +11,7 @@ exports.up = function (knex) {
         .inTable('ticket_types')
         .onDelete('CASCADE')
         .onUpdate('CASCADE');
-      table.string('ticket_status').notNullable();
+      table.string('ticket_status').default('pending');
       table.string('ticket_subject').notNullable();
       table
         .string('requested_for')
