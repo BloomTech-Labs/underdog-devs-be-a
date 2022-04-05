@@ -28,6 +28,10 @@ module.exports = {
         name: 'application',
         description: 'Operations for applications API',
       },
+      {
+        name: 'tickets',
+        description: 'Operations for tickets API',
+      },
     ],
     externalDocs: {
       description: 'Data Science scaffold service docs',
