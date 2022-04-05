@@ -6,7 +6,7 @@ function add(newApplication) {
   return db('applications').insert(newApplication);
 }
 
-function getPendingTickets() {
+function getPendingApplications() {
   return db('applications as a')
     .join('profiles as p', 'a.profile_id', 'p.profile_id')
     .join('roles as r', 'r.role_id', 'p.role_id')
@@ -23,7 +23,7 @@ function getPendingTickets() {
     .where('a.approved', false);
 }
 
-function getPendingTicketsByRole(role_name) {
+function getPendingApplicationsByRole(role_name) {
   return db('applications as a')
     .join('profiles as p', 'a.profile_id', 'p.profile_id')
     .join('roles as r', 'r.role_id', 'p.role_id')
@@ -116,8 +116,8 @@ module.exports = {
   add,
   updateTicket,
   getTicketById,
-  getPendingTickets,
-  getPendingTicketsByRole,
+  getPendingApplications,
+  getPendingApplicationsByRole,
   getMentorIntake,
   getMenteeIntake,
   insertMenteeIntake,
