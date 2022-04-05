@@ -6,10 +6,7 @@ const ticketsSchema = yup.object().shape({
     .string()
     .trim()
     .required('"ticket type" (string) is required'),
-  ticket_status: yup
-    .string()
-    .trim()
-    .required('"ticket status" (string) is required'),
+  ticket_status: yup.string().trim(),
   ticket_subject: yup
     .string()
     .trim()
