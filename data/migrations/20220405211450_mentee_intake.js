@@ -4,11 +4,11 @@ exports.up = function (knex) {
     .createTable('mentee_intake', function (table) {
       table.increments('mentee_intake_id').notNullable().unique().primary();
       table
-        .string('profile_id')
+        .string('role_id')
         .unsigned()
         .notNullable()
-        .references('profile_id')
-        .inTable('profiles')
+        .references('role_id')
+        .inTable('roles')
         .onDelete('RESTRICT')
         .onUpdate('RESTRICT');
       table.string('email').notNullable().unique();
