@@ -206,8 +206,12 @@ router.get('/:ticket_type', checkTicketType, authRequired, (req, res) => {
 
 //Post new ticket
 
-router.post('/', validateTicket, (req, res) => {
-  res.json(req.body);
+router.post('/', validateTicket, (req, res, next) => {
+  Tickets.add(req.body)
+    .then(() => {
+      res.status(200).json({ message: 'Ticket has been submitted' });
+    })
+    .catch(next);
 });
 
 module.exports = router;

@@ -34,7 +34,6 @@ const validateTicket = async (req, res, next) => {
     const payload = req.body;
     const validatedTicket = await ticketsSchema.validate(payload);
     if (validatedTicket) {
-      req.ticket = validateTicket;
       next();
     }
   } catch (err) {

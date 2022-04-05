@@ -34,8 +34,16 @@ function findByTicketType(ticket_type) {
     .where('ty.ticket_type', ticket_type);
 }
 
+async function add(ticket) {
+  const { ticket_type_id } = await db('ticket_types as ty')
+    .select('ty.ticket_type_id')
+    .where('ty.ticket_type', ticket.ticket_type)
+    .first();
+  return db('tickets as t').insert({ ...ticket, ticket_type: ticket_type_id });
+}
 module.exports = {
   getPendingTickets,
   findById,
   findByTicketType,
+  add,
 };
