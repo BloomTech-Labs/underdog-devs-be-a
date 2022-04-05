@@ -1,8 +1,8 @@
 exports.up = function (knex) {
   return knex.schema
     .raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"')
-    .createTable('application_tickets', function (table) {
-      table.increments('application_id').notNullable().unique().primary();
+    .createTable('mentor_application', function (table) {
+      table.increments('mentor_application_id');
       table
         .integer('position')
         .unsigned()
@@ -12,18 +12,41 @@ exports.up = function (knex) {
         .onDelete('RESTRICT')
         .onUpdate('RESTRICT');
       table
-        .string('profile_id')
+        .integer('mentor_intake_id')
         .notNullable()
-        .references('profile_id')
-        .inTable('profiles')
+        .references('mentor_intake_id')
+        .inTable('mentor_intake')
         .onDelete('RESTRICT')
         .onUpdate('RESTRICT');
       table.boolean('approved').notNullable().defaultTo(false);
       table.timestamps(true, true);
-      table.string('application_notes').defaultTo('');
+      table.string('mentor_application_notes').defaultTo('');
+    })
+    .createTable('mentee_application', function (table) {
+      table.increments('mentee_application_id');
+      table
+        .integer('position')
+        .unsigned()
+        .notNullable()
+        .references('role_id')
+        .inTable('roles')
+        .onDelete('RESTRICT')
+        .onUpdate('RESTRICT');
+      table
+        .integer('mentee_intake_id')
+        .notNullable()
+        .references('mentee_intake_id')
+        .inTable('mentee_intake')
+        .onDelete('RESTRICT')
+        .onUpdate('RESTRICT');
+      table.boolean('approved').notNullable().defaultTo(false);
+      table.timestamps(true, true);
+      table.string('mentee_application_notes').defaultTo('');
     });
 };
 
 exports.down = function (knex) {
-  return knex.schema.dropTableIfExists('application_tickets');
+  return knex.schema
+    .dropTableIfExists('mentor_application')
+    .dropTableIfExists('mentee_application');
 };
