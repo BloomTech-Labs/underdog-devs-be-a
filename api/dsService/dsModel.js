@@ -14,4 +14,19 @@ const postMeeting = (meeting) => {
   return dsClient.post(`/Meetings/create`, meeting);
 };
 
-module.exports = { getPrediction, getViz, postMeeting };
+function postProfileUpdate(update, role_id) {
+  const isMentor = role_id <= 3 ? 'Mentors' : 'Mentees';
+  const name = `${update.first_name} ${update.last_name}`;
+
+  const request = {
+    email: update.email,
+    name: name,
+    location: update.location,
+    company: update.company,
+    tech_stack: update.tech_stack,
+    attendance_rate: update.attendance_rate,
+  };
+  return dsClient.post(`/${isMentor}/update`, request);
+}
+
+module.exports = { getPrediction, getViz, postMeeting, postProfileUpdate };

@@ -57,15 +57,20 @@ Please see [this file](./__tests__/README.md) for more info.
 ###### Reference profile schema:
 
     {
-        "user_id": "00ulzfj6nX72gu3Nh4d6",
+        "profile_id": "00ulzfj6nX72gu3Nh4d6",
         "email": "email@email.mail",
         "first_name":"John",
         "last_name":"Doe",
+        "location": "Sedona, Arizona",
+        "company": "Unemployed",
+        "tech_stack": ["react", "msPaint"],
         "role_id": 3,
-        "role_name": "user",
-        "created_at": "2021-04-21T18:47:18.712Z",
-        "updated_at": "2021-04-21T18:47:18.712Z",
-        "approved": True
+        "created_at": "2022-03-30T23:36:21.053Z",
+        "updated_at": "2022-03-30T23:36:21.053Z",
+        "is_active": true,
+        "progress_status": null,
+        "attendance_rate": 0.4689,
+        "progress_id": null
     }
 
 | Method | Endpoint                  | Required Request Body | Returns                           | User Auth    |
@@ -74,7 +79,8 @@ Please see [this file](./__tests__/README.md) for more info.
 | GET    | `/profile/:id`            | -                     | `get profile by id`               | `Admin`      |
 | GET    | `/profile/current_user`   | -                     | `get current profile`             |              |
 | POST   | `/profile`                | `first/last, email`   | `create new profile`              |              |
-| PUT    | `/profile/:id`            | `first/last, email`   | `update a profile by profile id`  |              |
+| PUT    | `/profile/`               |                       | `update current profile`          |              |
+| PUT    | `/profile/:id`            |                       | `update a profile by profile id`  | `Admin`      |
 | PUT    | `/profile/roles`          | `role`                | `update a profiles role`          | `Admin`      |
 | PUT    | `/profile/is_active/:id`  | -                     | `activates/deactivates a profile` | `SuperAdmin` |
 
