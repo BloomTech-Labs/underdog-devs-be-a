@@ -22,15 +22,39 @@ function getPendingTickets() {
 
 function findById(profile_id) {
   return db('tickets as t')
-    .select('t.*', 'ty.ticket_type')
+    .select(
+      't.ticket_id',
+      't.ticket_type',
+      't.ticket_status',
+      't.ticket_subject',
+      'p.first_name',
+      'p.last_name',
+      't.urgent',
+      't.notes',
+      't.created_at',
+      'ty.ticket_type'
+    )
     .join('ticket_types as ty', 't.ticket_type', 'ty.ticket_type_id')
+    .join('profiles as p', 't.submitted_by', 'p.profile_id')
     .where('t.submitted_by', profile_id);
 }
 
 function findByTicketType(ticket_type) {
   return db('tickets as t')
-    .select('t.*', 'ty.ticket_type')
+    .select(
+      't.ticket_id',
+      't.ticket_type',
+      't.ticket_status',
+      't.ticket_subject',
+      'p.first_name',
+      'p.last_name',
+      't.urgent',
+      't.notes',
+      't.created_at',
+      'ty.ticket_type'
+    )
     .join('ticket_types as ty', 't.ticket_type', 'ty.ticket_type_id')
+    .join('profiles as p', 't.submitted_by', 'p.profile_id')
     .where('ty.ticket_type', ticket_type);
 }
 
@@ -41,16 +65,31 @@ async function add(ticket) {
     .first();
   return db('tickets as t').insert({ ...ticket, ticket_type: ticket_type_id });
 }
+
 function updateTicketStatus(ticket_id, ticket_status) {
   return db('tickets')
     .update({ ticket_status: ticket_status })
     .where({ ticket_id: ticket_id })
     .returning('*');
 }
+
+function updateNotes(ticket_id, changes) {
+  return db('tickets')
+    .update({ notes: changes })
+    .where({ ticket_id: ticket_id })
+    .returning('*');
+}
+
+function remove(ticket_id) {
+  return db('tickets').where({ ticket_id: ticket_id }).del();
+}
+
 module.exports = {
   getPendingTickets,
   findById,
   findByTicketType,
   add,
   updateTicketStatus,
+  updateNotes,
+  remove,
 };

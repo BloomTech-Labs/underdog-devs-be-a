@@ -18,7 +18,6 @@ const Tickets = require('./ticketsModel');
  *      type: object
  *      required:
  *        - ticket_type
- *        - ticket_status
  *        - ticket_subject
  *        - submitted_by
  *      properties:
@@ -30,7 +29,7 @@ const Tickets = require('./ticketsModel');
  *          description: Foreign key referencing a numeric ticket type ID referencing the ticket type
  *        ticket_status:
  *          type: string
- *          description: Status of whether or not a ticket has been approved
+ *          description: Status of whether or not a ticket has been approved. Defaults to pending
  *        ticket_subject:
  *          type: string
  *          description: Subject of the ticket
@@ -62,7 +61,8 @@ const Tickets = require('./ticketsModel');
  *          ticket_subject: "Spencer missed his 2nd weekly session, may be dropped?"
  *          request_for: "10"
  *          submitted_by: "7"
- *          approved_by: null
+ *          first_name: "User"
+ *          last_name: "11"
  *          urgent: false
  *          notes: null
  *          requested_role: null
@@ -95,7 +95,8 @@ const Tickets = require('./ticketsModel');
  *               ticket_subject: "Spencer missed his 2nd weekly session, may be dropped?"
  *               request_for: "10"
  *               submitted_by: "7"
- *               approved_by: null
+ *               first_name: "User"
+ *               last_name: "11"
  *               urgent: false
  *               notes: null
  *               requested_role: null
@@ -104,7 +105,7 @@ const Tickets = require('./ticketsModel');
  *       $ref: '#/components/responses/UnauthorizedError'
  */
 
-//get tickets by ticket_status = "pending"
+//get tickets by ticket_status equal to "pending"
 
 router.get('/', authRequired, adminRequired, (req, res, next) => {
   Tickets.getPendingTickets()
@@ -144,6 +145,8 @@ router.get('/', authRequired, adminRequired, (req, res, next) => {
  *             $ref: '#/components/schemas/Tickets'
  *     '401':
  *       $ref: '#/components/responses/UnauthorizedError'
+ *     '404':
+ *       $ref: '#/components/responses/NotFound'
  */
 
 //get tickets by submitted_by profile ID
@@ -187,8 +190,8 @@ router.get('/profile/:id', checkTicketExists, authRequired, (req, res) => {
  *             ticket_status: approved
  *             ticket_subject: Application for mentee
  *             requested_for: null
- *             submitted_by: 7
- *             approved_by: null
+ *             first_name: "User"
+ *             last_name: "11"
  *             urgent: false
  *             notes: null
  *             requested_role: 4
@@ -196,6 +199,8 @@ router.get('/profile/:id', checkTicketExists, authRequired, (req, res) => {
  *             updated_at: 2022-03-28T22:12:23.940Z
  *     '401':
  *       $ref: '#/components/responses/UnauthorizedError'
+ *     '404':
+ *       $ref: '#/components/responses/NotFound'
  */
 
 //get tickets by ticket_type
@@ -206,24 +211,51 @@ router.get('/:ticket_type', checkTicketType, authRequired, (req, res) => {
 
 //Post new ticket
 
-router.post('/', validateTicket, (req, res, next) => {
+router.post('/', validateTicket, authRequired, (req, res, next) => {
   Tickets.add(req.body)
     .then(() => {
-      res.status(200).json({ message: 'Ticket has been submitted' });
+      res.status(201).json({ message: 'Ticket has been submitted' });
     })
     .catch(next);
 });
 
-//PUT endpoint to update ticket status
-router.put('/:ticket_id', (req, res, next) => {
+//PUT endpoint to update ticket status by ticket ID
+
+router.put('/:id', authRequired, checkTicketExists, (req, res, next) => {
   const { id } = req.params;
   const { ticket_status } = req.body;
   Tickets.updateTicketStatus(id, ticket_status)
     .then(() => {
-      res
-        .status(200)
-        .json({ message: `Ticket status updated for Ticket with ${id}` });
+      res.status(200).json({
+        message: `Ticket status updated for Ticket with ${id}`,
+      });
     })
     .catch(next);
 });
+
+//PUT endpoint to update notes by ticket ID
+
+router.put('/notes/:id', authRequired, checkTicketExists, (req, res, next) => {
+  const { id } = req.params;
+  const { notes } = req.body;
+  Tickets.updateNotes(id, notes)
+    .then(() => {
+      res.status(200).json({ message: `Notes have been successfully updated` });
+    })
+    .catch(next);
+});
+
+//Delete endpoint to remove the ticket
+
+router.delete('/:id', authRequired, checkTicketExists, (req, res, next) => {
+  const { id } = req.params;
+  Tickets.remove(id)
+    .then(() => {
+      res.status(200).json({
+        message: `Ticket with ID ${id} have been successfully removed`,
+      });
+    })
+    .catch(next);
+});
+
 module.exports = router;
