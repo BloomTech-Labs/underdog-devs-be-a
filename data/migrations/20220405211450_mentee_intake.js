@@ -5,8 +5,8 @@ exports.up = function (knex) {
       table.increments('mentee_intake_id').notNullable().unique().primary();
       table
         .integer('role_id')
-        .unsigned()
         .notNullable()
+        .defaultTo(5)
         .references('role_id')
         .inTable('roles')
         .onDelete('RESTRICT')

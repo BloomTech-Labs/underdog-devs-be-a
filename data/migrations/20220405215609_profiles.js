@@ -10,11 +10,10 @@ exports.up = (knex) => {
         .integer('role_id')
         .unsigned()
         .notNullable()
-        .default(5)
         .references('role_id')
         .inTable('roles')
-        .onDelete('CASCADE')
-        .onUpdate('CASCADE');
+        .onDelete('RESTRICT')
+        .onUpdate('RESTRICT');
       table.timestamps(true, true);
       table.boolean('is_active').default(true);
       table.string('progress_status');

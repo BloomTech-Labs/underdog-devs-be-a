@@ -6,7 +6,7 @@ exports.up = function (knex) {
       table
         .integer('role_id')
         .notNullable()
-        .unsigned()
+        .defaultTo(5)
         .references('role_id')
         .inTable('roles')
         .onDelete('RESTRICT')
