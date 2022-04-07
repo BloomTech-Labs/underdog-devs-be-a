@@ -146,7 +146,7 @@ describe('Application Router', () => {
 
         it('responds with status 404', () => {
           const expected = 404;
-          const actual = res;
+          const actual = res.status;
 
           expect(actual).toBe(expected);
         });
