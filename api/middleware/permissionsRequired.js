@@ -10,7 +10,7 @@ const superAdminRequired = async (req, res, next) => {
         next();
       } else {
         next({
-          status: 500,
+          status: 401,
           message: 'invalid credentials / not superadmin',
         });
       }
@@ -27,7 +27,7 @@ const adminRequired = (req, res, next) => {
       if (selectedUser.role_id <= 2) next();
       else
         next({
-          status: 500,
+          status: 401,
           message: 'invalid credentials / not admin',
         });
     })
@@ -43,7 +43,7 @@ const mentorRequired = async (req, res, next) => {
         next();
       } else {
         next({
-          status: 500,
+          status: 401,
           message: 'invalid credentials / not mentor',
         });
       }
