@@ -2,22 +2,34 @@ exports.up = (knex) => {
   return knex.schema
     .raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"')
     .createTable('profiles', function (table) {
-      table.string('profile_id').notNullable().unique().primary();
-      table.string('email').notNullable().unique();
-      table.string('first_name');
-      table.string('last_name');
+      table.string('profile_id').notNullable().primary().unique();
       table
-        .integer('role_id')
-        .unsigned()
+        .integer('application_id')
         .notNullable()
-        .references('role_id')
-        .inTable('roles')
+        .references('application_id')
+        .inTable('applications')
         .onDelete('RESTRICT')
         .onUpdate('RESTRICT');
+      table
+        .integer('mentor_id')
+        .references('mentor_intake_id')
+        .inTable('mentor_intake')
+        .onDelete('CASCADE')
+        .onUpdate('CASCADE');
+      table
+        .integer('mentee_id')
+        .references('mentee_intake_id')
+        .inTable('mentee_intake')
+        .onDelete('CASCADE')
+        .onUpdate('CASCADE');
       table.timestamps(true, true);
-      table.boolean('is_active').default(true);
-      table.string('progress_status');
-      table.float('attendance_rate').notNullable().unsigned().default(1.0);
+      table.boolean('profile_is_active').default(true);
+      table.string('profile_progress_status');
+      table
+        .float('profile_attendance_rate')
+        .notNullable()
+        .unsigned()
+        .default(1.0);
     });
 };
 

@@ -1,52 +1,36 @@
 exports.up = function (knex) {
   return knex.schema
     .raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"')
-    .createTable('mentor_application', function (table) {
-      table.increments('mentor_application_id');
+    .createTable('applications', function (table) {
+      table.increments('application_id');
+      // not nullable info about role -- need this to come thru
       table
         .integer('position')
-        .unsigned()
         .notNullable()
         .references('role_id')
         .inTable('roles')
-        .onDelete('RESTRICT')
-        .onUpdate('RESTRICT');
-      table
-        .integer('mentor_intake_id')
-        .notNullable()
-        .references('mentor_intake_id')
-        .inTable('mentor_intake')
-        .onDelete('RESTRICT')
-        .onUpdate('RESTRICT');
-      table.boolean('approved').notNullable().defaultTo(false);
-      table.timestamps(true, true);
-      table.string('mentor_application_notes').defaultTo('');
-    })
-    .createTable('mentee_application', function (table) {
-      table.increments('mentee_application_id');
-      table
-        .integer('position')
-        .unsigned()
-        .notNullable()
-        .references('role_id')
-        .inTable('roles')
-        .onDelete('RESTRICT')
-        .onUpdate('RESTRICT');
+        .onDelete('CASCADE')
+        .onUpdate('CASCADE');
+      // Nullable information about mentor
       table
         .integer('mentee_intake_id')
-        .notNullable()
         .references('mentee_intake_id')
         .inTable('mentee_intake')
-        .onDelete('RESTRICT')
-        .onUpdate('RESTRICT');
+        .onDelete('CASCADE')
+        .onUpdate('CASCADE');
+      // Nullable information about mentee
+      table
+        .integer('mentor_intake_id')
+        .references('mentor_intake_id')
+        .inTable('mentor_intake')
+        .onDelete('CASCADE')
+        .onUpdate('CASCADE');
       table.boolean('approved').notNullable().defaultTo(false);
       table.timestamps(true, true);
-      table.string('mentee_application_notes').defaultTo('');
+      table.string('application_notes').defaultTo('');
     });
 };
 
 exports.down = function (knex) {
-  return knex.schema
-    .dropTableIfExists('mentor_application')
-    .dropTableIfExists('mentee_application');
+  return knex.schema.dropTableIfExists('applications');
 };
