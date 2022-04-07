@@ -356,7 +356,7 @@ Please see [this file](./__tests__/README.md) for more info.
         "content_type": type here,
         "status": ["in progress", "resolved", "no action needed", "escalated"]
         "content": note text,
-        "level": low - high,
+        "level": low medium or high,
         "visible_to_admin": true,
         "visible_to_mentor": true,
         "visible_to_mentee": false,
@@ -380,6 +380,6 @@ Please see [this file](./__tests__/README.md) for more info.
                                                  `visible_to_mentor`,
                                                  `visible_to_mentee`,
                                                  `mentor_id`,
-                                                 `mentee_id`                                     | `added note`                      | -         |
-| PUT    | `/notes/:note_id`                   | `note_id`(params), `field to change in body`    | `updated note`                    | -         |
-| DELETE | `/notes/:note_id`                   | `note_id`(params)                               | `remove note by note_id`          | -         |
+                                                 `mentee_id`                                           | `added note`                      | -         |
+| PUT    | `/notes/:note_id`                   | `note_id`(params), `status, content, and/or level`    | `updated note`                    | -         |
+| DELETE | `/notes/:note_id`                   | `note_id`(params)                                     | `remove note by note_id`          | -         |
