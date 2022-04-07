@@ -2,19 +2,21 @@ exports.up = (knex) => {
   return knex.schema
     .raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"')
     .createTable('assignments', function (table) {
-      table.increments('assignment_id').notNullable().unique().primary();
+      table.increments('assignments_id').primary();
       table
-        .string('mentor_id')
+        .integer('mentor_id')
         .notNullable()
-        .references('profile_id')
-        .inTable('profiles')
+        .unique()
+        .references('mentor_intake_id')
+        .inTable('mentor_intake')
         .onDelete('RESTRICT')
         .onUpdate('RESTRICT');
       table
-        .string('mentee_id')
+        .integer('mentee_id')
         .notNullable()
-        .references('profile_id')
-        .inTable('profiles')
+        .unique()
+        .references('mentee_intake_id')
+        .inTable('mentee_intake')
         .onDelete('RESTRICT')
         .onUpdate('RESTRICT');
     });

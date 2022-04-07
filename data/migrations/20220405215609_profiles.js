@@ -5,6 +5,7 @@ exports.up = (knex) => {
       table.string('profile_id').notNullable().primary().unique();
       table
         .integer('application_id')
+        .unsigned()
         .notNullable()
         .references('application_id')
         .inTable('applications')
@@ -12,16 +13,14 @@ exports.up = (knex) => {
         .onUpdate('RESTRICT');
       table
         .integer('mentor_id')
+        .unique()
         .references('mentor_intake_id')
-        .inTable('mentor_intake')
-        .onDelete('CASCADE')
-        .onUpdate('CASCADE');
+        .inTable('mentor_intake');
       table
         .integer('mentee_id')
+        .unique()
         .references('mentee_intake_id')
-        .inTable('mentee_intake')
-        .onDelete('CASCADE')
-        .onUpdate('CASCADE');
+        .inTable('mentee_intake');
       table.timestamps(true, true);
       table.boolean('profile_is_active').default(true);
       table.string('profile_progress_status');

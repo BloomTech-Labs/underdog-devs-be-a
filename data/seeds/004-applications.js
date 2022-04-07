@@ -1,40 +1,40 @@
-const dummyData = [
+const initialData = [
   {
-    profile_id: '12',
+    mentor_intake_id: 2,
     position: 4,
     approved: false,
   },
   {
-    profile_id: '00u13oned0U8XP8Mb4x7',
-    position: 3,
-    approved: false,
-  },
-  {
-    profile_id: '7',
+    mentor_intake_id: 1,
     position: 4,
-    approved: true,
-  },
-  {
-    profile_id: '9',
-    position: 3,
-    approved: true,
-  },
-  {
-    profile_id: '00u13omswyZM1xVya4x7',
-    position: 3,
     approved: false,
   },
   {
-    profile_id: '10',
+    mentor_intake_id: 3,
+    position: 4,
+    approved: false,
+  },
+  {
+    mentee_intake_id: 2,
+    position: 4,
+    approved: false,
+  },
+  {
+    mentee_intake_id: 1,
+    position: 4,
+    approved: false,
+  },
+  {
+    mentee_intake_id: 3,
     position: 4,
     approved: false,
   },
 ];
 
 exports.seed = function (knex) {
-  return knex('mentor_application')
+  return knex('applications')
     .del()
     .then(function () {
-      return knex('mentor_application').insert(dummyData);
+      return knex('applications').insert(initialData);
     });
 };
