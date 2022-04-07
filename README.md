@@ -351,7 +351,7 @@ Please see [this file](./__tests__/README.md) for more info.
 ###### Notes schema:
 
     {
-        "note_id": 1 (PK, integer),
+        "note_id": 1 (PK, integer, automatically generated),
         "created_by": profile_id of note creator(FK),
         "content_type": type here,
         "status": ["in progress", "resolved", "no action needed", "escalated"]
@@ -362,8 +362,8 @@ Please see [this file](./__tests__/README.md) for more info.
         "visible_to_mentee": false,
         "mentor_id": profile_id of mentor(FK),
         "mentee_id": profile_id of mentee(FK),
-        "created_at": timestamp with time zone,
-        "updated_at": timestamp with time zone
+        "created_at": timestamp with time zone (automatically generated),
+        "updated_at": timestamp with time zone (automatically generated)
     }
 
 | Method | Endpoint                            | Required Request Body                           | Returns                           | User Auth |

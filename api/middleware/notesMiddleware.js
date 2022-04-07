@@ -128,7 +128,6 @@ const checkStatusEnum = (req, res, next) => {
 
 module.exports = {
   checkNoteExists,
-  checkBodyIsComplete,
   checkUpdateInfo,
   checkMenteeIdExists,
   checkMentorIdExists,

@@ -2,10 +2,11 @@ const express = require('express');
 const Notes = require('./noteModel');
 const router = express.Router();
 const authRequired = require('../middleware/authRequired');
+const validation = require('../middleware/validation');
+const notesSchema = require('../../data/schemas/notesSchema');
 
 const {
   checkNoteExists,
-  checkBodyIsComplete,
   checkUpdateInfo,
   checkMenteeIdExists,
   checkMentorIdExists,
@@ -54,6 +55,7 @@ router.get(
 router.post(
   '/',
   authRequired,
+  validation(notesSchema),
   checkBodyIsComplete,
   checkStatusEnum,
   checkMenteeIdExists,
