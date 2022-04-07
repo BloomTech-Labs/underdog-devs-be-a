@@ -229,15 +229,10 @@ router.get('/:ticket_type', checkTicketType, authRequired, (req, res) => {
  *            $ref: '#/components/schemas/Tickets'
  *          example:
  *            ticket_type: "action"
- *            ticket_status: "pending"
  *            ticket_subject: "Spencer missed his 2nd weekly session, may be dropped?"
- *            request_for: "10"
+ *            requested_for: "10"
  *            submitted_by: "7"
- *            first_name: "User"
- *            last_name: "11"
- *            urgent: false
- *            notes: null
- *            requested_role: null
+ *            notes: "test"
  *      required:
  *        - ticket_type
  *        - ticket_subject
