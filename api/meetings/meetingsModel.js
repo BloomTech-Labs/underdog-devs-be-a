@@ -3,8 +3,17 @@ const db = require('../../data/db-config');
 const findAll = async () => {
   //returns names and profile info based on the host
   const meetings = await db('meetings as m')
-    .join('profiles as p', 'm.host_id', 'p.profile_id')
-    .select('m.*', 'p.first_name', ' p.last_name', 'p.email');
+    .join('profiles as mentor', 'm.host_id', 'mentor.profile_id')
+    .join('profiles as attendee', 'm.host_id', 'attendee.profile_id')
+    .select(
+      'm.*',
+      'mentor.first_name as mentor.first-name',
+      'mentor.last_name as mentor.last-name',
+      'mentor.email as mentor-email',
+      'attendee.first_name as attendee.first-name',
+      'attendee.last_name as attendee.last-name',
+      'attendee.email as attendee-email'
+    );
   return meetings;
 };
 
