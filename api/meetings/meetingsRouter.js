@@ -155,7 +155,7 @@ function validMeetingID(req, res, next) {
       req.meeting = meeting;
       next();
     } else {
-      next({ status: 400, message: 'Meeting_id Not Found' });
+      next({ status: 404, message: 'Meeting_id Not Found' });
     }
   });
 }
@@ -169,7 +169,7 @@ function validProfileID(req, res, next) {
         req.profile = profile;
         next();
       } else {
-        res.status(400).json({
+        res.status(404).json({
           message: 'Invalid ID',
         });
       }
@@ -186,7 +186,7 @@ function validHostID(req, res, next) {
         req.profile = profile;
         next();
       } else {
-        res.status(400).json({
+        res.status(404).json({
           message: 'Invalid Host ID',
         });
       }
@@ -203,7 +203,7 @@ function validAttendeeID(req, res, next) {
         req.profile = profile;
         next();
       } else {
-        res.status(400).json({
+        res.status(404).json({
           message: 'Invalid attendee_id',
         });
       }

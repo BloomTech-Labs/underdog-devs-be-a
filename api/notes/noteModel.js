@@ -4,6 +4,10 @@ const findAll = () => {
   return db('notes');
 };
 
+const filterBy = (filter) => {
+  return db('notes').where(filter);
+};
+
 const findBy = (filter) => {
   return db('notes').where(filter).first();
 };
@@ -26,6 +30,7 @@ const remove = (id) => {
 
 module.exports = {
   findAll,
+  filterBy,
   findBy,
   findById,
   create,

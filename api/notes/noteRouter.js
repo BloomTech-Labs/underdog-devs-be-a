@@ -8,6 +8,9 @@ const notesSchema = require('../../data/schemas/notesSchema');
 const {
   checkNoteExists,
   checkUpdateInfo,
+  checkMenteeIdExists,
+  checkMentorIdExists,
+  checkStatusEnum,
 } = require('../middleware/notesMiddleware');
 
 router.get('/', authRequired, async (req, res, next) => {
@@ -33,21 +36,30 @@ router.get(
   }
 );
 
-router.get('/mentee/:mentee_id', authRequired, async (req, res, next) => {
-  try {
-    const note = await Notes.findBy({
-      mentee_id: req.params.mentee_id,
-    });
-    res.status(200).json(note);
-  } catch (error) {
-    next(error);
+router.get(
+  '/mentee/:mentee_id',
+  authRequired,
+  checkMenteeIdExists,
+  async (req, res, next) => {
+    try {
+      const note = await Notes.filterBy({
+        mentee_id: req.params.mentee_id,
+      });
+      res.status(200).json(note);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 router.post(
   '/',
   authRequired,
   validation(notesSchema),
+  checkBodyIsComplete,
+  checkStatusEnum,
+  checkMenteeIdExists,
+  checkMentorIdExists,
   async (req, res, next) => {
     try {
       const newNote = {
