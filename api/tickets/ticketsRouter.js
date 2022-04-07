@@ -5,6 +5,7 @@ const authRequired = require('../middleware/authRequired');
 const { adminRequired } = require('../middleware/permissionsRequired.js');
 const {
   checkTicketExists,
+  checkTicketByID,
   checkTicketType,
   validateTicket,
 } = require('../middleware/ticketsMiddleware');
@@ -140,7 +141,7 @@ router.get('/', authRequired, adminRequired, (req, res, next) => {
  *     '200':
  *       description: An array of tickets objects
  *       content:
- *         tickets/json:
+ *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/Tickets'
  *     '401':
@@ -181,7 +182,7 @@ router.get('/profile/:id', checkTicketExists, authRequired, (req, res) => {
  *     '200':
  *       description: An array of tickets objects
  *       content:
- *         tickets/json:
+ *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/Tickets'
  *           example:
@@ -209,6 +210,56 @@ router.get('/:ticket_type', checkTicketType, authRequired, (req, res) => {
   res.status(200).json(req.tickets);
 });
 
+/**
+ * @swagger
+ * required: true
+ * /tickets:
+ *  post:
+ *    summary: Adds a new ticket to the database
+ *    description: Posts a new ticket object to the the tickets table, if the ticket is validly formatted.
+ *    tags:
+ *      - tickets
+ *    security:
+ *      - okta: []
+ *    requestBody:
+ *      description: Information about the ticket to be added
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Tickets'
+ *          example:
+ *            ticket_type: "action"
+ *            ticket_status: "pending"
+ *            ticket_subject: "Spencer missed his 2nd weekly session, may be dropped?"
+ *            request_for: "10"
+ *            submitted_by: "7"
+ *            first_name: "User"
+ *            last_name: "11"
+ *            urgent: false
+ *            notes: null
+ *            requested_role: null
+ *      required:
+ *        - ticket_type
+ *        - ticket_subject
+ *        - submitted_by
+ *    responses:
+ *      '200':
+ *        description: Response from successful post
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                ticket:
+ *                  description: Object mirroring the newly created action
+ *                  type: object
+ *              example:
+ *                message: Ticket has been submitted
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *      '406':
+ *        description: Not acceptable ticket request body
+ */
 //Post new ticket
 
 router.post('/', validateTicket, authRequired, (req, res, next) => {
@@ -219,9 +270,53 @@ router.post('/', validateTicket, authRequired, (req, res, next) => {
     .catch(next);
 });
 
+/**
+ * @swagger
+ * /tickets/{ticket_id}:
+ *  put:
+ *    summary: Updates the ticket status
+ *    description: Allows the user to update the ticket status of a specific ticket with ticket_ID
+ *    tags:
+ *      - tickets
+ *    security:
+ *      - okta: []
+ *    parameters:
+ *      - in: path
+ *        name: ticket_id
+ *        schema:
+ *          type: interger
+ *        description: ID of the ticket to return
+ *    requestBody:
+ *      description: Information to update about the desired role ticket
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Tickets'
+ *          example:
+ *            ticket_status: "approved"
+ *      required: true
+ *    responses:
+ *      '200':
+ *        description: A success message indicating that the ticket has been updated
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: Success message, including the ID of the updated ticket
+ *            example:
+ *             message: 'Ticket status updated for Ticket with ${id}'
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *      '404':
+ *        $ref: '#/components/responses/NotFound'
+ */
+
 //PUT endpoint to update ticket status by ticket ID
 
-router.put('/:id', authRequired, checkTicketExists, (req, res, next) => {
+router.put('/:id', authRequired, checkTicketByID, (req, res, next) => {
   const { id } = req.params;
   const { ticket_status } = req.body;
   Tickets.updateTicketStatus(id, ticket_status)
@@ -233,9 +328,53 @@ router.put('/:id', authRequired, checkTicketExists, (req, res, next) => {
     .catch(next);
 });
 
+/**
+ * @swagger
+ * /tickets/notes/{ticket_id}:
+ *  put:
+ *    summary: Updates the ticket notes
+ *    description: Allows the user to update the notes of a specific ticket with ticket_ID
+ *    tags:
+ *      - tickets
+ *    security:
+ *      - okta: []
+ *    parameters:
+ *      - in: path
+ *        name: ticket_id
+ *        schema:
+ *          type: interger
+ *        description: ID of the ticket to return
+ *    requestBody:
+ *      description: Information to update about the desired ticket notes
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Tickets'
+ *          example:
+ *            notes: "Update the notes"
+ *      required: true
+ *    responses:
+ *      '200':
+ *        description: A success message indicating that the ticket notes have been updated
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: Success message
+ *            example:
+ *             message: 'Notes have been successfully updated'
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *      '404':
+ *        $ref: '#/components/responses/NotFound'
+ */
+
 //PUT endpoint to update notes by ticket ID
 
-router.put('/notes/:id', authRequired, checkTicketExists, (req, res, next) => {
+router.put('/notes/:id', authRequired, checkTicketByID, (req, res, next) => {
   const { id } = req.params;
   const { notes } = req.body;
   Tickets.updateNotes(id, notes)
@@ -245,9 +384,44 @@ router.put('/notes/:id', authRequired, checkTicketExists, (req, res, next) => {
     .catch(next);
 });
 
+/**
+ * @swagger
+ * /tickets/{ticket_id}:
+ *  delete:
+ *    summary: Deletes the ticket with provided ID from the database
+ *    description: Allows the user to delete a specific ticket with ticket_ID
+ *    tags:
+ *      - tickets
+ *    security:
+ *      - okta: []
+ *    parameters:
+ *      - in: path
+ *        name: ticket_id
+ *        schema:
+ *          type: interger
+ *        description: ID of the ticket to remove from database
+ *    responses:
+ *      '200':
+ *        description: A success message indicating that the ticket notes have been deleted
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: Success message indicating the ID of the ticket removed
+ *            example:
+ *             message: 'Ticket with ID ${ticket_id} have been successfully removed'
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *      '404':
+ *        $ref: '#/components/responses/NotFound'
+ */
+
 //Delete endpoint to remove the ticket
 
-router.delete('/:id', authRequired, checkTicketExists, (req, res, next) => {
+router.delete('/:id', authRequired, checkTicketByID, (req, res, next) => {
   const { id } = req.params;
   Tickets.remove(id)
     .then(() => {

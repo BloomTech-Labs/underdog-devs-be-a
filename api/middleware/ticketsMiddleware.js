@@ -1,4 +1,8 @@
-const { findById, findByTicketType } = require('../tickets/ticketsModel');
+const {
+  findById,
+  findByTicketType,
+  findTicketById,
+} = require('../tickets/ticketsModel');
 const ticketsSchema = require('../../data/schemas/ticketsSchema');
 
 const checkTicketExists = async (req, res, next) => {
@@ -6,6 +10,18 @@ const checkTicketExists = async (req, res, next) => {
   const ticket = await findById(id);
   if (ticket.length > 0) {
     req.ticket = ticket;
+    next();
+  } else {
+    next({
+      status: 404,
+      message: `ticket with id ${id} does not exist`,
+    });
+  }
+};
+const checkTicketByID = async (req, res, next) => {
+  const id = req.params.id;
+  const ticket = await findTicketById(id);
+  if (ticket.length > 0) {
     next();
   } else {
     next({
@@ -45,6 +61,7 @@ const validateTicket = async (req, res, next) => {
 };
 module.exports = {
   checkTicketExists,
+  checkTicketByID,
   checkTicketType,
   validateTicket,
 };

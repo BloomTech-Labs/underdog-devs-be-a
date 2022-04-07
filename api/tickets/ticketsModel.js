@@ -38,6 +38,9 @@ function findById(profile_id) {
     .join('profiles as p', 't.submitted_by', 'p.profile_id')
     .where('t.submitted_by', profile_id);
 }
+function findTicketById(ticket_id) {
+  return db('tickets as t').select('t.*').where('t.ticket_id', ticket_id);
+}
 
 function findByTicketType(ticket_type) {
   return db('tickets as t')
@@ -87,6 +90,7 @@ function remove(ticket_id) {
 module.exports = {
   getPendingTickets,
   findById,
+  findTicketById,
   findByTicketType,
   add,
   updateTicketStatus,
