@@ -383,3 +383,29 @@ Please see [this file](./__tests__/README.md) for more info.
                                                  `mentee_id`                                           | `added note`                      | -         |
 | PUT    | `/notes/:note_id`                   | `note_id`(params), `status, content, and/or level`    | `updated note`                    | -         |
 | DELETE | `/notes/:note_id`                   | `note_id`(params)                                     | `remove note by note_id`          | -         |
+
+###### Tickets schema:
+
+    {
+        "ticket_id": 3,
+        "ticket_type": "action",
+        "ticket_status": "pending",
+        "ticket_subject": "My mentor isn't really helping me learn, could I seek reassignment?",
+        "submitted_by": "11",
+        "first_name": "User",
+        "last_name": "11",
+        "urgent": false,
+        "notes": null,
+        "created_at": "2022-04-07T01:11:36.139Z"
+    }
+
+
+| Method | Endpoint                  | URL Parameters                                          | Required Request Body                  | Returns                                    | User Auth |
+| ------ | ------------------------- | ------------------------------------------------------- | -------------------------------------- | ------------------------------------------ | --------- |
+| GET    | `/tickets`                | -                                                       | -                                      | `get all pending tickets`                  |  `Admin`  |
+| GET    | `/tickets/profile/:id`    | `profile_id` (required) must be a sting value           | -                                      |`get all tickets related to profile_id`|           |
+| GET    | `/tickets/:ticket_type`   | `ticket_type` (required) must be a string value         | -                                      |`get all tickets with a certain ticket_type`|           |
+| POST   | `/tickets`                | -                                                       | `ticket_type`,`ticket_subject`,`submitted_by` | `add a new ticket to the db`       |           |
+| PUT    | `/tickets/:ticket_id` | `ticket_id` (required) must be an integer value             | `ticket_status`                        | `update the status of ticket with a certain ticket_id` |   |
+| PUT    | `/tickets/notes/:ticket_id`| `tickets_id` (required) must be an integer value      | `notes`                                | `update the notes of ticket with a certain ticket_id` |    |
+| DELETE | `/ticket/:ticket_id` | `ticket_id` (required) must be an integer value              | -                                      | `delete a ticket by ticket_id from db` |    |
