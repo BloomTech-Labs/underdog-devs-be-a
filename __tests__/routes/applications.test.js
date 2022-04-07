@@ -32,7 +32,7 @@ jest.mock('../../api/middleware/permissionsRequired', () => ({
 
 const app = express();
 app.use(express.json());
-app.use('/application', applicationRouter);
+app.use('/applications', applicationRouter);
 app.use(handleError);
 
 // Declare Tests
@@ -53,7 +53,7 @@ describe('Application Router', () => {
   describe('[GET] /application', () => {
     let res;
     beforeAll(async () => {
-      res = await request(app).get('/application');
+      res = await request(app).get('/applications');
     });
 
     it('requires authentication', () => {
@@ -68,12 +68,12 @@ describe('Application Router', () => {
     });
   });
 
-  describe('[GET] /application/:role', () => {
+  describe('[GET] /applications/:role', () => {
     describe('success', () => {
       describe('mentor role', () => {
         let res;
         beforeAll(async () => {
-          res = await request(app).get('/application/mentor');
+          res = await request(app).get('/applications/mentor');
         });
 
         it('responds with status 200', () => {
@@ -102,7 +102,7 @@ describe('Application Router', () => {
       describe('mentee role', () => {
         let res;
         beforeAll(async () => {
-          res = await request(app).get('/application/mentee');
+          res = await request(app).get('/applications/mentee');
         });
 
         it('responds with status 200', () => {
@@ -138,10 +138,10 @@ describe('Application Router', () => {
 
     describe('failure', () => {
       describe('invalid role parameter', () => {
-        const invalidRoleName = 'bad-role';
+        const invalidRoleName = '1234';
         let res;
         beforeAll(async () => {
-          res = await request(app).get(`/application/role/${invalidRoleName}`);
+          res = await request(app).get(`/applications/${invalidRoleName}`);
         });
 
         it('responds with status 404', () => {
@@ -165,11 +165,9 @@ describe('Application Router', () => {
     describe('success', () => {
       const validProfileID = 10;
       let res;
-      // let user;
-      beforeAll(async () => {
-        // user = request(app).post();
+      beforeEach(async () => {
         res = await request(app).get(
-          `/application/profileID/${validProfileID}`
+          `/applications/profileId/${validProfileID}`
         );
       });
 
@@ -183,11 +181,9 @@ describe('Application Router', () => {
       it('returns application(s) for a given user', () => {
         const expected = {
           application_id: 6,
-          // created_at: '2022-01-28T23:38:28.256Z',
-          // first_name: 'Johnny',
-          // last_name: 'Donuts', //! will not have necessary info if they change their name - test will fail for no reason!
-          profile_id: '10',
-          // role_name: 'mentee',
+          first_name: 'Johnny',
+          last_name: 'Donuts',
+          role_name: 'mentee',
         };
         const actual = res.body;
 
@@ -201,7 +197,7 @@ describe('Application Router', () => {
         let res;
         beforeAll(async () => {
           res = await request(app).get(
-            `/application/profileId/${invalidProfileID}`
+            `/applications/profileId/${invalidProfileID}`
           );
         });
 
@@ -212,8 +208,8 @@ describe('Application Router', () => {
           expect(actual).toBe(expected);
         });
 
-        it('returns error "profile id XX not found"', () => {
-          const expected = /no applications/i;
+        it('returns error "no applications found under this id"', () => {
+          const expected = `no applications with profile_id: ${invalidProfileID} were found`;
           const actual = res.body.message;
 
           expect(actual).toMatch(expected);
