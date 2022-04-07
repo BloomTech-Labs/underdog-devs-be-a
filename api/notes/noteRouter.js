@@ -61,12 +61,14 @@ router.post(
   async (req, res, next) => {
     try {
       const newNote = {
+        created_by: req.body.created_by,
         content_type: req.body.content_type,
         status: req.body.status,
         content: req.body.content,
         level: req.body.level,
         visible_to_admin: req.body.visible_to_admin,
         visible_to_mentor: req.body.visible_to_mentor,
+        visible_to_mentee: req.body.visible_to_mentee,
         mentor_id: req.body.mentor_id,
         mentee_id: req.body.mentee_id,
       };

@@ -352,12 +352,14 @@ Please see [this file](./__tests__/README.md) for more info.
 
     {
         "note_id": 1 (PK, integer),
+        "created_by": profile_id of note creator(FK),
         "content_type": type here,
         "status": ["in progress", "resolved", "no action needed", "escalated"]
         "content": note text,
         "level": low - high,
         "visible_to_admin": true,
         "visible_to_mentor": true,
+        "visible_to_mentee": false,
         "mentor_id": profile_id of mentor(FK),
         "mentee_id": profile_id of mentee(FK),
         "created_at": timestamp with time zone,
@@ -369,12 +371,14 @@ Please see [this file](./__tests__/README.md) for more info.
 | GET    | `/notes`                            | -                                               | `get all notes`                   | -         |
 | GET    | `/notes/:note_id`                   | `note_id`(params)                               | `get note by note_id`             | -         |
 | GET    | `/notes/mentee/:mentee_id`          | `mentee_id`(params)                             | `get notes by mentee_id`          | -         |
-| POST   | `/notes`                            | `content_type`,                                 | `newly created note`              | -         |
+| POST   | `/notes`                            | `created_by`,                                   | `newly created note`              | -         |
+                                                 `content_type`,                                 
                                                  `status`,
                                                  `content`,
                                                  `level`,
                                                  `visible_to_admin`,
                                                  `visible_to_mentor`,
+                                                 `visible_to_mentee`,
                                                  `mentor_id`,
                                                  `mentee_id`                                     | `added note`                      | -         |
 | PUT    | `/notes/:note_id`                   | `note_id`(params), `field to change in body`    | `updated note`                    | -         |

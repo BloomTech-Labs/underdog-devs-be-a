@@ -61,22 +61,26 @@ const checkMentorIdExists = async (req, res, next) => {
 
 const checkBodyIsComplete = (req, res, next) => {
   const {
+    created_by,
     content_type,
     status,
     content,
     level,
     visible_to_admin,
     visible_to_mentor,
+    visible_to_mentee,
     mentor_id,
     mentee_id,
   } = req.body;
   if (
+    !created_by ||
     !content_type ||
     !status ||
     !content ||
     !level ||
     !visible_to_admin ||
     !visible_to_mentor ||
+    !visible_to_mentee ||
     !mentor_id ||
     !mentee_id
   ) {
