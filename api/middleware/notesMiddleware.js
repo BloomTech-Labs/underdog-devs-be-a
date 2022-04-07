@@ -1,4 +1,5 @@
 const Notes = require('../notes/noteModel');
+const Profile_Model = require('../profile/profileModel');
 
 const checkNoteExists = async (req, res, next) => {
   try {
@@ -9,8 +10,48 @@ const checkNoteExists = async (req, res, next) => {
         message: 'Note with given ID does not exist',
       });
     } else {
-      //appending the already retrieved note to the req body to avoid multiple DB queries
       req.body.retrievedNote = note;
+      next();
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+const helper_checkProfileIdExists = async (profile_id) => {
+  const profile = await Profile_Model.findById(profile_id);
+  return Boolean(profile);
+};
+
+const checkMenteeIdExists = async (req, res, next) => {
+  try {
+    const boolean = await helper_checkProfileIdExists(
+      req.params.mentee_id || req.body.mentee_id
+    );
+    if (!boolean) {
+      next({
+        status: 404,
+        message: 'mentee_id not found',
+      });
+    } else {
+      next();
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+const checkMentorIdExists = async (req, res, next) => {
+  try {
+    const boolean = await helper_checkProfileIdExists(
+      req.params.mentee_id || req.body.mentee_id
+    );
+    if (!boolean) {
+      next({
+        status: 404,
+        message: 'mentor_id not found',
+      });
+    } else {
       next();
     }
   } catch (error) {
@@ -59,8 +100,33 @@ const checkUpdateInfo = (req, res, next) => {
   }
 };
 
+const checkStatusEnum = (req, res, next) => {
+  try {
+    const status = req.body.status.toLowerCase().trim();
+    if (
+      status === 'in progress' ||
+      status === 'resolved' ||
+      status === 'no action needed' ||
+      status === 'escalated'
+    ) {
+      next();
+    } else {
+      next({
+        status: 400,
+        message:
+          'status must be : "in progress", "resolved", "no action needed" or "escalated"',
+      });
+    }
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   checkNoteExists,
   checkBodyIsComplete,
   checkUpdateInfo,
+  checkMenteeIdExists,
+  checkMentorIdExists,
+  checkStatusEnum,
 };
