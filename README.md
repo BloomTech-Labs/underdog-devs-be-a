@@ -57,15 +57,20 @@ Please see [this file](./__tests__/README.md) for more info.
 ###### Reference profile schema:
 
     {
-        "user_id": "00ulzfj6nX72gu3Nh4d6",
+        "profile_id": "00ulzfj6nX72gu3Nh4d6",
         "email": "email@email.mail",
         "first_name":"John",
         "last_name":"Doe",
+        "location": "Sedona, Arizona",
+        "company": "Unemployed",
+        "tech_stack": ["react", "msPaint"],
         "role_id": 3,
-        "role_name": "user",
-        "created_at": "2021-04-21T18:47:18.712Z",
-        "updated_at": "2021-04-21T18:47:18.712Z",
-        "approved": True
+        "created_at": "2022-03-30T23:36:21.053Z",
+        "updated_at": "2022-03-30T23:36:21.053Z",
+        "is_active": true,
+        "progress_status": null,
+        "attendance_rate": 0.4689,
+        "progress_id": null
     }
 
 | Method | Endpoint                  | Required Request Body | Returns                           | User Auth    |
@@ -74,7 +79,8 @@ Please see [this file](./__tests__/README.md) for more info.
 | GET    | `/profile/:id`            | -                     | `get profile by id`               | `Admin`      |
 | GET    | `/profile/current_user`   | -                     | `get current profile`             |              |
 | POST   | `/profile`                | `first/last, email`   | `create new profile`              |              |
-| PUT    | `/profile/:id`            | `first/last, email`   | `update a profile by profile id`  |              |
+| PUT    | `/profile/`               |                       | `update current profile`          |              |
+| PUT    | `/profile/:id`            |                       | `update a profile by profile id`  | `Admin`      |
 | PUT    | `/profile/roles`          | `role`                | `update a profiles role`          | `Admin`      |
 | PUT    | `/profile/is_active/:id`  | -                     | `activates/deactivates a profile` | `SuperAdmin` |
 
@@ -345,17 +351,19 @@ Please see [this file](./__tests__/README.md) for more info.
 ###### Notes schema:
 
     {
-        "note_id": 1 (PK, integer),
+        "note_id": 1 (PK, integer, automatically generated),
+        "created_by": profile_id of note creator(FK),
         "content_type": type here,
         "status": ["in progress", "resolved", "no action needed", "escalated"]
         "content": note text,
-        "level": low - high,
+        "level": low medium or high,
         "visible_to_admin": true,
         "visible_to_mentor": true,
+        "visible_to_mentee": false,
         "mentor_id": profile_id of mentor(FK),
         "mentee_id": profile_id of mentee(FK),
-        "created_at": timestamp with time zone,
-        "updated_at": timestamp with time zone
+        "created_at": timestamp with time zone (automatically generated),
+        "updated_at": timestamp with time zone (automatically generated)
     }
 
 | Method | Endpoint                            | Required Request Body                           | Returns                           | User Auth |
@@ -363,13 +371,15 @@ Please see [this file](./__tests__/README.md) for more info.
 | GET    | `/notes`                            | -                                               | `get all notes`                   | -         |
 | GET    | `/notes/:note_id`                   | `note_id`(params)                               | `get note by note_id`             | -         |
 | GET    | `/notes/mentee/:mentee_id`          | `mentee_id`(params)                             | `get notes by mentee_id`          | -         |
-| POST   | `/notes`                            | `content_type`,                                 | `newly created note`              | -         |
+| POST   | `/notes`                            | `created_by`,                                   | `newly created note`              | -         |
+                                                 `content_type`,                                 
                                                  `status`,
                                                  `content`,
                                                  `level`,
                                                  `visible_to_admin`,
                                                  `visible_to_mentor`,
+                                                 `visible_to_mentee`,
                                                  `mentor_id`,
-                                                 `mentee_id`                                     | `added note`                      | -         |
-| PUT    | `/notes/:note_id`                   | `note_id`(params), `field to change in body`    | `updated note`                    | -         |
-| DELETE | `/notes/:note_id`                   | `note_id`(params)                               | `remove note by note_id`          | -         |
+                                                 `mentee_id`                                           | `added note`                      | -         |
+| PUT    | `/notes/:note_id`                   | `note_id`(params), `status, content, and/or level`    | `updated note`                    | -         |
+| DELETE | `/notes/:note_id`                   | `note_id`(params)                                     | `remove note by note_id`          | -         |

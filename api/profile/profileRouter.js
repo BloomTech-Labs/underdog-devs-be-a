@@ -7,7 +7,10 @@ const {
   adminRequired,
   superAdminRequired,
 } = require('../middleware/permissionsRequired');
+const validation = require('../middleware/validation');
+const validateSelfUpdate = require('../../data/schemas/userProfileSchema');
 const { validateUser } = require('../middleware/generalMiddleware');
+const dsService = require('../dsService/dsModel');
 validateUser;
 
 // gets current user profile
@@ -244,31 +247,63 @@ router.post('/', authRequired, async (req, res, next) => {
  *                profile:
  *                  $ref: '#/components/schemas/Profile'
  */
-router.put('/', authRequired, (req, res, next) => {
-  const profile = req.body;
-  if (profile) {
-    const id = profile.profile_id || 0;
-    Profiles.findById(id)
-      .then(
-        Profiles.update(id, profile)
-          .then((updated) => {
-            res
-              .status(200)
-              .json({ message: 'profile created', profile: updated[0] });
+// update current profile firstname, lastname, email
+router.put(
+  '/',
+  validation(validateSelfUpdate),
+  authRequired,
+  (req, res, next) => {
+    try {
+      const changes = req.body;
+      const user = req.profile;
+      if (changes) {
+        Profiles.update(user.profile_id, changes)
+          .then(async (updated) => {
+            await dsService.postProfileUpdate(updated, updated.role_id);
+            res.status(200).json({ updated_profile: updated[0] });
           })
           .catch(() => {
             next({
               status: 500,
-              message: `Could not update profile '${id}'`,
+              message: `Could not update profile ${user.profile_id}`,
             });
-          })
-      )
-      .catch(() => {
+          });
+      } else {
         next({
-          status: 404,
-          message: `Could not find profile '${id}'`,
+          status: 400,
+          message: `Missing or invalid request`,
         });
+      }
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+// update profile by id (admin)
+router.put('/:id', adminRequired, authRequired, (req, res, next) => {
+  try {
+    const changes = req.body;
+    if (changes) {
+      Profiles.update(req.params.id, changes)
+        .then(async (updated) => {
+          await dsService.postProfileUpdate(updated, updated.role_id);
+          res.status(200).json({ updated_profile: updated });
+        })
+        .catch(() => {
+          next({
+            status: 500,
+            message: `Could not update profile ${req.profile.profile_id}`,
+          });
+        });
+    } else {
+      next({
+        status: 400,
+        message: `Missing or invalid request`,
       });
+    }
+  } catch (err) {
+    next(err);
   }
 });
 /**
