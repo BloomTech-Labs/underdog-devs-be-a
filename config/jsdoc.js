@@ -64,8 +64,7 @@ module.exports = {
                 properties: {
                   message: {
                     type: 'string',
-                    description: `The server has not found the requested'
-                       the URI.`,
+                    description: `The server has not found the requested #field#.`,
                     example: 'Not Found',
                   },
                 },
@@ -101,8 +100,9 @@ module.exports = {
                     type: 'string',
                     description: `When ready to deploy app - change to 404!
                     Generally used as a proxy definition. But we will use this as
-                    a Third Party error`,
-                    example: 'Okta server error - please contact support',
+                    a Third Party error. Please do not use 407 error in deployment
+                    as this could cause an intruder to understand too much of the real issue`,
+                    example: 'Okta server error - please contact support.',
                   },
                 },
               },
