@@ -27,10 +27,12 @@ router.get('/current_user_profile/', authRequired, async (req, res, next) => {
  * @swagger
  * components:
  *  schemas:
- *    Profile:
+ *    Profiles:
  *      type: object
  *      required:
  *        - profile_id
+ *        - first_name
+ *        - last_name
  *        - email
  *        - role_id
  *        - attendance_rate
@@ -54,14 +56,14 @@ router.get('/current_user_profile/', authRequired, async (req, res, next) => {
  *        role_id: 4
  *        attendance_rate: 1
  *
- * /profile:
+ * /profiles:
  *  get:
  *    description: Returns a list of profiles
  *    summary: Get a list of all profiles
  *    security:
  *      - okta: []
  *    tags:
- *      - profile
+ *      - profiles
  *    responses:
  *      200:
  *        description: array of profiles
@@ -70,16 +72,18 @@ router.get('/current_user_profile/', authRequired, async (req, res, next) => {
  *            schema:
  *              type: array
  *              items:
- *                $ref: '#/components/schemas/Profile'
+ *                $ref: '#/components/schemas/Profiles'
  *              example:
  *                - profile_id: '00uhjfrwdWAQvD8JV4x6'
- *                  email: 'frank@example.com'
  *                  first_name: 'Frank'
  *                  last_name: 'Martinez'
+ *                  email: 'frank@example.com'
+ *                  attendence_rate: '80'
  *                - profile_id: '013e4ab94d96542e791f'
- *                  email: 'cathy@example.com'
  *                  first_name: 'Cathy'
  *                  last_name: 'Warmund'
+ *                  email: 'cathy@example.com'
+ *                  attendence_rate: '80'
  *      400:
  *        $ref: '#/components/responses/BadRequest'
  *      401:
@@ -108,7 +112,7 @@ router.get('/', authRequired, adminRequired, function (req, res, next) {
  * components:
  *  parameters:
  *    profile_id:
- *      name: id
+ *      name: profile_id
  *      in: path
  *      description: ID of the profile to return
  *      required: true
@@ -116,14 +120,14 @@ router.get('/', authRequired, adminRequired, function (req, res, next) {
  *      schema:
  *        type: string
  *
- * /profile/{id}:
+ * /profiles/{id}:
  *  get:
- *    description: Find profiles by ID
+ *    description: Find profile by ID
  *    summary: Returns a single profile
  *    security:
  *      - okta: []
  *    tags:
- *      - profile
+ *      - profiles
  *    parameters:
  *      - $ref: '#/components/parameters/profile_id'
  *    responses:
@@ -132,11 +136,13 @@ router.get('/', authRequired, adminRequired, function (req, res, next) {
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Profile'
+ *              $ref: '#/components/schemas/Profiles'
  *      401:
  *        $ref: '#/components/responses/Unauthorized'
+ *      403:
+ *        $ref: '#/components/responses/Forbidden'
  *      404:
- *        description: 'Profile not found'
+ *        descripton: 'Profiles cannot be found'
  */
 router.get(
   '/:id',
@@ -152,7 +158,7 @@ router.get(
             .status(200)
             .json({ ...profile, attendance_rate: attendance_average });
         } else {
-          next({ status: 404, message: 'ProfileNotFound' });
+          next({ status: 404, message: 'Profile Not Found' });
         }
       })
       .catch((err) => {
@@ -163,13 +169,13 @@ router.get(
 
 /**
  * @swagger
- * /profile:
+ * /profiles:
  *  post:
- *    summary: Add a profile
+ *    summary: Adding a profile
  *    security:
  *      - okta: []
  *    tags:
- *      - profile
+ *      - profiles
  *    requestBody:
  *      description: Profile object to to be added
  *      content:
@@ -184,7 +190,7 @@ router.get(
  *      404:
  *        description: 'Profile not found'
  *      201:
- *        description: A profile object
+ *        description: A profile object has been created
  *        content:
  *          application/json:
  *            schema:
@@ -192,10 +198,11 @@ router.get(
  *              properties:
  *                message:
  *                  type: string
- *                  description: A message about the result
- *                  example: profile created
+ *                  description: A profile has been created
+ *                  example: `Welcome message to the user about being admitted
+ *                     into the program`
  *                profile:
- *                  $ref: '#/components/schemas/Profile'
+ *                  $ref: '#/components/schemas/Profiles'
  */
 router.post('/', authRequired, async function (req, res, next) {
   const profile = req.body;
