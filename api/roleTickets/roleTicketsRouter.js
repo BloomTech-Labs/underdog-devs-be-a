@@ -105,15 +105,36 @@ const {
  *        $ref: '#/components/responses/UnauthorizedError'
  */
 
+const dummyData = [
+  {
+    role_ticket_id: 1,
+    submitted_by: '00ulthapbErVUwVJy4x6',
+    subject_id: '00ulthapbErVUwVJy4x6',
+    requested_role: 1,
+    approved_by: '00ulthapbErVUwVJy4x6',
+    comments: 'This is my 1st dummy data comment',
+    pending: true,
+    resolved: false,
+    created_at: '2022-03-11T22:34:47.814Z',
+    updated_at: '2022-03-11T22:34:47.814Z',
+  },
+  {
+    role_ticket_id: 2,
+    submitted_by: '00ulthapbErVUwVJy4x6',
+    subject_id: '00ulthapbErVUwVJy4x6',
+    requested_role: 1,
+    approved_by: '00ulthapbErVUwVJy4x6',
+    comments: 'This is my 2nd dummy data comment',
+    pending: true,
+    resolved: false,
+    created_at: '2022-03-11T22:34:47.814Z',
+    updated_at: '2022-03-11T22:34:47.814Z',
+  },
+];
+
 // Responds with all available role ticket requests
-router.get('/', authRequired, adminRequired, (req, res, next) => {
-  RoleTickets.findAllRoleTickets()
-    .then((roleTickets) => {
-      res.status(200).json(roleTickets);
-    })
-    .catch((err) => {
-      next(err);
-    });
+router.get('/', authRequired, adminRequired, (req, res) => {
+  res.status(200).json(dummyData);
 });
 
 /**
@@ -164,7 +185,7 @@ router.get(
       const roleTicket = req.roleTicket;
       return res.status(200).json(roleTicket);
     } catch (err) {
-      return next(err);
+      next({ status: 500, message: err.message });
     }
   }
 );
@@ -231,7 +252,7 @@ router.post(
         roleTicket: postResponse,
       });
     } catch (err) {
-      return next(err);
+      next({ status: 500, message: err.message });
     }
   }
 );
@@ -321,7 +342,7 @@ router.put(
         roleTicket: updatedRoleTicket,
       });
     } catch (err) {
-      return next(err);
+      next({ status: 500, message: err.message });
     }
   }
 );
@@ -384,7 +405,7 @@ router.delete(
         message: `Role Ticket #${role_ticket_id} deleted, succesfully!`,
       });
     } catch (err) {
-      return next(err);
+      next({ status: 500, message: err.message });
     }
   }
 );

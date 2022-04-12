@@ -7,16 +7,22 @@ const {
   adminRequired,
   superAdminRequired,
 } = require('../middleware/permissionsRequired');
+const validation = require('../middleware/validation');
+const validateSelfUpdate = require('../../data/schemas/userProfileSchema');
 const { validateUser } = require('../middleware/generalMiddleware');
+const dsService = require('../dsService/dsModel');
 validateUser;
 
-// this will be modified to get profiles from the mentee_intake table once the seed data is cleaned up a bit and the profile_ids in the mentee intake tabler are updated and usable.
+// gets current user profile
+
 router.get('/current_user_profile/', authRequired, async (req, res, next) => {
   try {
-    const resp = await Profiles.mentorApplicationData(req.profile.profile_id);
-    res.status(200).json(resp);
-  } catch (error) {
-    next(error);
+    req.profile.attendance_rate = await Profiles.checkAverageAttendance(
+      req.profile.profile_id
+    );
+    res.status(200).json(req.profile);
+  } catch (err) {
+    next({ status: 500, message: err.message });
   }
 });
 
@@ -48,7 +54,7 @@ router.get('/current_user_profile/', authRequired, async (req, res, next) => {
  *        name: 'Frank Martinez'
  *        avatarUrl: 'https://s3.amazonaws.com/uifaces/faces/twitter/hermanobrother/128.jpg'
  *
- * /profiles:
+ * /profile:
  *  get:
  *    description: Returns a list of profiles
  *    summary: Get a list of all profiles
@@ -79,14 +85,13 @@ router.get('/current_user_profile/', authRequired, async (req, res, next) => {
  *      403:
  *        $ref: '#/components/responses/UnauthorizedError'
  */
-router.get('/', authRequired, adminRequired, function (req, res) {
+router.get('/', authRequired, adminRequired, function (req, res, next) {
   Profiles.findAll()
     .then((profiles) => {
       res.status(200).json(profiles);
     })
     .catch((err) => {
-      console.log(err);
-      res.status(500).json({ message: err.message });
+      next({ status: 500, message: err.message });
     });
 });
 
@@ -94,7 +99,7 @@ router.get('/', authRequired, adminRequired, function (req, res) {
  * @swagger
  * components:
  *  parameters:
- *    profileId:
+ *    profile_id:
  *      name: id
  *      in: path
  *      description: ID of the profile to return
@@ -112,7 +117,7 @@ router.get('/', authRequired, adminRequired, function (req, res) {
  *    tags:
  *      - profile
  *    parameters:
- *      - $ref: '#/components/parameters/profileId'
+ *      - $ref: '#/components/parameters/profile_id'
  *    responses:
  *      200:
  *        description: A profile object
@@ -125,20 +130,28 @@ router.get('/', authRequired, adminRequired, function (req, res) {
  *      404:
  *        description: 'Profile not found'
  */
-router.get('/:id', authRequired, adminRequired, function (req, res) {
-  const id = String(req.params.id);
-  Profiles.findById(id)
-    .then((profile) => {
-      if (profile) {
-        res.status(200).json(profile);
-      } else {
-        res.status(404).json({ error: 'ProfileNotFound' });
-      }
-    })
-    .catch((err) => {
-      res.status(500).json({ error: err.message });
-    });
-});
+router.get(
+  '/:id',
+  authRequired,
+  adminRequired,
+  async function (req, res, next) {
+    const id = String(req.params.id);
+    const attendance_average = await Profiles.checkAverageAttendance(id);
+    Profiles.findById(id)
+      .then((profile) => {
+        if (profile) {
+          res
+            .status(200)
+            .json({ ...profile, attendance_rate: attendance_average });
+        } else {
+          next({ status: 404, message: 'ProfileNotFound' });
+        }
+      })
+      .catch((err) => {
+        next({ status: 500, message: err.message });
+      });
+  }
+);
 
 /**
  * @swagger
@@ -162,7 +175,7 @@ router.get('/:id', authRequired, adminRequired, function (req, res) {
  *        $ref: '#/components/responses/UnauthorizedError'
  *      404:
  *        description: 'Profile not found'
- *      200:
+ *      201:
  *        description: A profile object
  *        content:
  *          application/json:
@@ -176,7 +189,7 @@ router.get('/:id', authRequired, adminRequired, function (req, res) {
  *                profile:
  *                  $ref: '#/components/schemas/Profile'
  */
-router.post('/', authRequired, async (req, res) => {
+router.post('/', authRequired, async (req, res, next) => {
   const profile = req.body;
   if (profile) {
     const id = profile.id || 0;
@@ -186,19 +199,18 @@ router.post('/', authRequired, async (req, res) => {
           //profile not found so lets insert it
           await Profiles.create(profile).then((profile) =>
             res
-              .status(200)
+              .status(201)
               .json({ message: 'profile created', profile: profile[0] })
           );
         } else {
-          res.status(400).json({ message: 'profile already exists' });
+          next({ status: 400, message: 'profile already exists' });
         }
       });
     } catch (e) {
-      console.error(e);
-      res.status(500).json({ message: e.message });
+      next({ status: 500, message: e.message });
     }
   } else {
-    res.status(404).json({ message: 'Profile missing' });
+    next({ status: 404, message: 'Profile missing' });
   }
 });
 /**
@@ -235,36 +247,68 @@ router.post('/', authRequired, async (req, res) => {
  *                profile:
  *                  $ref: '#/components/schemas/Profile'
  */
-router.put('/', authRequired, (req, res) => {
-  const profile = req.body;
-  if (profile) {
-    const id = profile.profile_id || 0;
-    Profiles.findById(id)
-      .then(
-        Profiles.update(id, profile)
-          .then((updated) => {
-            res
-              .status(200)
-              .json({ message: 'profile created', profile: updated[0] });
+// update current profile firstname, lastname, email
+router.put(
+  '/',
+  validation(validateSelfUpdate),
+  authRequired,
+  (req, res, next) => {
+    try {
+      const changes = req.body;
+      const user = req.profile;
+      if (changes) {
+        Profiles.update(user.profile_id, changes)
+          .then(async (updated) => {
+            await dsService.postProfileUpdate(updated, updated.role_id);
+            res.status(200).json({ updated_profile: updated[0] });
           })
-          .catch((err) => {
-            res.status(500).json({
-              message: `Could not update profile '${id}'`,
-              error: err.message,
+          .catch(() => {
+            next({
+              status: 500,
+              message: `Could not update profile ${user.profile_id}`,
             });
-          })
-      )
-      .catch((err) => {
-        res.status(404).json({
-          message: `Could not find profile '${id}'`,
-          error: err.message,
+          });
+      } else {
+        next({
+          status: 400,
+          message: `Missing or invalid request`,
         });
+      }
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
+// update profile by id (admin)
+router.put('/:id', adminRequired, authRequired, (req, res, next) => {
+  try {
+    const changes = req.body;
+    if (changes) {
+      Profiles.update(req.params.id, changes)
+        .then(async (updated) => {
+          await dsService.postProfileUpdate(updated, updated.role_id);
+          res.status(200).json({ updated_profile: updated });
+        })
+        .catch(() => {
+          next({
+            status: 500,
+            message: `Could not update profile ${req.profile.profile_id}`,
+          });
+        });
+    } else {
+      next({
+        status: 400,
+        message: `Missing or invalid request`,
       });
+    }
+  } catch (err) {
+    next(err);
   }
 });
 /**
  * @swagger
- * profile/is_active/:profile_id:
+ * /profile/is_active/:profile_id:
  *  put:
  *    summary: Update a is_active filed in for the profile table.
  *    security:
@@ -302,7 +346,7 @@ router.put(
   authRequired,
   superAdminRequired,
   validateUser,
-  async (req, res) => {
+  async (req, res, next) => {
     const { profile_id } = req.params;
     try {
       const profile = await Profiles.findById(profile_id);
@@ -313,9 +357,9 @@ router.put(
         res.status(200).json({ message: 'profile is now inactive' });
       }
     } catch (err) {
-      res.status(500).json({
+      next({
+        status: 500,
         message: `Could not update active status of profile with with ID: ${profile_id}`,
-        error: err.message,
       });
     }
   }
@@ -335,7 +379,7 @@ router.get('/match/:id', authRequired, (req, res, next) => {
       });
     })
     .catch((err) => {
-      next(err);
+      next({ status: 500, message: err.message });
     });
 });
 

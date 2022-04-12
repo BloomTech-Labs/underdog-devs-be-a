@@ -1,6 +1,7 @@
 const express = require('express');
 const Meeting = require('../meetings/meetingsModel');
 const Profiles = require('../profile/profileModel');
+const dsService = require('../dsService/dsModel');
 const router = express.Router();
 const jwt = require('jwt-decode');
 const authRequired = require('../middleware/authRequired');
@@ -11,13 +12,13 @@ const {
 
 // get all meetings
 
-router.get('/', authRequired, adminRequired, (req, res) => {
+router.get('/', authRequired, adminRequired, (req, res, next) => {
   Meeting.findAll()
     .then((meetings) => {
       res.status(200).json(meetings);
     })
     .catch((err) => {
-      res.status(500).json({ error: err.message });
+      next({ status: 500, message: err.message });
     });
 });
 
@@ -28,7 +29,7 @@ router.get(
   authRequired,
   validProfileID,
   adminRequired,
-  (req, res) => {
+  (req, res, next) => {
     const id = req.params.profile_id;
     Meeting.findByProfileId(id)
       .then((meetings) => {
@@ -39,14 +40,14 @@ router.get(
         }
       })
       .catch((err) => {
-        res.status(500).json({ error: err.message });
+        next({ status: 500, message: err.message });
       });
   }
 );
 
 // get all the meetings the current user has
 
-router.get('/my-meetings', authRequired, async (req, res) => {
+router.get('/my-meetings', authRequired, async (req, res, next) => {
   const token = req.headers.authorization;
   const user = jwt(token);
   const id = user.sub;
@@ -55,7 +56,7 @@ router.get('/my-meetings', authRequired, async (req, res) => {
       res.status(200).json(meetings);
     })
     .catch((err) => {
-      res.status(500).json({ error: err.message });
+      next({ status: 500, message: err.message });
     });
 });
 
@@ -71,7 +72,10 @@ router.post(
   (req, res, next) => {
     const meeting = req.body;
     Meeting.Create(meeting)
-      .then(() => {
+      .then(async (meeting_object) => {
+        if (meeting_object.meeting_missed !== 'pending') {
+          await dsService.postMeeting(meeting_object);
+        }
         res.status(201).json({ message: 'success', meeting });
       })
       .catch(next);
@@ -92,10 +96,13 @@ router.put(
     Meeting.Update(id, changes)
       .then((change) => {
         if (change) {
-          Meeting.findByMeetingId(id).then((success) => {
+          Meeting.findByMeetingId(id).then(async (meeting_object) => {
+            if (meeting_object.meeting_missed !== 'pending') {
+              await dsService.postMeeting(meeting_object);
+            }
             res.status(200).json({
-              message: `Meeting '${success.meeting_id}' updated`,
-              success,
+              message: `Meeting '${meeting_object.meeting_id}' updated`,
+              meeting_object,
             });
           });
         }
@@ -127,14 +134,14 @@ router.delete(
 
 // get a meeting by meeting_id
 
-router.get('/:meeting_id', authRequired, validMeetingID, (req, res) => {
+router.get('/:meeting_id', authRequired, validMeetingID, (req, res, next) => {
   const id = req.params.meeting_id;
   Meeting.findByMeetingId(id)
     .then((meeting) => {
       res.status(200).json(meeting);
     })
     .catch((err) => {
-      res.status(500).json({ error: err.message });
+      next({ status: 500, message: err.message });
     });
 });
 
@@ -148,9 +155,7 @@ function validMeetingID(req, res, next) {
       req.meeting = meeting;
       next();
     } else {
-      res.status(400).json({
-        message: 'Meeting_id Not Found',
-      });
+      next({ status: 404, message: 'Meeting_id Not Found' });
     }
   });
 }
@@ -164,7 +169,7 @@ function validProfileID(req, res, next) {
         req.profile = profile;
         next();
       } else {
-        res.status(400).json({
+        res.status(404).json({
           message: 'Invalid ID',
         });
       }
@@ -181,7 +186,7 @@ function validHostID(req, res, next) {
         req.profile = profile;
         next();
       } else {
-        res.status(400).json({
+        res.status(404).json({
           message: 'Invalid Host ID',
         });
       }
@@ -198,7 +203,7 @@ function validAttendeeID(req, res, next) {
         req.profile = profile;
         next();
       } else {
-        res.status(400).json({
+        res.status(404).json({
           message: 'Invalid attendee_id',
         });
       }
@@ -222,9 +227,13 @@ function validNewMeeting(req, res, next) {
     res.status(400).json({
       message: 'Missing meeting_date field',
     });
-  } else if (!meeting.meeting_time) {
+  } else if (!meeting.meeting_start_date) {
     res.status(400).json({
-      message: 'Missing meeting_time field',
+      message: 'Missing meeting_start_date field',
+    });
+  } else if (!meeting.meeting_end_date) {
+    res.status(400).json({
+      message: 'Missing meeting_end_date field',
     });
   } else if (!meeting.host_id) {
     res.status(400).json({

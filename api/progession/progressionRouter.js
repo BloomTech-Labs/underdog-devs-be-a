@@ -14,13 +14,16 @@ const {
 const authRequired = require('../middleware/authRequired');
 
 // Responds with the available progression labels
-router.get('/', authRequired, mentorRequired, (req, res) => {
+router.get('/', authRequired, mentorRequired, (req, res, next) => {
   Progression.findAllLabels()
     .then((labels) => {
       res.status(200).json(labels);
     })
     .catch((err) => {
-      res.status(500).json({ message: err.message });
+      next({
+        status: 500,
+        message: err.message,
+      });
     });
 });
 
@@ -31,13 +34,16 @@ router.get(
   mentorRequired,
   validateUser,
   checkIfMentee,
-  async (req, res) => {
+  async (req, res, next) => {
     const { profile_id } = req.params;
     try {
       const data = await Progression.findByMenteeId(profile_id);
       res.status(200).json(data);
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      next({
+        status: 500,
+        message: err.message,
+      });
     }
   }
 );
@@ -51,7 +57,7 @@ router.put(
   validateProgressId,
   checkIfMentee,
   checkMenteeProgress,
-  async (req, res) => {
+  async (req, res, next) => {
     const { profile_id } = req.params;
     const { progress_id } = req.body;
     try {
@@ -62,7 +68,10 @@ router.put(
       data.message = 'Mentee progress successfully updated';
       res.status(200).json(data);
     } catch (err) {
-      res.status(500).json({ message: err.message });
+      next({
+        status: 500,
+        message: err.message,
+      });
     }
   }
 );

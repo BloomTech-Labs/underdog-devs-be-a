@@ -4,6 +4,7 @@ exports.up = function (knex) {
     .createTable('reviews', function (table) {
       table.increments('review_id').notNullable().unique().primary();
       table.string('review').notNullable();
+      table.boolean('rating');
       table
         .string('mentor_id')
         .unsigned()

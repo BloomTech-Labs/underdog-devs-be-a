@@ -31,6 +31,10 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 
 # Endpoints
 
+## Response Codes
+[Status Codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#server_error_responses)
+Please see [this file](./__tests__/README.md) for more info.
+
 ## Status
 
 | Method | Endpoint | Request Body | Returns                    |
@@ -53,25 +57,32 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 ###### Reference profile schema:
 
     {
-        "user_id": "00ulzfj6nX72gu3Nh4d6",
+        "profile_id": "00ulzfj6nX72gu3Nh4d6",
         "email": "email@email.mail",
         "first_name":"John",
         "last_name":"Doe",
+        "location": "Sedona, Arizona",
+        "company": "Unemployed",
+        "tech_stack": ["react", "msPaint"],
         "role_id": 3,
-        "role_name": "user",
-        "created_at": "2021-04-21T18:47:18.712Z",
-        "updated_at": "2021-04-21T18:47:18.712Z",
-        "approved": True
+        "created_at": "2022-03-30T23:36:21.053Z",
+        "updated_at": "2022-03-30T23:36:21.053Z",
+        "is_active": true,
+        "progress_status": null,
+        "attendance_rate": 0.4689,
+        "progress_id": null
     }
 
 | Method | Endpoint                  | Required Request Body | Returns                           | User Auth    |
 | ------ | ------------------------- | --------------------- | --------------------------------- | ------------ |
-| GET    | `/profiles`               | -                     | `get all profiles`                | `Admin`      |
-| GET    | `/profiles/:id`           | -                     | `get profile by id`               | `Admin`      |
-| POST   | `/profiles`               | `first/last, email`   | `create new profile`              |              |
-| PUT    | `/profiles/:id`           | `first/last, email`   | `update a profile by profile id`  |              |
-| PUT    | `/profiles/roles`         | `role`                | `update a profiles role`          | `Admin`      |
-| PUT    | `/profiles/is_active/:id` | -                     | `activates/deactivates a profile` | `SuperAdmin` |
+| GET    | `/profile`                | -                     | `get all profiles`                | `Admin`      |
+| GET    | `/profile/:id`            | -                     | `get profile by id`               | `Admin`      |
+| GET    | `/profile/current_user`   | -                     | `get current profile`             |              |
+| POST   | `/profile`                | `first/last, email`   | `create new profile`              |              |
+| PUT    | `/profile/`               |                       | `update current profile`          |              |
+| PUT    | `/profile/:id`            |                       | `update a profile by profile id`  | `Admin`      |
+| PUT    | `/profile/roles`          | `role`                | `update a profiles role`          | `Admin`      |
+| PUT    | `/profile/is_active/:id`  | -                     | `activates/deactivates a profile` | `SuperAdmin` |
 
 ## Applications / Mentee-Mentor Intakes
 
@@ -194,15 +205,16 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 ###### Meetings schema:
 
     {
-        "meeting_id": 4,
-        "created_at": "2021-11-08T19:21:16.551Z",
-        "updated_at": "2021-11-08T19:21:16.551Z",
-        "meeting_topic": "Resume Help",
-        "meeting_date": "2021-12-04",
-        "meeting_time": "4pm PCT - 5pm PCT",
-        "host_id": "9",
-        "attendee_id": "7",
-        "meeting_notes": "Remember to bring your resume"
+        meeting_id: 2,
+        created_at: 2022-03-12T00:42:20.382Z,
+        updated_at: 2022-03-12T00:42:20.382Z,
+        meeting_topic: 'lorem dipz um',
+        meeting_start_date: 1640353440,
+        meeting_end_date: 1640354210, 
+        host_id: '7',
+        attendee_id: '00ultx74kMUmEW8054x6',
+        meeting_notes: 'Remember to bring a smile',
+        meeting_missed: 'Pending'
     }
 
 | Method | Endpoint                        | Required Request Body                                                             | Returns                                           | User Auth |
@@ -335,3 +347,39 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 | GET    | `/progress`             | -                     | `get all available progress tags`           | `mentor`  |
 | GET    | `/progress/:profile_id` | -                     | `get a specific profile's current progress` | -         |
 | PUT    | `/progress/:profile_id` | `progress_id`         | `update a profile's progress`               | `admin`   |
+
+###### Notes schema:
+
+    {
+        "note_id": 1 (PK, integer, automatically generated),
+        "created_by": profile_id of note creator(FK),
+        "content_type": type here,
+        "status": ["in progress", "resolved", "no action needed", "escalated"]
+        "content": note text,
+        "level": low medium or high,
+        "visible_to_admin": true,
+        "visible_to_mentor": true,
+        "visible_to_mentee": false,
+        "mentor_id": profile_id of mentor(FK),
+        "mentee_id": profile_id of mentee(FK),
+        "created_at": timestamp with time zone (automatically generated),
+        "updated_at": timestamp with time zone (automatically generated)
+    }
+
+| Method | Endpoint                            | Required Request Body                           | Returns                           | User Auth |
+| ------ | ----------------------------------- | ----------------------------------------------- | --------------------------------- | --------- |
+| GET    | `/notes`                            | -                                               | `get all notes`                   | -         |
+| GET    | `/notes/:note_id`                   | `note_id`(params)                               | `get note by note_id`             | -         |
+| GET    | `/notes/mentee/:mentee_id`          | `mentee_id`(params)                             | `get notes by mentee_id`          | -         |
+| POST   | `/notes`                            | `created_by`,                                   | `newly created note`              | -         |
+                                                 `content_type`,                                 
+                                                 `status`,
+                                                 `content`,
+                                                 `level`,
+                                                 `visible_to_admin`,
+                                                 `visible_to_mentor`,
+                                                 `visible_to_mentee`,
+                                                 `mentor_id`,
+                                                 `mentee_id`                                           | `added note`                      | -         |
+| PUT    | `/notes/:note_id`                   | `note_id`(params), `status, content, and/or level`    | `updated note`                    | -         |
+| DELETE | `/notes/:note_id`                   | `note_id`(params)                                     | `remove note by note_id`          | -         |
