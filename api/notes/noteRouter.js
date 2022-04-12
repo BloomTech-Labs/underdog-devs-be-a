@@ -4,7 +4,6 @@ const router = express.Router();
 const authRequired = require('../middleware/authRequired');
 const validation = require('../middleware/validation');
 const notesSchema = require('../../data/schemas/notesSchema');
-const checkBodyIsComplete = require('.././middleware/notesMiddleware');
 
 const {
   checkNoteExists,
@@ -12,6 +11,7 @@ const {
   checkMenteeIdExists,
   checkMentorIdExists,
   checkStatusEnum,
+  checkBodyIsComplete,
 } = require('../middleware/notesMiddleware');
 
 router.get('/', authRequired, async (req, res, next) => {
