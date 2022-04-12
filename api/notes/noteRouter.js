@@ -11,6 +11,7 @@ const {
   checkMenteeIdExists,
   checkMentorIdExists,
   checkStatusEnum,
+  checkBodyIsComplete,
 } = require('../middleware/notesMiddleware');
 
 router.get('/', authRequired, async (req, res, next) => {
