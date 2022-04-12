@@ -69,6 +69,17 @@ router.post(
   }
 );
 
+// Create a review for a mentor
+
+router.post('/', authRequired, validNewReview, (req, res, next) => {
+  const review = req.body;
+  Review.Create(review)
+    .then(() => {
+      res.status(201).json({ message: 'success' });
+    })
+    .catch(next);
+});
+
 ////////////////MIDDLEWARE////////////////
 
 // Validate profile id
@@ -88,7 +99,7 @@ function validProfileID(req, res, next) {
     .catch(next);
 }
 
-// Validate new review includes a mentor and mentee
+// Validate new review includes a mentor_id and mentee_id
 
 function validNewReview(req, res, next) {
   const assign = req.body;
