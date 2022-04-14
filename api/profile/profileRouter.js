@@ -7,7 +7,7 @@ const {
   adminRequired,
   superAdminRequired,
 } = require('../middleware/permissionsRequired');
-const validation = require('../middleware/validation');
+const validation = require('../helpers/validation');
 const validateSelfUpdate = require('../../data/schemas/userProfileSchema');
 const { validateUser } = require('../middleware/generalMiddleware');
 const dsService = require('../dsService/dsModel');

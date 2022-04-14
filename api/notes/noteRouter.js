@@ -2,7 +2,7 @@ const express = require('express');
 const Notes = require('./noteModel');
 const router = express.Router();
 const authRequired = require('../middleware/authRequired');
-const validation = require('../middleware/validation');
+const validation = require('../helpers/validation');
 const notesSchema = require('../../data/schemas/notesSchema');
 
 const {
