@@ -1,6 +1,6 @@
-// TODO: Refactor these function to fetch data from tickets table instead of application_tickets table
-//FIRST, let's dig into the database wooo
 const db = require('../../data/db-config');
+
+//this is a basic model for our application flow. Currently, imports from applicationMiddleware depend on it and should be working correctly now.
 
 const getTicketById = async (ticket_id) => {
   return db.select('*').from('tickets').where({ ticket_id }).first();
@@ -22,8 +22,24 @@ const getMenteeIntake = async (mentee_intake_id) => {
     .first();
 };
 
+const insertMentorIntake = async (newMentorApplication) => {
+  const newMentorIntake = await db('mentor_intake').insert(
+    newMentorApplication
+  );
+  return newMentorIntake;
+};
+
+const insertMenteeIntake = async (newMenteeApplication) => {
+  const newMenteeIntake = await db('mentee_intake').insert(
+    newMenteeApplication
+  );
+  return newMenteeIntake;
+};
+
 module.exports = {
   getTicketById,
   getMentorIntake,
   getMenteeIntake,
+  insertMentorIntake,
+  insertMenteeIntake,
 };
