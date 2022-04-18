@@ -1,7 +1,5 @@
 const db = require('../../data/db-config');
 
-//this is a basic model for our application flow. Currently, imports from applicationMiddleware depend on it and should be working correctly now.
-
 const getTicketById = async (ticket_id) => {
   return db.select('*').from('tickets').where({ ticket_id }).first();
 };
