@@ -1,4 +1,3 @@
-// TODO: Refactor these function to fetch data from tickets table instead of role_tickets table
 const db = require('../../data/db-config');
 
 // This function allows you to see what tickets are requesting a mentee or mentor role via ticket type
