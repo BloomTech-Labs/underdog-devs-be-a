@@ -8,10 +8,10 @@ const verifyJwt = jwt({
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 5,
-    jwksUri: `${config.jwksUri}`,
+    jwksUri: config.jwksUri,
   }),
-  audience: `${config.audience}`,
-  issuer: `${config.issuer}`,
+  audience: config.audience,
+  issuer: config.issuer,
   algorithms: ['RS256'],
 });
 
