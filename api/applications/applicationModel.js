@@ -39,6 +39,24 @@ const add = async (applicationTicket) => {
   return newTicket;
 };
 
+const getMenteeSubject = async (mentee_id) => {
+  const subject = await db.select('*').from('mentees').where({ mentee_id }); //check if that's the actual name of the table!!!!
+  return subject;
+};
+
+const updateApplicationNotes = async (application_id, application_notes) => {
+  const notes = await db
+    .select('applications')
+    .where({ application_id })
+    .insert({ application_notes }); //ALSO CHECK ACTUAL NAME OF THE TABLE !
+  return notes;
+};
+
+const updateTicket = async (args) => {
+  const result = await db.grep('table??').insert(args);
+  return result; //this one will have to research a little more indepth to see how 'approved' is marked in the DB!
+};
+
 module.exports = {
   getTicketById,
   getMentorIntake,
@@ -46,4 +64,7 @@ module.exports = {
   insertMentorIntake,
   insertMenteeIntake,
   add,
+  getMenteeSubject,
+  updateApplicationNotes,
+  updateTicket,
 };
