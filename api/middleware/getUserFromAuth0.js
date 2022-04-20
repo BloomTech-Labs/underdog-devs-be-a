@@ -1,5 +1,5 @@
 const axios = require('axios');
-const getUserFromAuth0 = async (req, res, next) => {
+const getUserAuth0 = async (req, res, next) => {
   try {
     const accessToken = req.headers.authorization.split(' ')[1];
     const response = await axios.get('https://mypad.auth0.com/userinfo', {
@@ -18,4 +18,4 @@ const getUserFromAuth0 = async (req, res, next) => {
   }
 };
 
-module.exports = { getUserFromAuth0 };
+module.exports = { getUserAuth0 };
