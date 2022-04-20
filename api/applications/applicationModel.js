@@ -34,7 +34,6 @@ const insertMenteeIntake = async (newMenteeApplication) => {
   return newMenteeIntake;
 };
 
-//add function inserts ticket into ticket table. Needed for initial creation of ticket!!
 const add = async (applicationTicket) => {
   const newTicket = await db('tickets').insert(applicationTicket);
   return newTicket;
