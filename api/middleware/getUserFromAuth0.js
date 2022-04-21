@@ -1,8 +1,10 @@
 const axios = require('axios');
+const config = require('../../config/auth0');
+
 const getUserAuth0 = async (req, res, next) => {
   try {
     const accessToken = req.headers.authorization.split(' ')[1];
-    const response = await axios.get('https://mypad.auth0.com/userinfo', {
+    const response = await axios.get(`${config.issuer}/userinfo`, {
       headers: {
         authorization: `Bearer ${accessToken}`,
       },
