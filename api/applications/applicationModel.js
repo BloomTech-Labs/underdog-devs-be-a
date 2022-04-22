@@ -41,7 +41,7 @@ const add = async (applicationTicket) => {
 
 const getMenteeSubject = async (mentee_id) => {
   const subject = await db
-    .select('tech_stack')
+    .select('subject')
     .from('mentee_intake')
     .where('mentee_intake_id', mentee_id);
   return subject;
