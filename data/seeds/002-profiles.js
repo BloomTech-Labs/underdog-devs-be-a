@@ -1,5 +1,22 @@
-const randomLocations = ['Guthrie, Oklahoma', 'Seattle, Washington', 'Dallas, Texas', 'Sedona, Arizona', 'Raleigh, North Carolina' ];
-const tech_stack = ['React', 'Vue', 'Angular', 'Node', 'FastAPI', 'TypeScript', 'Go', 'C#', 'noSQL', 'sqlchad'];
+const randomLocations = [
+  'Guthrie, Oklahoma',
+  'Seattle, Washington',
+  'Dallas, Texas',
+  'Sedona, Arizona',
+  'Raleigh, North Carolina',
+];
+const tech_stack = [
+  'React',
+  'Vue',
+  'Angular',
+  'Node',
+  'FastAPI',
+  'TypeScript',
+  'Go',
+  'C#',
+  'noSQL',
+  'sqlchad',
+];
 
 const profiles = [...new Array(14)].map((i, idx) => ({
   profile_id: (idx + 1).toString(),
@@ -9,7 +26,10 @@ const profiles = [...new Array(14)].map((i, idx) => ({
   role_id: idx < 2 ? 1 : idx == 2 ? 2 : 3,
   company: idx < 2 ? 'UnderDogDevs' : idx === 2 ? 'BloomTech' : 'Unemployed',
   location: randomLocations[Math.floor(Math.random() * 5)],
-  tech_stack: [`${tech_stack[Math.floor(Math.random() * 9)]}`, `${tech_stack[Math.floor(Math.random() * 9)]}`],
+  tech_stack: [
+    `${tech_stack[Math.floor(Math.random() * 9)]}`,
+    `${tech_stack[Math.floor(Math.random() * 9)]}`,
+  ],
   is_active: true,
   progress_id: null,
 }));
