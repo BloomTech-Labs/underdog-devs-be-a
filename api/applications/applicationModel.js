@@ -49,15 +49,17 @@ const getMenteeSubject = async (mentee_id) => {
 
 const updateApplicationNotes = async (application_id, application_notes) => {
   const notes = await db
-    .select('applications')
+    .select('tickets')
     .where({ application_id })
-    .insert({ application_notes }); //ALSO CHECK ACTUAL NAME OF THE TABLE !
+    .insert({ application_notes });
   return notes;
 };
 
-const updateTicket = async (args) => {
-  const result = await db.grep('table??').insert(args);
-  return result; //this one will have to research a little more indepth to see how 'approved' is marked in the DB!
+const updateTicket = async (application_id) => {
+  const result = await db('tickets')
+    .where(application_id)
+    .update({ approved: true });
+  return result;
 };
 
 module.exports = {
