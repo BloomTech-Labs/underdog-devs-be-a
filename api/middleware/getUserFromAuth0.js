@@ -9,8 +9,8 @@ const getUserAuth0 = async (req, res, next) => {
         authorization: `Bearer ${accessToken}`,
       },
     });
-    const userInfo = response.data;
-    req.userInfo = userInfo;
+    const profile = response.data;
+    req.profile = profile;
     next();
   } catch (err) {
     next({
