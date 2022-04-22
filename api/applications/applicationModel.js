@@ -40,7 +40,10 @@ const add = async (applicationTicket) => {
 };
 
 const getMenteeSubject = async (mentee_id) => {
-  const subject = await db.select('*').from('mentees').where({ mentee_id }); //check if that's the actual name of the table!!!!
+  const subject = await db
+    .select('tech_stack')
+    .from('mentee_intake')
+    .where('mentee_intake_id', mentee_id);
   return subject;
 };
 
