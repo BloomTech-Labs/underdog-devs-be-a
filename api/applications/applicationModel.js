@@ -47,11 +47,12 @@ const getMenteeSubject = async (mentee_id) => {
   return subject;
 };
 
+//currently (4/22), there is no 'applications' table; these notes instead exist as a column on the 'tickets' table. These will need to be updated if we do create a dedicated applications table!
 const updateApplicationNotes = async (application_id, application_notes) => {
   const notes = await db
     .select('tickets')
-    .where({ application_id })
-    .insert({ application_notes });
+    .where('ticket_id', application_id)
+    .insert('notes', application_notes);
   return notes;
 };
 
