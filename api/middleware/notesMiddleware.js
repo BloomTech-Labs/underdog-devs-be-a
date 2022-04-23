@@ -133,5 +133,4 @@ module.exports = {
   checkMenteeIdExists,
   checkMentorIdExists,
   checkStatusEnum,
-  checkBodyIsComplete,
 };
