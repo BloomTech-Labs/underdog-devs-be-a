@@ -51,6 +51,34 @@ router.get('/mentee/:id', authRequired, validProfileID, (req, res, next) => {
     });
 });
 
+// Create a review for a mentee
+
+router.post(
+  '/',
+  authRequired,
+  validNewReview,
+  adminRequired,
+  (req, res, next) => {
+    const review = req.body;
+    Review.Create(review)
+      .then(() => {
+        res.status(201).json({ message: 'success' });
+      })
+      .catch(next);
+  }
+);
+
+// Create a review for a mentor
+
+router.post('/', authRequired, validNewReview, (req, res, next) => {
+  const review = req.body;
+  Review.Create(review)
+    .then(() => {
+      res.status(201).json({ message: 'success' });
+    })
+    .catch(next);
+});
+
 ////////////////MIDDLEWARE////////////////
 
 // Validate profile id
@@ -69,6 +97,27 @@ function validProfileID(req, res, next) {
       }
     })
     .catch(next);
+}
+
+// Validate new review includes a mentor_id and mentee_id
+
+function validNewReview(req, res, next) {
+  const assign = req.body;
+  if (!assign) {
+    res.status(400).json({
+      message: 'Missing Assignment Data',
+    });
+  } else if (!assign.mentor_id) {
+    res.status(400).json({
+      message: 'Missing mentor_id field',
+    });
+  } else if (!assign.mentee_id) {
+    res.status(400).json({
+      message: 'Missing mentee_id field',
+    });
+  } else {
+    next();
+  }
 }
 
 module.exports = router;
