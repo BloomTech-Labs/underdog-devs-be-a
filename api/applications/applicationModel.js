@@ -34,10 +34,43 @@ const insertMenteeIntake = async (newMenteeApplication) => {
   return newMenteeIntake;
 };
 
+const add = async (applicationTicket) => {
+  const newTicket = await db('tickets').insert(applicationTicket);
+  return newTicket;
+};
+
+const getMenteeSubject = async (mentee_id) => {
+  const subject = await db
+    .select('subject')
+    .from('mentee_intake')
+    .where('mentee_intake_id', mentee_id);
+  return subject;
+};
+
+//currently (4/22), there is no 'applications' table; these notes instead exist as a column on the 'tickets' table. These will need to be updated if we do create a dedicated applications table!
+const updateApplicationNotes = async (application_id, application_notes) => {
+  const notes = await db
+    .select('tickets')
+    .where('ticket_id', application_id)
+    .insert('notes', application_notes);
+  return notes;
+};
+
+const updateTicket = async (application_id) => {
+  const result = await db('tickets')
+    .where(application_id)
+    .update({ approved: true });
+  return result;
+};
+
 module.exports = {
   getTicketById,
   getMentorIntake,
   getMenteeIntake,
   insertMentorIntake,
   insertMenteeIntake,
+  add,
+  getMenteeSubject,
+  updateApplicationNotes,
+  updateTicket,
 };
