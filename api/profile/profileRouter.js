@@ -133,7 +133,7 @@ router.get('/', authRequired, adminRequired, function (req, res, next) {
 router.get(
   '/:id',
   authRequired,
-  adminRequired,
+
   async function (req, res, next) {
     const id = String(req.params.id);
     const attendance_average = await Profiles.checkAverageAttendance(id);
