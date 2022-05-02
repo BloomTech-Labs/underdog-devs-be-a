@@ -1,3 +1,6 @@
+const dotenv = require('dotenv');
+dotenv.config();
+
 module.exports = {
   jwksUri: process.env.AUTH0_JWKS_URI,
   audience: process.env.AUTH0_AUDIENCE,
