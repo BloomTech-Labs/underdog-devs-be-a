@@ -30,6 +30,7 @@ exports.up = function (knex) {
       table.boolean('industry_knowledge').defaultTo(false);
       table.boolean('job_help').defaultTo(false);
       table.boolean('pair_programming').defaultTo(false);
+      table.string('heard_about').notNullable();
       table.string('other_info');
       table.string('validateStatus').defaultTo('pending');
     });
