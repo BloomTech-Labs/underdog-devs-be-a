@@ -11,7 +11,6 @@ const {
   findProfile,
 } = require('../middleware/applicationMiddleware');
 const { createProfile } = require('../middleware/profilesMiddleware');
-const { registerOktaUser } = require('../middleware/oktaAuth');
 const validation = require('../helpers/validation');
 const applicationSchema = require('../validations/application/applicationSchema');
 const config = require('../../config/dsConfig');
@@ -352,7 +351,6 @@ router.put(
   adminRequired,
   checkApplicationExists,
   findProfile,
-  registerOktaUser,
   (req, res, next) => {
     const application_id = req.application.application_id;
 

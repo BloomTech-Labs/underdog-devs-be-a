@@ -1,52 +1,61 @@
-const OktaJwtVerifier = require('@okta/jwt-verifier');
-const oktaVerifierConfig = require('../../config/okta');
+const axios = require('axios');
+const config = require('../../config/auth0');
 const Profiles = require('../profile/profileModel');
-const oktaJwtVerifier = new OktaJwtVerifier(oktaVerifierConfig.config);
 
-const makeProfileObj = (claims) => {
-  return {
-    id: claims.sub,
-    email: claims.email,
-    name: claims.name,
-  };
-};
-/**
- * A simple middleware that asserts valid Okta idToken and sends 401 responses
- * if the token is not present or fails validation. If the token is valid its
- * contents are attached to req.profile
- */
 const authRequired = async (req, res, next) => {
   try {
     // Check if there's a token in the auth header
     const authHeader = req.headers.authorization || '';
-    const match = authHeader.match(/Bearer (.+)/);
-    if (!match) {
+    const tokenFormat = authHeader.match(/Bearer (.+)/);
+
+    if (!tokenFormat) {
       next({
         status: 401,
-        message: 'Missing idToken',
+        message: 'The token is incorrectly formatted',
       });
     }
 
-    // Verify that the token is valid
-    const idToken = match[1];
-    const oktaData = await oktaJwtVerifier.verifyAccessToken(
-      idToken,
-      oktaVerifierConfig.expectedAudience
-    );
-    const jwtUserObj = makeProfileObj(oktaData.claims);
-    const profile = await Profiles.findOrCreateProfile(jwtUserObj);
+    const createProfileObj = (user) => {
+      return {
+        profile_id: user.sub,
+        email: user.email,
+      };
+    };
 
-    if (profile) {
-      req.profile = profile;
-    } else {
-      next({
-        status: 401,
-        message: 'Unable to process idToken',
+    // Check against Auth0 if token is valid and grab user data
+    await axios
+      .get(`${config.issuer}userinfo`, {
+        headers: {
+          authorization: authHeader,
+        },
+      })
+      .then((user) => {
+        if (user.data) {
+          const obj = createProfileObj(user.data);
+          Profiles.findOrCreateProfile(obj)
+            .then((profile) => {
+              req.profile = profile;
+              next();
+            })
+            .catch((err) => {
+              next({
+                status: 500,
+                message: err,
+              });
+            });
+        } else {
+          next({
+            status: 401,
+            message: 'Unable to process idToken',
+          });
+        }
+      })
+      .catch((err) => {
+        next({
+          status: err.status,
+          message: err.message,
+        });
       });
-    }
-
-    // Proceed with request if token is valid
-    next();
   } catch (err) {
     next({
       status: err.status || 500,
