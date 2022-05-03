@@ -110,7 +110,7 @@ router.get('/', authRequired, adminRequired, async (req, res, next) => {
   await RoleTickets.findAll()
     .then((roletickets) => {
       if (roletickets.length === 0) {
-        next({ status: 200, message: 'No role tickets available' });
+        next({ status: 404, message: 'No role tickets available' });
       } else {
         res.status(200).json(roletickets);
       }
