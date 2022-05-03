@@ -6,8 +6,9 @@ const authRequired = async (req, res, next) => {
   try {
     // Check if there's a token in the auth header
     const authHeader = req.headers.authorization || '';
-    const tokenFormat = authHeader.match(/Bearer (.+)/);
 
+    // Check if the token matches our format
+    const tokenFormat = authHeader.match(/Bearer (.+)/);
     if (!tokenFormat) {
       next({
         status: 401,
@@ -15,6 +16,10 @@ const authRequired = async (req, res, next) => {
       });
     }
 
+    // Build the profile object to match DB columns
+    // Important to note that when a user register/login without google
+    // They do not have the first_name or last_name obj
+    // But regardless, every user will always have a sub and a email
     const createProfileObj = (user) => {
       return {
         profile_id: user.sub,
@@ -30,6 +35,7 @@ const authRequired = async (req, res, next) => {
         },
       })
       .then((user) => {
+        // If user exists, they hold a valid jwt, then we find/create their profile
         if (user.data) {
           const obj = createProfileObj(user.data);
           Profiles.findOrCreateProfile(obj)
@@ -45,8 +51,8 @@ const authRequired = async (req, res, next) => {
             });
         } else {
           next({
-            status: 401,
-            message: 'Unable to process idToken',
+            status: 404,
+            message: 'User object cannot be found',
           });
         }
       })
