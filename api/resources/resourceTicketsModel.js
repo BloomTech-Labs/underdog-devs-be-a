@@ -1,4 +1,3 @@
-//Todo: Refactor these function to be fetching data from tickets table instead of resource-tickets table
 const db = require('../../data/db-config');
 
 // This function returns everything from the tickets table
@@ -8,14 +7,19 @@ const findAll = async () => {
 };
 
 // This function allows you to get ticket by request
-const getByRequest = asnyc (requested_for) => {
-  return db('tickets').where({ requested_for })select('*');
-}
+const getByRequest = (requested_for) => {
+  return db('tickets').where({ requested_for }).select('*');
+};
 
 // This function allows you to get ticket by who submitted the ticket
-const getBySubmit = asnyc (submitted_by) => {
-  return db('tickets').where({ submitted_by })select('*');
-}
+const getBySubmit = (submitted_by) => {
+  return db('tickets').where({ submitted_by }).select('*');
+};
+
+// Find ticket by id
+const findTicketById = (ticket_id) => {
+  return db('tickets').where({ ticket_id }).first();
+};
 
 //This function allows you to update the ticket subject based on who the ticket is requested for
 const updateTicketSubject = (ticket_id, ticket_subject) => {
@@ -23,12 +27,12 @@ const updateTicketSubject = (ticket_id, ticket_subject) => {
     .where({ ticket_id })
     .update({ ticket_subject })
     .then(() => {
-      return getByRequest(requested_for);
+      return findTicketById(ticket_id);
     });
 };
 
 //This function allows you to remove tickets by ticket_id
-const remove = (id) => {
+const remove = (ticket_id) => {
   return db('tickets').where({ ticket_id }).del();
 };
 
@@ -37,5 +41,6 @@ module.exports = {
   getByRequest,
   getBySubmit,
   updateTicketSubject,
-  remove
+  remove,
+  findTicketById,
 };
