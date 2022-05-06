@@ -15,11 +15,17 @@
     "migrate": "npx knex --knexfile config/knexfile.js migrate:latest",
     "rollback": "npx knex --knexfile config/knexfile.js migrate:rollback",
     "seed": "npx knex --knexfile config/knexfile.js seed:run",
+    "migrateh": "heroku run knex migrate:latest -a underdog-devs-a-api --knexfile config/knexfile.js",
+    "rollbackh": "heroku run knex migrate:rollback -a underdog-devs-a-api --knexfile config/knexfile.js",
+    "seedh": "heroku run knex seed:run -a underdog-devs-a-api --knexfile config/knexfile.js",
+    "databaseh": "heroku pg:psql -a underdog-devs-a-api --knexfile config/knexfile.js",
+    "deploy": "git push heroku main",
     "coverage": "CI=true npx jest --coverage --detectOpenHandles --forceExit",
     "dev": "nodemon",
     "up": "npx knex --knexfile config/knexfile.js migrate:up",
     "down": "npx knex --knexfile config/knexfile.js migrate:down",
-    "update": "npx knex --knexfile config/knexfile.js migrate:rollback && npx knex --knexfile config/knexfile.js migrate:latest && npx knex --knexfile config/knexfile.js seed:run"
+    "update": "npx knex --knexfile config/knexfile.js migrate:rollback && npx knex --knexfile config/knexfile.js migrate:latest && npx knex --knexfile config/knexfile.js seed:run",
+    "updateh": "heroku run knex --knexfile config/knexfile.js migrate:rollback && npx knex --knexfile config/knexfile.js migrate:latest && npx knex --knexfile config/knexfile.js seed:run"
   },
   "lint-staged": {
     "api/**/*.js": [
