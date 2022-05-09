@@ -28,6 +28,7 @@ const cacheSignUpData = async (req, res, next) => {
     city: formData.city,
     experience_level: formData.experience_level,
     subject: formData.subject,
+    tech_stack: formData.tech_stack,
     industry_knowledge: formData.industry_knowledge,
     job_help: formData.job_help,
     pair_programming: formData.pair_programming,
