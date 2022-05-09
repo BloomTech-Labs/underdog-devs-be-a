@@ -1,5 +1,10 @@
 const db = require('../../data/db-config');
 
+// This function returns all role tickets
+const findAll = async () => {
+  return db('tickets').select('*');
+};
+
 // This function allows you to see what tickets are requesting a mentee or mentor role via ticket type
 const findAllMenteeOrMentorRoleTickets = () => {
   return db('tickets as t').select('*').where('t.ticket_type', '=', '2');
@@ -42,4 +47,5 @@ module.exports = {
   findByTicketStatus,
   updateTicketStatus,
   findByRequestedRole,
+  findAll,
 };

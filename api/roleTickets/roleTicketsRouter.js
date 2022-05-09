@@ -105,36 +105,19 @@ const {
  *        $ref: '#/components/responses/UnauthorizedError'
  */
 
-const dummyData = [
-  {
-    role_ticket_id: 1,
-    submitted_by: '00ulthapbErVUwVJy4x6',
-    subject_id: '00ulthapbErVUwVJy4x6',
-    requested_role: 1,
-    approved_by: '00ulthapbErVUwVJy4x6',
-    comments: 'This is my 1st dummy data comment',
-    pending: true,
-    resolved: false,
-    created_at: '2022-03-11T22:34:47.814Z',
-    updated_at: '2022-03-11T22:34:47.814Z',
-  },
-  {
-    role_ticket_id: 2,
-    submitted_by: '00ulthapbErVUwVJy4x6',
-    subject_id: '00ulthapbErVUwVJy4x6',
-    requested_role: 1,
-    approved_by: '00ulthapbErVUwVJy4x6',
-    comments: 'This is my 2nd dummy data comment',
-    pending: true,
-    resolved: false,
-    created_at: '2022-03-11T22:34:47.814Z',
-    updated_at: '2022-03-11T22:34:47.814Z',
-  },
-];
-
 // Responds with all available role ticket requests
-router.get('/', authRequired, adminRequired, (req, res) => {
-  res.status(200).json(dummyData);
+router.get('/', authRequired, adminRequired, async (req, res, next) => {
+  await RoleTickets.findAll()
+    .then((roletickets) => {
+      if (roletickets.length === 0) {
+        next({ status: 404, message: 'No role tickets available' });
+      } else {
+        res.status(200).json(roletickets);
+      }
+    })
+    .catch((err) => {
+      next({ status: 500, message: err.message });
+    });
 });
 
 /**
