@@ -1,67 +1,82 @@
-const axios = require('axios');
-const config = require('../../config/auth0');
+/**
+ * @author Khaleel Musleh
+ * @constant Imported jsonwebtoken import for Auth0 and removed @okta/jwt-verifier package import
+ */
+const Auth0Verifier = require('jsonwebtoken');
+/**
+ * @author Khaleel Musleh
+ * @constant Removed const oktaVerifierConfig = require('../../config/okta');
+ * @constant Added const AuthVerifierConfig = require('../helpers/auth0') importing credentials and secrets from helpers/auth0
+ */
+const AuthVerifierConfig = require('../helpers/auth0');
 const Profiles = require('../profile/profileModel');
 
+const makeProfileObj = (claims) => {
+  return {
+    id: claims.sub,
+    email: claims.email,
+    name: claims.name,
+  };
+};
+/**
+ * A simple middleware that asserts valid Okta idToken and sends 401 responses
+ * if the token is not present or fails validation. If the token is valid its
+ * contents are attached to req.profile
+ */
 const authRequired = async (req, res, next) => {
   try {
     // Check if there's a token in the auth header
     const authHeader = req.headers.authorization || '';
-
-    // Check if the token matches our format
-    const tokenFormat = authHeader.match(/Bearer (.+)/);
-    if (!tokenFormat) {
+    const match = authHeader.match(/Bearer (.+)/);
+    if (!match) {
       next({
         status: 401,
-        message: 'The token is incorrectly formatted',
+        message: 'Missing idToken',
       });
     }
 
-    // Build the profile object to match DB columns
-    // Important to note that when a user register/login without google
-    // They do not have the first_name or last_name obj
-    // But regardless, every user will always have a sub and a email
-    const createProfileObj = (user) => {
-      return {
-        profile_id: user.sub,
-        email: user.email,
-      };
-    };
+    /**
+     *  @author Khaleel Musleh
+     * @abstract Changed from Okta to Auth0
+     * Substituted: 
+    //const oktaData = await oktaJwtVerifier.verify(
+    //   idToken,
+    //   AuthVerifierConfig.audience
+    // );
 
-    // Check against Auth0 if token is valid and grab user data
-    await axios
-      .get(`${config.issuer}userinfo`, {
-        headers: {
-          authorization: authHeader,
-        },
-      })
-      .then((user) => {
-        // If user exists, they hold a valid jwt, then we find/create their profile
-        if (user.data) {
-          const obj = createProfileObj(user.data);
-          Profiles.findOrCreateProfile(obj)
-            .then((profile) => {
-              req.profile = profile;
-              next();
-            })
-            .catch((err) => {
-              next({
-                status: 500,
-                message: err,
-              });
-            });
-        } else {
-          next({
-            status: 404,
-            message: 'User object cannot be found',
-          });
-        }
-      })
-      .catch((err) => {
-        next({
-          status: err.status,
-          message: err.message,
-        });
+     TO:
+
+    //    const authData = Auth0Verifier.verify(
+    // idToken,
+    //  AuthVerifierConfig.verifyJwt.secret,
+    //  { audience: AuthVerifierConfig.verifyJwt.audience }
+    //);
+
+    Basically Verifies the token with idToken, AuthVerifierConfig.verifyJwt.secret taken from the auth0 helpers and { audience: AuthVerifierConfig.verifyJwt.audience }.
+     *
+     */
+
+    // Verify that the token is valid
+    const idToken = match[1];
+
+    const authData = Auth0Verifier.verify(
+      idToken,
+      AuthVerifierConfig.verifyJwt.secret,
+      { audience: AuthVerifierConfig.verifyJwt.audience }
+    );
+    const jwtUserObj = makeProfileObj(authData.claims);
+    const profile = await Profiles.findOrCreateProfile(jwtUserObj);
+    if (profile) {
+      req.profile = profile;
+    } else {
+      next({
+        status: 401,
+        message: 'Unable to process idToken',
       });
+    }
+
+    // Proceed with request if token is valid
+    next();
   } catch (err) {
     next({
       status: err.status || 500,
