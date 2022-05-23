@@ -17,9 +17,7 @@ validateUser;
 
 router.get('/current_user_profile/', authRequired, async (req, res, next) => {
   try {
-    req.profile.attendance_rate = await Profiles.checkAverageAttendance(
-      req.profile.profile_id
-    );
+    req.profile = await Profiles.findById(req.profile.profile_id);
     res.status(200).json(req.profile);
   } catch (err) {
     next({ status: 500, message: err.message });
