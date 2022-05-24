@@ -25,14 +25,11 @@ const cacheSignUpData = async (req, res, next) => {
     country: formData.country,
     state: formData.state,
     city: formData.city,
-    experience_level: formData.experience_level,
-    subject: formData.subject,
     tech_stack: formData.tech_stack,
-    industry_knowledge: formData.industry_knowledge,
     job_help: formData.job_help,
     pair_programming: formData.pair_programming,
     other_info: formData.other_info,
-    validateStatus: 'pending',
+    validate_status: 'pending',
   };
   const newMentorApplication = {
     ...sharedFields,
@@ -45,7 +42,7 @@ const cacheSignUpData = async (req, res, next) => {
     list_convictions: formData.list_convictions,
     underrepresented_group: formData.underrepresented_group,
     low_income: formData.low_income,
-    heard_about: 'something',
+    heard_about: formData.heard_about,
   };
 
   try {
