@@ -19,13 +19,14 @@ exports.up = function (knex) {
       table.string('last_name').notNullable();
       table.string('current_company');
       table.string('current_position');
-      table.string('subject').notNullable();
+      //tech_stack previously named "subject"
+      table.string('tech_stack').notNullable();
       table.boolean('industry_knowledge').defaultTo(false);
       table.boolean('job_help').defaultTo(false);
       table.boolean('pair_programming').defaultTo(false);
       table.string('other_info');
       table.string('validateStatus').defaultTo('pending');
-      table.string('tech_stack');
+      table.string('referred_by');
     });
 };
 
