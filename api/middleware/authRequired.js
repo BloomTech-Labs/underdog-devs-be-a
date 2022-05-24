@@ -1,7 +1,14 @@
-const OktaJwtVerifier = require('@okta/jwt-verifier');
-const oktaVerifierConfig = require('../../config/okta');
+/**
+ * @author Khaleel Musleh
+ * @constant Imported jsonwebtoken import for Auth0 and removed @okta/jwt-verifier package import
+ */
+const Auth0Verifier = require('jsonwebtoken');
+/**
+ * @author Khaleel Musleh
+ * @constant removed const oktaVerifierConfig = require('../../config/okta'); and
+ */
+const AuthVerifierConfig = require('../helpers/auth0');
 const Profiles = require('../profile/profileModel');
-const oktaJwtVerifier = new OktaJwtVerifier(oktaVerifierConfig.config);
 
 const makeProfileObj = (claims) => {
   return {
@@ -27,15 +34,36 @@ const authRequired = async (req, res, next) => {
       });
     }
 
+    /**
+      * @abstract Changed from Okta to Auth0
+      * Substituted: 
+     //const oktaData = await oktaJwtVerifier.verify(
+     //   idToken,
+     //   AuthVerifierConfig.audience
+     // );
+ 
+      TO:
+ 
+     //    const authData = Auth0Verifier.verify(
+     // idToken,
+     //  AuthVerifierConfig.verifyJwt.secret,
+     //  { audience: AuthVerifierConfig.verifyJwt.audience }
+     //);
+ 
+     Basically Verifies the token with idToken, AuthVerifierConfig.verifyJwt.secret taken from the auth0 helpers and { audience: AuthVerifierConfig.verifyJwt.audience }.
+      * @author Khaleel Musleh
+      */
+
     // Verify that the token is valid
     const idToken = match[1];
-    const oktaData = await oktaJwtVerifier.verifyAccessToken(
-      idToken,
-      oktaVerifierConfig.expectedAudience
-    );
-    const jwtUserObj = makeProfileObj(oktaData.claims);
-    const profile = await Profiles.findOrCreateProfile(jwtUserObj);
 
+    const authData = Auth0Verifier.verify(
+      idToken,
+      AuthVerifierConfig.verifyJwt.secret,
+      { audience: AuthVerifierConfig.verifyJwt.audience }
+    );
+    const jwtUserObj = makeProfileObj(authData.claims);
+    const profile = await Profiles.findOrCreateProfile(jwtUserObj);
     if (profile) {
       req.profile = profile;
     } else {
