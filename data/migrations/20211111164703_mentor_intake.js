@@ -20,12 +20,12 @@ exports.up = function (knex) {
       table.string('current_company');
       table.string('current_position');
       table.string('subject').notNullable();
-      table.string('experience_level').notNullable();
       table.boolean('industry_knowledge').defaultTo(false);
       table.boolean('job_help').defaultTo(false);
       table.boolean('pair_programming').defaultTo(false);
       table.string('other_info');
       table.string('validateStatus').defaultTo('pending');
+      table.string('tech_stack');
     });
 };
 

@@ -177,7 +177,7 @@ const validateMentorIntakeData = async (req, res, next) => {
 
 const sendData = (req, res, next) => {
   axios
-    .post(`${config.baseURL}/${req.role}/create`, req.application)
+    .post(`${config.baseURL}/create/${req.role}`, req.application)
     .then((res) => {
       next({ status: res.status, message: res.data });
     })
