@@ -1,5 +1,4 @@
 const axios = require('axios');
-const { config } = require('../../config/dsConfig');
 
 const {
   getTicketById,
@@ -46,19 +45,20 @@ const cacheSignUpData = async (req, res, next) => {
     list_convictions: formData.list_convictions,
     underrepresented_group: formData.underrepresented_group,
     low_income: formData.low_income,
+    heard_about: 'something',
   };
 
   try {
     if (role === 'mentor') {
       req.body.position = 3;
       req.application = newMentorApplication;
-      req.role = 'Mentors';
+      req.role = 'mentor';
       await insertMentorIntake(newMentorApplication);
       next();
     } else {
       req.body.position = 4;
       req.application = newMenteeApplication;
-      req.role = 'Mentees';
+      req.role = 'mentee';
       await insertMenteeIntake(newMenteeApplication);
       next();
     }
@@ -176,7 +176,7 @@ const validateMentorIntakeData = async (req, res, next) => {
 
 const sendData = (req, res, next) => {
   axios
-    .post(`${config.baseURL}/${req.role}/create`, req.application)
+    .post(`${process.env.DS_API_URL}/create/${req.role}`, req.application)
     .then((res) => {
       next({ status: res.status, message: res.data });
     })
