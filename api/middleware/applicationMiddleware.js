@@ -1,6 +1,5 @@
 const axios = require('axios');
 const { config } = require('../../config/dsConfig');
-
 const {
   getTicketById,
   getMentorIntake,
@@ -83,6 +82,8 @@ const checkApplicationExists = async (req, res, next) => {
     });
   }
 };
+
+console.log('committing branch');
 
 const checkRole = async (req, res, next) => {
   const application = req.application;
