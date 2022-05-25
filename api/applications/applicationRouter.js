@@ -301,7 +301,6 @@ router.post(
       profile_id: req.body.profile_id,
       position: req.body.position,
     };
-    console.log(res);
     Application.add(applicationTicket)
       .then(() => {
         res.status(201).json({ message: 'Application has been submitted' });
