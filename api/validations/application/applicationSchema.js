@@ -6,7 +6,7 @@ const menteeApplicationSchema = yup.object({
   last_name: yup.string().required('last name required'),
   email: yup.string().email().required('email required'),
   country: yup.string().required('country required'),
-  // subject: yup.string().required('subject required'),
+  // tech_stack: yup.string().required('tech_stack required'),
 });
 
 module.exports = menteeApplicationSchema;

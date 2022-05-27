@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { config } = require('../../config/dsConfig');
+const { baseURL } = require('../../config/dsConfig');
 const {
   getTicketById,
   getMentorIntake,
@@ -25,8 +25,6 @@ const cacheSignUpData = async (req, res, next) => {
     country: formData.country,
     state: formData.state,
     city: formData.city,
-    experience_level: formData.experience_level,
-    subject: formData.subject,
     tech_stack: formData.tech_stack,
     industry_knowledge: formData.industry_knowledge,
     job_help: formData.job_help,
@@ -51,13 +49,13 @@ const cacheSignUpData = async (req, res, next) => {
     if (role === 'mentor') {
       req.body.position = 3;
       req.application = newMentorApplication;
-      req.role = 'Mentors';
+      req.role = 'mentor';
       await insertMentorIntake(newMentorApplication);
       next();
     } else {
       req.body.position = 4;
       req.application = newMenteeApplication;
-      req.role = 'Mentees';
+      req.role = 'mentee';
       await insertMenteeIntake(newMenteeApplication);
       next();
     }
@@ -177,11 +175,12 @@ const validateMentorIntakeData = async (req, res, next) => {
 
 const sendData = (req, res, next) => {
   axios
-    .post(`${config.baseURL}/create/${req.role}`, req.application)
+    .post(`${baseURL}/create/${req.role}`, req.application)
     .then((res) => {
       next({ status: res.status, message: res.data });
     })
     .catch((err) => {
+      console.log(err);
       next({ status: res.status, message: err });
     });
 };

@@ -13,7 +13,7 @@ const sharedFields = {
     .string()
     .trim()
     .max(255, '"other_info" must be shorter than 255 characters'),
-  tech_stack: yup.string().trim().required('"tech_stack" (string) is required'),
+  subject: yup.string().trim().required('"subject" (string) is required'),
 };
 
 const mentorApplicationSchema = yup.object().shape({

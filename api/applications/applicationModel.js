@@ -21,6 +21,7 @@ const getMenteeIntake = async (mentee_intake_id) => {
 };
 
 const insertMentorIntake = async (newMentorApplication) => {
+  console.log(newMentorApplication);
   const newMentorIntake = await db('mentor_intake').insert(
     newMentorApplication
   );
