@@ -23,7 +23,7 @@ exports.up = function (knex) {
       table.boolean('job_help').defaultTo(false);
       table.boolean('industry_knowledge').defaultTo(false);
       table.boolean('pair_programming').defaultTo(false);
-      table.string('commitment');
+      table.boolean('commitment');
       table.string('referred_by');
       table.string('other_info');
     });
