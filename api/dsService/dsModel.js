@@ -23,7 +23,7 @@ function postProfileUpdate(update, role_id) {
     name: name,
     location: update.location,
     company: update.company,
-    tech_stack: update.tech_stack,
+    subject: update.subject,
     attendance_rate: update.attendance_rate,
   };
   return dsClient.post(`/${isMentor}/update`, request);

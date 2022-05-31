@@ -13,9 +13,9 @@ const {
 const { createProfile } = require('../middleware/profilesMiddleware');
 const { registerOktaUser } = require('../middleware/oktaAuth');
 const validation = require('../helpers/validation');
-const applicationSchema = require('../validations/application/applicationSchema');
-const config = require('../../config/dsConfig');
+const applicationSchema = require('../../data/schemas/applicationSchema');
 const axios = require('axios');
+const { baseURL } = require('../../config/dsConfig');
 
 /**
  * @swagger
@@ -467,7 +467,7 @@ router.get(
     const profile_id = req.params.id;
     const role = req.params.role;
     axios
-      .post(`${config.baseURL}/${role}/read`, { profile_id: profile_id })
+      .post(`${baseURL}/${role}/read`, { profile_id: profile_id })
       .then((res) => {
         if (res.data.result.length === 0)
           return next({ message: 'Profile does not exist', status: 404 });

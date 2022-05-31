@@ -11,21 +11,21 @@ exports.up = function (knex) {
         .inTable('profiles')
         .onDelete('RESTRICT')
         .onUpdate('RESTRICT');
-      table.string('email').notNullable();
-      table.string('country').notNullable();
-      table.string('city');
-      table.string('state');
       table.string('first_name').notNullable();
       table.string('last_name').notNullable();
+      table.string('email').notNullable();
+      table.string('country').notNullable();
+      table.string('state');
+      table.string('city');
       table.string('current_company');
       table.string('current_position');
-      table.string('subject').notNullable();
-      table.string('experience_level').notNullable();
-      table.boolean('industry_knowledge').defaultTo(false);
+      table.specificType('tech_stack', 'text ARRAY');
       table.boolean('job_help').defaultTo(false);
+      table.boolean('industry_knowledge').defaultTo(false);
       table.boolean('pair_programming').defaultTo(false);
+      table.boolean('commitment');
+      table.string('referred_by');
       table.string('other_info');
-      table.string('validateStatus').defaultTo('pending');
     });
 };
 

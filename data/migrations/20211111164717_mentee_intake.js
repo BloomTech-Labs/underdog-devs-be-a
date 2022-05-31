@@ -19,14 +19,13 @@ exports.up = function (knex) {
       table.string('last_name').notNullable();
       table.string('location');
       table.boolean('lives_in_us');
-      table.string('tech_stack');
       table.string('your_hope');
       table.boolean('formerly_incarcerated').notNullable();
       table.boolean('underrepresented_group').notNullable();
       table.boolean('low_income').notNullable();
       table.string('list_convictions');
       table.string('experience_level').notNullable();
-      table.string('subject').notNullable();
+      table.string('tech_stack').notNullable();
       table.boolean('industry_knowledge').defaultTo(false);
       table.boolean('job_help').defaultTo(false);
       table.boolean('pair_programming').defaultTo(false);
