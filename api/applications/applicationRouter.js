@@ -13,7 +13,7 @@ const {
 const { createProfile } = require('../middleware/profilesMiddleware');
 const { registerOktaUser } = require('../middleware/oktaAuth');
 const validation = require('../helpers/validation');
-const applicationSchema = require('../validations/application/applicationSchema');
+const applicationSchema = require('../../data/schemas/applicationSchema');
 const axios = require('axios');
 const { baseURL } = require('../../config/dsConfig');
 
