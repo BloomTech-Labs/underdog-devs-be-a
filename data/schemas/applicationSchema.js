@@ -23,7 +23,7 @@ const mentorApplicationSchema = yup.object().shape({
 const menteeApplicationSchema = yup.object().shape({
   ...sharedFields,
 
-  lives_in_us: yup.boolean().required('"lives_in_us" (boolean) is required'),
+  country: yup.boolean().required('"lives_in_us" (boolean) is required'),
   formerly_incarcerated: yup
     .boolean()
     .required('"formerly_incarcerated" (boolean) is required'),
@@ -32,7 +32,6 @@ const menteeApplicationSchema = yup.object().shape({
     .string()
     .trim()
     .required('"experience_level" (string) is required'),
-  your_hope: yup.string().trim().required('"your_hope" (string) is required'),
 });
 
 const applicationTicketSchema = yup.object().shape({
