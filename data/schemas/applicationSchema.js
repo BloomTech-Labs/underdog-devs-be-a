@@ -23,7 +23,7 @@ const mentorApplicationSchema = yup.object().shape({
 const menteeApplicationSchema = yup.object().shape({
   ...sharedFields,
 
-  country: yup.boolean().required('"lives_in_us" (boolean) is required'),
+  country: yup.boolean().required('"country" (boolean) is required'),
   formerly_incarcerated: yup
     .boolean()
     .required('"formerly_incarcerated" (boolean) is required'),
