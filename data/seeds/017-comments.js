@@ -18,7 +18,7 @@ exports.seed = function (knex) {
         {
           comment_id: 3,
           comment_text: 'some text 3',
-          note_id: 1,
+          note_id: 2,
         },
       ]);
     });
