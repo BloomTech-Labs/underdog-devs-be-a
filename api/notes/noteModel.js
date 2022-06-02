@@ -27,7 +27,9 @@ const update = (id, note) => {
 const remove = (id) => {
   return db('notes').where({ note_id: id }).del();
 };
-
+const getNoteComments = () => {
+  return db('comments as c').join('notes as n', 'c.note_id', 'n.note_id');
+};
 module.exports = {
   findAll,
   filterBy,
@@ -36,4 +38,5 @@ module.exports = {
   create,
   update,
   remove,
+  getNoteComments,
 };
