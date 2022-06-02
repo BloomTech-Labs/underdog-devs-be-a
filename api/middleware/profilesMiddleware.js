@@ -9,6 +9,7 @@ const createProfile = async (req, res, next) => {
     first_name: req.body.first_name,
     last_name: req.body.last_name,
     is_active: true,
+    // role_id: req.params.role === 'mentor' ? 3 : 4,
   };
   try {
     const profile = await create(newProfile);

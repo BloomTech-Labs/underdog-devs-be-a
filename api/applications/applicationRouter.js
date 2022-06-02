@@ -13,7 +13,9 @@ const {
 const { createProfile } = require('../middleware/profilesMiddleware');
 const { registerOktaUser } = require('../middleware/oktaAuth');
 const validation = require('../helpers/validation');
-const applicationSchema = require('../../data/schemas/applicationSchema');
+const {
+  mentorApplicationSchema,
+} = require('../../data/schemas/applicationSchema');
 const axios = require('axios');
 const { baseURL } = require('../../config/dsConfig');
 
@@ -292,7 +294,7 @@ router.get('/profileId/:id', checkApplicationExists, checkRole, (req, res) => {
 
 router.post(
   '/new/:role',
-  validation(applicationSchema),
+  validation(mentorApplicationSchema),
   createProfile,
   cacheSignUpData,
   sendData,

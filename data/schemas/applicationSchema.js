@@ -8,7 +8,6 @@ const sharedFields = {
     .email('invalid email provided'),
   first_name: yup.string().trim().required('"first_name" (string) is required'),
   last_name: yup.string().trim().required('"last_name" (string) is required'),
-  profile_id: yup.string().trim().required('"profile_id" (string) is required'),
   other_info: yup
     .string()
     .trim()
