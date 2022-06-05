@@ -26,9 +26,11 @@ const cacheSignUpData = async (req, res, next) => {
     state: formData.state,
     city: formData.city,
     tech_stack: formData.tech_stack,
+    commitment: formData.commitment,
     industry_knowledge: formData.industry_knowledge,
     job_help: formData.job_help,
     pair_programming: formData.pair_programming,
+    referred_by: formData.referred_by,
     other_info: formData.other_info,
     // validateStatus: 'pending',
   };
@@ -47,13 +49,13 @@ const cacheSignUpData = async (req, res, next) => {
 
   try {
     if (role === 'mentor') {
-      req.body.role_id = 3;
+      // req.body.role_id = 3;
       req.application = newMentorApplication;
       req.role = 'mentor';
       await insertMentorIntake(newMentorApplication);
       next();
     } else {
-      req.body.role_id = 4;
+      // req.body.role_id = 4;
       req.application = newMenteeApplication;
       req.role = 'mentee';
       await insertMenteeIntake(newMenteeApplication);
@@ -80,8 +82,6 @@ const checkApplicationExists = async (req, res, next) => {
     });
   }
 };
-
-console.log('committing branch');
 
 const checkRole = async (req, res, next) => {
   const application = req.application;
@@ -175,13 +175,12 @@ const validateMentorIntakeData = async (req, res, next) => {
 
 const sendData = (req, res, next) => {
   axios
-    .post(`${process.env.DS_API_URL}/create/${req.role}`, req.application)
-    .then((res) => {
-      next({ status: res.status, message: res.data });
+    .post(`${process.env.DS_API_URL}/create/${req.role}`, req.body)
+    .then(() => {
+      next();
     })
-    .catch((err) => {
-      console.log(err);
-      next({ status: res.status, message: err });
+    .catch(() => {
+      next({ status: res.status });
     });
 };
 

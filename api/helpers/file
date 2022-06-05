@@ -1,0 +1,17 @@
+{
+    "email": "fakeRosnbert3333@gmail.com",
+    "first_name": "Robert",
+    "last_name": "Sharp",
+    "country": "U.S.",
+    "state": "Oregon",
+    "city": "The Woods",
+    "current_company": "RedWoodsUnited",
+    "current_position": "Backend Engineering Manager",
+    "tech_stack": ["backend", "frontend"],
+    "industry_knowledge": true,
+    "pair_programming": false,
+    "job_help": false,
+    "commitment": true,
+    "referred_by": "",
+    "other_info": ""
+  }
