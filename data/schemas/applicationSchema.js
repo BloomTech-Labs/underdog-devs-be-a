@@ -12,6 +12,9 @@ const sharedFields = {
     .string()
     .trim()
     .max(255, '"other_info" must be shorter than 255 characters'),
+  validate_status: yup
+    .string()
+    .required('"validate_status" must be included in front-end payload'),
 };
 
 const mentorApplicationSchema = yup.object().shape({

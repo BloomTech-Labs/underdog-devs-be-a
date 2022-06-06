@@ -32,7 +32,7 @@ const cacheSignUpData = async (req, res, next) => {
     pair_programming: formData.pair_programming,
     referred_by: formData.referred_by,
     other_info: formData.other_info,
-    // validateStatus: 'pending',
+    validate_status: 'pending',
   };
   const newMentorApplication = {
     ...sharedFields,
@@ -49,13 +49,11 @@ const cacheSignUpData = async (req, res, next) => {
 
   try {
     if (role === 'mentor') {
-      // req.body.role_id = 3;
       req.application = newMentorApplication;
       req.role = 'mentor';
       await insertMentorIntake(newMentorApplication);
       next();
     } else {
-      // req.body.role_id = 4;
       req.application = newMenteeApplication;
       req.role = 'mentee';
       await insertMenteeIntake(newMenteeApplication);

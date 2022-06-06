@@ -17,6 +17,7 @@ const dummyData = [
     commitment: true,
     referred_by: 'My friends says its very rewarding',
     other_info: 'Great idea!',
+    validate_status: 'pending',
   },
   {
     profile_id: '00ultwz1n9ORpNFc04x6',
@@ -35,6 +36,7 @@ const dummyData = [
     commitment: true,
     referred_by: 'Found on twitter',
     other_info: 'I am busy on Thursdays',
+    validate_status: 'pending',
   },
   {
     profile_id: '00ulthapbErVUwVJy4x6',
@@ -53,6 +55,7 @@ const dummyData = [
     commitment: true,
     referred_by: '',
     other_info: '',
+    validate_status: 'pending',
   },
 ];
 
