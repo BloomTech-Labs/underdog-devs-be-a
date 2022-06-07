@@ -13,9 +13,6 @@ const {
 const { createProfile } = require('../middleware/profilesMiddleware');
 const { registerOktaUser } = require('../middleware/oktaAuth');
 const validation = require('../helpers/validation');
-const {
-  mentorApplicationSchema,
-} = require('../../data/schemas/applicationSchema');
 const axios = require('axios');
 const { baseURL } = require('../../config/dsConfig');
 
@@ -291,17 +288,22 @@ router.get('/profileId/:id', checkApplicationExists, checkRole, (req, res) => {
  */
 
 // create a new user profile and application ticket
-
+//this only works for the mentor application because we are passing the mentorApplicationSchema directly (6/4/2022)
 router.post(
   '/new/:role',
-  validation(mentorApplicationSchema),
+  validation(),
   createProfile,
   cacheSignUpData,
   sendData,
   (req, res, next) => {
+    //this applicationTicket object works for the existing backend db schema for "tickets". Both likely need to be updated (6/4/2022)
     const applicationTicket = {
-      profile_id: req.body.profile_id,
-      position: req.body.position,
+      ticket_status: 'pending',
+      //unsure of correct value for 'ticket_type' to indicate this is an application (6/4/2022)
+      ticket_type: 1,
+      ticket_subject: 'application',
+      requested_for: req.body.profile_id,
+      submitted_by: req.body.profile_id,
     };
     Application.add(applicationTicket)
       .then(() => {

@@ -12,6 +12,9 @@ const sharedFields = {
     .string()
     .trim()
     .max(255, '"other_info" must be shorter than 255 characters'),
+  validate_status: yup
+    .string()
+    .required('"validate_status" must be included in front-end payload'),
 };
 
 const mentorApplicationSchema = yup.object().shape({
@@ -22,17 +25,7 @@ const mentorApplicationSchema = yup.object().shape({
 
 const menteeApplicationSchema = yup.object().shape({
   ...sharedFields,
-
-  lives_in_us: yup.boolean().required('"lives_in_us" (boolean) is required'),
-  formerly_incarcerated: yup
-    .boolean()
-    .required('"formerly_incarcerated" (boolean) is required'),
   list_convictions: yup.string().trim(),
-  experience_level: yup
-    .string()
-    .trim()
-    .required('"experience_level" (string) is required'),
-  your_hope: yup.string().trim().required('"your_hope" (string) is required'),
 });
 
 const applicationTicketSchema = yup.object().shape({

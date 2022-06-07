@@ -26,6 +26,7 @@ exports.up = function (knex) {
       table.boolean('commitment');
       table.string('referred_by');
       table.string('other_info');
+      table.string('validate_status');
     });
 };
 
