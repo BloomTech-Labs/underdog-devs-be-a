@@ -13,9 +13,8 @@ const {
 const { createProfile } = require('../middleware/profilesMiddleware');
 const { registerOktaUser } = require('../middleware/oktaAuth');
 const validation = require('../helpers/validation');
-const applicationSchema = require('../validations/application/applicationSchema');
-const config = require('../../config/dsConfig');
 const axios = require('axios');
+const { baseURL } = require('../../config/dsConfig');
 
 /**
  * @swagger
@@ -289,17 +288,22 @@ router.get('/profileId/:id', checkApplicationExists, checkRole, (req, res) => {
  */
 
 // create a new user profile and application ticket
-
+//this only works for the mentor application because we are passing the mentorApplicationSchema directly (6/4/2022)
 router.post(
   '/new/:role',
-  validation(applicationSchema),
+  validation(),
   createProfile,
   cacheSignUpData,
   sendData,
   (req, res, next) => {
+    //this applicationTicket object works for the existing backend db schema for "tickets". Both likely need to be updated (6/4/2022)
     const applicationTicket = {
-      profile_id: req.body.profile_id,
-      position: req.body.position,
+      ticket_status: 'pending',
+      //unsure of correct value for 'ticket_type' to indicate this is an application (6/4/2022)
+      ticket_type: 1,
+      ticket_subject: 'application',
+      requested_for: req.body.profile_id,
+      submitted_by: req.body.profile_id,
     };
     Application.add(applicationTicket)
       .then(() => {
@@ -467,7 +471,7 @@ router.get(
     const profile_id = req.params.id;
     const role = req.params.role;
     axios
-      .post(`${config.baseURL}/${role}/read`, { profile_id: profile_id })
+      .post(`${baseURL}/${role}/read`, { profile_id: profile_id })
       .then((res) => {
         if (res.data.result.length === 0)
           return next({ message: 'Profile does not exist', status: 404 });

@@ -1,5 +1,5 @@
 const axios = require('axios');
-
+// const { baseURL } = require('../../config/dsConfig');
 const {
   getTicketById,
   getMentorIntake,
@@ -28,6 +28,7 @@ const cacheSignUpData = async (req, res, next) => {
     tech_stack: formData.tech_stack,
     job_help: formData.job_help,
     pair_programming: formData.pair_programming,
+    referred_by: formData.referred_by,
     other_info: formData.other_info,
     validate_status: 'pending',
   };
@@ -47,13 +48,11 @@ const cacheSignUpData = async (req, res, next) => {
 
   try {
     if (role === 'mentor') {
-      req.body.position = 3;
       req.application = newMentorApplication;
       req.role = 'mentor';
       await insertMentorIntake(newMentorApplication);
       next();
     } else {
-      req.body.position = 4;
       req.application = newMenteeApplication;
       req.role = 'mentee';
       await insertMenteeIntake(newMenteeApplication);
@@ -177,8 +176,8 @@ const sendData = (req, res, next) => {
     .then((res) => {
       next({ status: res.status, message: res.data });
     })
-    .catch((err) => {
-      next({ status: res.status, message: err });
+    .catch(() => {
+      next({ status: res.status });
     });
 };
 
