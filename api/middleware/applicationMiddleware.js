@@ -49,11 +49,13 @@ const cacheSignUpData = async (req, res, next) => {
 
   try {
     if (role === 'mentor') {
+      req.body.role_id = 3;
       req.application = newMentorApplication;
       req.role = 'mentor';
       await insertMentorIntake(newMentorApplication);
       next();
     } else {
+      req.body.role_id = 4;
       req.application = newMenteeApplication;
       req.role = 'mentee';
       await insertMenteeIntake(newMenteeApplication);
