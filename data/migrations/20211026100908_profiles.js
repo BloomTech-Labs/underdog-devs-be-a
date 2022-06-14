@@ -9,6 +9,15 @@ exports.up = (knex) => {
       table.string('location');
       table.string('company');
       table.specificType('tech_stack', 'text ARRAY');
+      table
+        .integer('role_id')
+        .unsigned()
+        .notNullable()
+        .default(5)
+        .references('role_id')
+        .inTable('roles')
+        .onDelete('CASCADE')
+        .onUpdate('CASCADE');
       table.timestamps(true, true);
       table.boolean('is_active');
       table.string('progress_status');

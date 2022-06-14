@@ -23,6 +23,7 @@ const profiles = [...new Array(14)].map((i, idx) => ({
   email: `llama00${idx + 1}@maildrop.cc`,
   first_name: idx < 2 ? `Admin` : idx == 2 ? `Moderator` : `User`,
   last_name: idx < 2 ? `${idx + 1}` : `${idx + 1}`,
+  role_id: idx < 2 ? 1 : idx == 2 ? 2 : 3,
   company: idx < 2 ? 'UnderDogDevs' : idx === 2 ? 'BloomTech' : 'Unemployed',
   location: randomLocations[Math.floor(Math.random() * 5)],
   tech_stack: [
@@ -42,6 +43,16 @@ profiles[5].profile_id = '00u13omswyZM1xVya4x7';
 profiles[7].profile_id = '00u13oned0U8XP8Mb4x7';
 profiles[12].profile_id = 'BH6hr755W188LA6e';
 profiles[13].profile_id = 'l46VW1FXE2lM1610';
+
+profiles[4].role_id = 5;
+profiles[6].role_id = 3;
+profiles[7].role_id = 4;
+profiles[8].role_id = 3;
+profiles[9].role_id = 4;
+profiles[10].role_id = 4;
+profiles[11].role_id = 5;
+profiles[12].role_id = 2;
+profiles[13].role_id = 2;
 
 profiles[7].progress_id = 3;
 profiles[9].progress_id = 4;
