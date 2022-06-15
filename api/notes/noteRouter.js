@@ -140,4 +140,17 @@ router.get('/:id/comments', authRequired, async (req, res, next) => {
   }
 });
 
+router.post('/:note_id/comments', authRequired, async (req, res, next) => {
+  try {
+    const newComment = {
+      comment_text: req.body.comment_text,
+      note_id: req.params.note_id,
+    };
+    const comment = await Notes.createNoteComments(newComment);
+    res.status(201).json(comment);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
