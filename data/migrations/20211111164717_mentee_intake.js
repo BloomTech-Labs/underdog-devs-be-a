@@ -17,21 +17,16 @@ exports.up = function (knex) {
       table.string('state');
       table.string('first_name').notNullable();
       table.string('last_name').notNullable();
-      table.string('location');
-      table.boolean('lives_in_us');
-      table.string('your_hope');
+      table.string('tech_stack');
       table.boolean('formerly_incarcerated').notNullable();
       table.boolean('underrepresented_group').notNullable();
       table.boolean('low_income').notNullable();
       table.string('list_convictions');
-      table.string('experience_level').notNullable();
-      table.string('tech_stack').notNullable();
-      table.boolean('industry_knowledge').defaultTo(false);
       table.boolean('job_help').defaultTo(false);
       table.boolean('pair_programming').defaultTo(false);
       table.string('heard_about').notNullable();
       table.string('other_info');
-      table.string('validateStatus').defaultTo('pending');
+      table.string('validate_status').defaultTo('pending');
     });
 };
 

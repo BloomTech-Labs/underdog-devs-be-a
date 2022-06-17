@@ -26,8 +26,6 @@ const cacheSignUpData = async (req, res, next) => {
     state: formData.state,
     city: formData.city,
     tech_stack: formData.tech_stack,
-    commitment: formData.commitment,
-    industry_knowledge: formData.industry_knowledge,
     job_help: formData.job_help,
     pair_programming: formData.pair_programming,
     referred_by: formData.referred_by,
@@ -45,6 +43,7 @@ const cacheSignUpData = async (req, res, next) => {
     list_convictions: formData.list_convictions,
     underrepresented_group: formData.underrepresented_group,
     low_income: formData.low_income,
+    heard_about: formData.heard_about,
   };
 
   try {
@@ -175,9 +174,9 @@ const validateMentorIntakeData = async (req, res, next) => {
 
 const sendData = (req, res, next) => {
   axios
-    .post(`${process.env.DS_API_URL}/create/${req.role}`, req.body)
-    .then(() => {
-      next();
+    .post(`${process.env.DS_API_URL}/create/${req.role}`, req.application)
+    .then((res) => {
+      next({ status: res.status, message: res.data });
     })
     .catch(() => {
       next({ status: res.status });
