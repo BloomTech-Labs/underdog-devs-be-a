@@ -31,10 +31,12 @@ const getNoteComments = (id) => {
   return db
     .from('comments as c')
     .innerJoin('notes as n', 'c.note_id', 'n.note_id')
-    .select('comment_text', 'n.note_id')
+    .select('comment_text', 'n.created_by', 'n.note_id')
     .where('n.note_id', id);
 };
-
+const createNoteComments = (comment) => {
+  return db('comments').insert(comment).returning('*');
+};
 module.exports = {
   findAll,
   filterBy,
@@ -44,4 +46,5 @@ module.exports = {
   update,
   remove,
   getNoteComments,
+  createNoteComments,
 };
