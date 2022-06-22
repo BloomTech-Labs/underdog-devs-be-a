@@ -64,6 +64,23 @@ const updateTicket = async (application_id) => {
   return result;
 };
 
+const getApplications = () => {
+  return db('profiles as p')
+    .join('roles as r', 'p.role_id', 'r.role_id')
+    .join('tickets as t', 'p.profile_id', 't.submitted_by')
+    .select(
+      't.ticket_id as application_id',
+      'p.profile_id',
+      'p.first_name',
+      'p.last_name',
+      'p.email',
+      'p.created_at',
+      'r.role_name'
+    )
+    .where('t.ticket_type', 2)
+    .where('t.ticket_status', 'pending');
+};
+
 module.exports = {
   getTicketById,
   getMentorIntake,
@@ -74,4 +91,5 @@ module.exports = {
   getMenteeSubject,
   updateApplicationNotes,
   updateTicket,
+  getApplications,
 };
