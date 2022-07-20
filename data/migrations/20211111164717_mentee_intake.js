@@ -21,7 +21,7 @@ exports.up = function (knex) {
       table.boolean('formerly_incarcerated').notNullable();
       table.boolean('underrepresented_group').notNullable();
       table.boolean('low_income').notNullable();
-      table.string('list_convictions');
+      table.string('convictions');
       table.boolean('job_help').defaultTo(false);
       table.boolean('pair_programming').defaultTo(false);
       table.string('heard_about').notNullable();
