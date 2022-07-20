@@ -18,6 +18,8 @@ const cacheSignUpData = async (req, res, next) => {
   const role = req.params.role;
   const formData = req.body;
   const sharedFields = {
+    created_at: Date.now(),
+    updated_at: Date.now(),
     profile_id: formData.profile_id,
     first_name: formData.first_name,
     last_name: formData.last_name,
