@@ -28,7 +28,6 @@ const cacheSignUpData = async (req, res, next) => {
     tech_stack: formData.tech_stack,
     job_help: formData.job_help,
     pair_programming: formData.pair_programming,
-    referred_by: formData.referred_by,
     other_info: formData.other_info,
     validate_status: 'pending',
   };
@@ -40,7 +39,7 @@ const cacheSignUpData = async (req, res, next) => {
   const newMenteeApplication = {
     ...sharedFields,
     formerly_incarcerated: formData.formerly_incarcerated,
-    list_convictions: formData.list_convictions,
+    convictions: formData.convictions,
     underrepresented_group: formData.underrepresented_group,
     low_income: formData.low_income,
     heard_about: formData.heard_about,
