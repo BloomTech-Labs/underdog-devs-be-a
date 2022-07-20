@@ -14,6 +14,7 @@ const dummyData = [
     low_income: true,
     underrepresented_group: false,
     pair_programming: true,
+    heard_about: 'ad',
   },
   {
     profile_id: '7',
@@ -30,6 +31,7 @@ const dummyData = [
     job_help: true,
     underrepresented_group: false,
     pair_programming: true,
+    heard_about: 'ad',
   },
   {
     profile_id: '10',
@@ -44,6 +46,7 @@ const dummyData = [
     pair_programming: true,
     tech_stack: 'ux design',
     underrepresented_group: false,
+    heard_about: 'ad',
   },
 ];
 
