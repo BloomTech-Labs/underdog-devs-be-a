@@ -10,7 +10,6 @@ const tickets = [
     ticket_type: 2,
     ticket_status: 'approved',
     ticket_subject: 'Application for mentee',
-    requested_role: 4,
     submitted_by: '7',
   },
   {
@@ -25,14 +24,12 @@ const tickets = [
     ticket_type: 2,
     ticket_status: 'pending',
     ticket_subject: 'Application for mentee',
-    requested_role: 4,
     submitted_by: '12',
   },
   {
     ticket_type: 2,
     ticket_status: 'approved',
     ticket_subject: 'Application for mentor',
-    requested_role: 3,
     submitted_by: '9',
   },
   {
@@ -47,7 +44,6 @@ const tickets = [
     ticket_type: 2,
     ticket_status: 'pending',
     ticket_subject: 'Application for mentor',
-    requested_role: 3,
     urgent: true,
     submitted_by: '00u13omswyZM1xVya4x7',
   },
@@ -63,7 +59,6 @@ const tickets = [
     ticket_type: 4,
     ticket_status: 'approved',
     ticket_subject: 'Applying for admin role',
-    requested_role: '1',
     approved_by: '00ultwew80Onb2vOT4x6',
     submitted_by: '00ulthapbErVUwVJy4x6',
   },

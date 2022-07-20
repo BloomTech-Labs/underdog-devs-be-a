@@ -13,9 +13,8 @@ const {
 const { createProfile } = require('../middleware/profilesMiddleware');
 const { registerOktaUser } = require('../middleware/oktaAuth');
 const validation = require('../helpers/validation');
-const applicationSchema = require('../validations/application/applicationSchema');
-const config = require('../../config/dsConfig');
 const axios = require('axios');
+const { baseURL } = require('../../config/dsConfig');
 
 /**
  * @swagger
@@ -93,50 +92,55 @@ const axios = require('axios');
  */
 
 // get all pending application tickets
-const dummyData = [
-  {
-    profile_id: '00u13omswyZM1xVya4x7',
-    first_name: 'User',
-    last_name: '6',
-    role_name: 'mentor',
-    created_at: '2022-03-11T22:34:47.794Z',
-    application_id: 5,
-    application_notes: '',
-    email: 'llama006@maildrop.cc',
-  },
-  {
-    profile_id: '10',
-    first_name: 'User',
-    last_name: '10',
-    role_name: 'mentee',
-    created_at: '2022-03-11T22:34:47.794Z',
-    application_id: 6,
-    application_notes: '',
-    email: 'llama0010@maildrop.cc',
-  },
-  {
-    profile_id: '00u13oned0U8XP8Mb4x7',
-    first_name: 'User',
-    last_name: '8',
-    role_name: 'mentee',
-    created_at: '2022-03-11T22:34:47.794Z',
-    application_id: 2,
-    application_notes: '',
-    email: 'llama008@maildrop.cc',
-  },
-  {
-    profile_id: '12',
-    first_name: 'User',
-    last_name: '12',
-    role_name: 'pending',
-    created_at: '2022-03-11T22:34:47.794Z',
-    application_id: 1,
-    application_notes: '',
-    email: 'llama0012@maildrop.cc',
-  },
-];
-router.get('/', authRequired, adminRequired, (req, res) => {
-  res.json(dummyData);
+// const dummyData = [
+//   {
+//     profile_id: '00u13omswyZM1xVya4x7',
+//     first_name: 'User',
+//     last_name: '6',
+//     role_name: 'mentor',
+//     created_at: '2022-03-11T22:34:47.794Z',
+//     application_id: 5,
+//     application_notes: '',
+//     email: 'llama006@maildrop.cc',
+//   },
+//   {
+//     profile_id: '10',
+//     first_name: 'User',
+//     last_name: '10',
+//     role_name: 'mentee',
+//     created_at: '2022-03-11T22:34:47.794Z',
+//     application_id: 6,
+//     application_notes: '',
+//     email: 'llama0010@maildrop.cc',
+//   },
+//   {
+//     profile_id: '00u13oned0U8XP8Mb4x7',
+//     first_name: 'User',
+//     last_name: '8',
+//     role_name: 'mentee',
+//     created_at: '2022-03-11T22:34:47.794Z',
+//     application_id: 2,
+//     application_notes: '',
+//     email: 'llama008@maildrop.cc',
+//   },
+//   {
+//     profile_id: '12',
+//     first_name: 'User',
+//     last_name: '12',
+//     role_name: 'pending',
+//     created_at: '2022-03-11T22:34:47.794Z',
+//     application_id: 1,
+//     application_notes: '',
+//     email: 'llama0012@maildrop.cc',
+//   },
+// ];
+router.get('/', authRequired, adminRequired, async (req, res, next) => {
+  try {
+    const requestedApplications = await Application.getApplications();
+    res.status(200).json(requestedApplications);
+  } catch (err) {
+    next({ message: err.message });
+  }
 });
 
 /**
@@ -289,17 +293,22 @@ router.get('/profileId/:id', checkApplicationExists, checkRole, (req, res) => {
  */
 
 // create a new user profile and application ticket
-
+//this only works for the mentor application because we are passing the mentorApplicationSchema directly (6/4/2022)
 router.post(
   '/new/:role',
-  validation(applicationSchema),
+  validation(),
   createProfile,
   cacheSignUpData,
   sendData,
   (req, res, next) => {
+    //this applicationTicket object works for the existing backend db schema for "tickets". Both likely need to be updated (6/4/2022)
     const applicationTicket = {
-      profile_id: req.body.profile_id,
-      position: req.body.position,
+      ticket_status: 'pending',
+      //unsure of correct value for 'ticket_type' to indicate this is an application (6/4/2022)
+      ticket_type: 1,
+      ticket_subject: 'application',
+      requested_for: req.body.profile_id,
+      submitted_by: req.body.profile_id,
     };
     Application.add(applicationTicket)
       .then(() => {
@@ -467,7 +476,7 @@ router.get(
     const profile_id = req.params.id;
     const role = req.params.role;
     axios
-      .post(`${config.baseURL}/${role}/read`, { profile_id: profile_id })
+      .post(`${baseURL}/${role}/read`, { profile_id: profile_id })
       .then((res) => {
         if (res.data.result.length === 0)
           return next({ message: 'Profile does not exist', status: 404 });

@@ -37,14 +37,6 @@ exports.up = function (knex) {
         .onUpdate('CASCADE');
       table.boolean('urgent').default(false);
       table.string('notes');
-      table
-        .integer('requested_role')
-        .unsigned()
-        .references('role_id')
-        .inTable('roles')
-        .onDelete('CASCADE')
-        .onUpdate('CASCADE');
-      table.timestamps(true, true);
     });
 };
 

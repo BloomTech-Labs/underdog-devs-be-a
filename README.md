@@ -32,6 +32,7 @@ The base technologies are JavaScript, HTML and CSS. The frontend leverages [Reac
 # Endpoints
 
 ## Response Codes
+
 [Status Codes](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status#server_error_responses)
 Please see [this file](./__tests__/README.md) for more info.
 
@@ -73,16 +74,16 @@ Please see [this file](./__tests__/README.md) for more info.
         "progress_id": null
     }
 
-| Method | Endpoint                  | Required Request Body | Returns                           | User Auth    |
-| ------ | ------------------------- | --------------------- | --------------------------------- | ------------ |
-| GET    | `/profile`                | -                     | `get all profiles`                | `Admin`      |
-| GET    | `/profile/:id`            | -                     | `get profile by id`               | `Admin`      |
-| GET    | `/profile/current_user`   | -                     | `get current profile`             |              |
-| POST   | `/profile`                | `first/last, email`   | `create new profile`              |              |
-| PUT    | `/profile/`               |                       | `update current profile`          |              |
-| PUT    | `/profile/:id`            |                       | `update a profile by profile id`  | `Admin`      |
-| PUT    | `/profile/roles`          | `role`                | `update a profiles role`          | `Admin`      |
-| PUT    | `/profile/is_active/:id`  | -                     | `activates/deactivates a profile` | `SuperAdmin` |
+| Method | Endpoint                 | Required Request Body | Returns                           | User Auth    |
+| ------ | ------------------------ | --------------------- | --------------------------------- | ------------ |
+| GET    | `/profile`               | -                     | `get all profiles`                | `Admin`      |
+| GET    | `/profile/:id`           | -                     | `get profile by id`               | `Admin`      |
+| GET    | `/profile/current_user`  | -                     | `get current profile`             |              |
+| POST   | `/profile`               | `first/last, email`   | `create new profile`              |              |
+| PUT    | `/profile/`              |                       | `update current profile`          |              |
+| PUT    | `/profile/:id`           |                       | `update a profile by profile id`  | `Admin`      |
+| PUT    | `/profile/roles`         | `role`                | `update a profiles role`          | `Admin`      |
+| PUT    | `/profile/is_active/:id` | -                     | `activates/deactivates a profile` | `SuperAdmin` |
 
 ## Applications / Mentee-Mentor Intakes
 
@@ -112,7 +113,7 @@ Please see [this file](./__tests__/README.md) for more info.
         "job_help": true,
         "industry_knowledge": true,
         "pair_programming": false,
-        "subject": 'frontend'
+        "tech_stack": 'frontend'
         "experience_level": 'expert',
         "other_info": 'none',
         "validateStatus: 'pending',
@@ -130,7 +131,7 @@ Please see [this file](./__tests__/README.md) for more info.
         "last_name": 'Baseball',
         "formerly_incarcerated": true,
         "list_convictions": 'coded too much',
-        "subject": 'frontend'
+        "tech_stack": 'frontend'
         "experience_level": beginner',
         "underrepresented_group": true,
         "low_income": false,
@@ -210,7 +211,7 @@ Please see [this file](./__tests__/README.md) for more info.
         updated_at: 2022-03-12T00:42:20.382Z,
         meeting_topic: 'lorem dipz um',
         meeting_start_date: 1640353440,
-        meeting_end_date: 1640354210, 
+        meeting_end_date: 1640354210,
         host_id: '7',
         attendee_id: '00ultx74kMUmEW8054x6',
         meeting_notes: 'Remember to bring a smile',
@@ -366,13 +367,14 @@ Please see [this file](./__tests__/README.md) for more info.
         "updated_at": timestamp with time zone (automatically generated)
     }
 
-| Method | Endpoint                            | Required Request Body                           | Returns                           | User Auth |
-| ------ | ----------------------------------- | ----------------------------------------------- | --------------------------------- | --------- |
-| GET    | `/notes`                            | -                                               | `get all notes`                   | -         |
-| GET    | `/notes/:note_id`                   | `note_id`(params)                               | `get note by note_id`             | -         |
-| GET    | `/notes/mentee/:mentee_id`          | `mentee_id`(params)                             | `get notes by mentee_id`          | -         |
-| POST   | `/notes`                            | `created_by`,                                   | `newly created note`              | -         |
-                                                 `content_type`,                                 
+| Method | Endpoint                   | Required Request Body | Returns                  | User Auth |
+| ------ | -------------------------- | --------------------- | ------------------------ | --------- |
+| GET    | `/notes`                   | -                     | `get all notes`          | -         |
+| GET    | `/notes/:note_id`          | `note_id`(params)     | `get note by note_id`    | -         |
+| GET    | `/notes/mentee/:mentee_id` | `mentee_id`(params)   | `get notes by mentee_id` | -         |
+| POST   | `/notes`                   | `created_by`,         | `newly created note`     | -         |
+
+                                                 `content_type`,
                                                  `status`,
                                                  `content`,
                                                  `level`,
@@ -381,5 +383,6 @@ Please see [this file](./__tests__/README.md) for more info.
                                                  `visible_to_mentee`,
                                                  `mentor_id`,
                                                  `mentee_id`                                           | `added note`                      | -         |
-| PUT    | `/notes/:note_id`                   | `note_id`(params), `status, content, and/or level`    | `updated note`                    | -         |
-| DELETE | `/notes/:note_id`                   | `note_id`(params)                                     | `remove note by note_id`          | -         |
+
+| PUT | `/notes/:note_id` | `note_id`(params), `status, content, and/or level` | `updated note` | - |
+| DELETE | `/notes/:note_id` | `note_id`(params) | `remove note by note_id` | - |
