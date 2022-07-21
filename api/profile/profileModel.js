@@ -41,7 +41,9 @@ const remove = (id) => {
 };
 
 const findOrCreateProfile = async (profileObj) => {
-  const foundProfile = await findById(profileObj.id).then((profile) => profile);
+  const foundProfile = await findById(profileObj.profile_id).then(
+    (profile) => profile
+  );
   if (foundProfile) {
     return foundProfile;
   } else {

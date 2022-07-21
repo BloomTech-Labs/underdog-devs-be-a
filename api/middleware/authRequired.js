@@ -1,7 +1,15 @@
-const OktaJwtVerifier = require('@okta/jwt-verifier');
-const oktaVerifierConfig = require('../../config/okta');
+/**
+ * @author Khaleel Musleh
+ * @constant Imported jsonwebtoken import for Auth0 and removed @okta/jwt-verifier package import
+ */
+const Auth0Verifier = require('jsonwebtoken');
+/**
+ * @author Khaleel Musleh
+ * @constant Removed const oktaVerifierConfig = require('../../config/okta');
+ * @constant Added const AuthVerifierConfig = require('../helpers/auth0') importing credentials and secrets from helpers/auth0
+ */
+const AuthVerifierConfig = require('../helpers/auth0');
 const Profiles = require('../profile/profileModel');
-const oktaJwtVerifier = new OktaJwtVerifier(oktaVerifierConfig.config);
 
 const makeProfileObj = (claims) => {
   return {
@@ -27,15 +35,37 @@ const authRequired = async (req, res, next) => {
       });
     }
 
+    /**
+     *  @author Khaleel Musleh
+     * @abstract Changed from Okta to Auth0
+     * Substituted: 
+    //const oktaData = await oktaJwtVerifier.verify(
+    //   idToken,
+    //   AuthVerifierConfig.audience
+    // );
+
+     TO:
+
+    //    const authData = Auth0Verifier.verify(
+    // idToken,
+    //  AuthVerifierConfig.verifyJwt.secret,
+    //  { audience: AuthVerifierConfig.verifyJwt.audience }
+    //);
+
+    Basically Verifies the token with idToken, AuthVerifierConfig.verifyJwt.secret taken from the auth0 helpers and { audience: AuthVerifierConfig.verifyJwt.audience }.
+     *
+     */
+
     // Verify that the token is valid
     const idToken = match[1];
-    const oktaData = await oktaJwtVerifier.verifyAccessToken(
-      idToken,
-      oktaVerifierConfig.expectedAudience
-    );
-    const jwtUserObj = makeProfileObj(oktaData.claims);
-    const profile = await Profiles.findOrCreateProfile(jwtUserObj);
 
+    const authData = Auth0Verifier.verify(
+      idToken,
+      AuthVerifierConfig.verifyJwt.secret,
+      { audience: AuthVerifierConfig.verifyJwt.audience }
+    );
+    const jwtUserObj = makeProfileObj(authData.claims);
+    const profile = await Profiles.findOrCreateProfile(jwtUserObj);
     if (profile) {
       req.profile = profile;
     } else {
