@@ -7,6 +7,7 @@ const helmet = require('helmet');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
 const jsdocConfig = require('../config/jsdoc');
+const { verifyJwt } = require('./helpers/auth0');
 const dotenv = require('dotenv');
 const config_result = dotenv.config();
 if (process.env.NODE_ENV != 'production' && config_result.error) {
@@ -59,6 +60,7 @@ app.use(
 app.use(logger('dev'));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(verifyJwt);
 
 // application routes
 app.use('/', indexRouter);
