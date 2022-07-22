@@ -5,10 +5,10 @@ const {
 
 const validation = () => async (req, res, next) => {
   const body = req.body;
-  const schema =
-    req.params.role === 'mentor'
-      ? mentorApplicationSchema
-      : menteeApplicationSchema;
+  const schema = console.log(req);
+  req.params.role === 'mentor'
+    ? mentorApplicationSchema
+    : menteeApplicationSchema;
   try {
     await schema.validate(body);
     next();
