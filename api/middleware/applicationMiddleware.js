@@ -17,6 +17,7 @@ const { findById } = require('../profile/profileModel');
 const cacheSignUpData = async (req, res, next) => {
   const role = req.params.role;
   const formData = req.body;
+
   const sharedFields = {
     profile_id: formData.profile_id,
     first_name: formData.first_name,
@@ -30,6 +31,7 @@ const cacheSignUpData = async (req, res, next) => {
     pair_programming: formData.pair_programming,
     other_info: formData.other_info,
     validate_status: 'pending',
+    // is_active: formData.is_active,
   };
   const newMentorApplication = {
     ...sharedFields,
@@ -44,6 +46,7 @@ const cacheSignUpData = async (req, res, next) => {
     underrepresented_group: formData.underrepresented_group,
     low_income: formData.low_income,
     heard_about: formData.heard_about,
+    // in_project_underdog: formData.in_project_underdog,
   };
 
   try {
@@ -148,6 +151,7 @@ const validateApplicationTicket = async (req, res, next) => {
 
 const validateMenteeIntakeData = async (req, res, next) => {
   const payload = req.body;
+  console.log(payload);
   try {
     await menteeApplicationSchema.validate(payload);
     return next();
@@ -173,6 +177,13 @@ const validateMentorIntakeData = async (req, res, next) => {
 };
 
 const sendData = (req, res, next) => {
+  console.log(req);
+  const temp = req.application;
+  temp['created_at'] = Date.now();
+  temp['updated_at'] = Date.now();
+  temp['is_active'] = true;
+  temp['in_project_underdog'] = true;
+  //write a comment here to explain what we are doing
   axios
     .post(`${process.env.DS_API_URL}/create/${req.role}`, req.application)
     .then((res) => {

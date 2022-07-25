@@ -301,6 +301,8 @@ router.post(
   cacheSignUpData,
   sendData,
   (req, res, next) => {
+    // console.log(res.body);
+
     //this applicationTicket object works for the existing backend db schema for "tickets". Both likely need to be updated (6/4/2022)
     const applicationTicket = {
       ticket_status: 'pending',
