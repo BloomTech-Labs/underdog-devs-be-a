@@ -186,15 +186,17 @@ const sendData = (req, res, next) => {
     mentee['in_project_underdog'] = false;
   } else {
     const mentor = req.application;
-    mentor['is_active'] = false;
-    mentor['accepting_new_mentees'] = false;
     mentor['created_at'] = Date.now();
     mentor['updated_at'] = Date.now();
+    mentor['is_active'] = false;
+    mentor['accepting_new_mentees'] = false;
     mentor['commitment'] = false;
     mentor['industry_knowledge'] = false;
   }
 
-  // our mentee intake schema is creating 17 tables, but the DS API is expecting 21. as of now, we have hard coded the missing 4 tables to be submitted right before axios makes the post request, but we will need to rollback and migrate a new schema table with all 21 required tables.
+  // regarding the 'created_at' and 'updated_at' keys, we are planning on automating it on the DS side using MongoDB, so we will need to delete it once they implement it.
+  // we are going to leave this middleware in this format due to future changes to the database in the near future. updated 7/27/22.
+  // migration schema and seeding has not been updated, once DS has finalized the schema then we can rollback and migrate to a new migration.
 
   axios
     .post(`${process.env.DS_API_URL}/create/${req.role}`, req.application)
