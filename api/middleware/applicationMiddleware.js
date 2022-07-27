@@ -152,7 +152,6 @@ const validateApplicationTicket = async (req, res, next) => {
 
 const validateMenteeIntakeData = async (req, res, next) => {
   const payload = req.body;
-  console.log(payload);
   try {
     await menteeApplicationSchema.validate(payload);
     return next();
