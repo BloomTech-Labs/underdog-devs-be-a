@@ -183,7 +183,8 @@ const sendData = (req, res, next) => {
   temp['updated_at'] = Date.now();
   temp['is_active'] = true;
   temp['in_project_underdog'] = true;
-  //write a comment here to explain what we are doing
+
+  // our mentee intake schema is creating 17 tables, but the DS API is expecting 21. as of now, we have hard coded the missing 4 tables to be submitted right before axios makes the post request, but we will need to rollback and migrate a new schema table with all 21 required tables.
 
   axios
     .post(`${process.env.DS_API_URL}/create/${req.role}`, req.application)
