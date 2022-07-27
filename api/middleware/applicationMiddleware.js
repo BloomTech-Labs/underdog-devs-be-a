@@ -18,7 +18,6 @@ const cacheSignUpData = async (req, res, next) => {
   const role = req.params.role;
   const formData = req.body;
 
-  // missing created_at, updated_at
   const sharedFields = {
     profile_id: formData.profile_id,
     first_name: formData.first_name,
@@ -32,7 +31,6 @@ const cacheSignUpData = async (req, res, next) => {
     pair_programming: formData.pair_programming,
     other_info: formData.other_info,
     validate_status: 'pending',
-    // is_active: formData.is_active,
   };
   const newMentorApplication = {
     ...sharedFields,
@@ -46,8 +44,7 @@ const cacheSignUpData = async (req, res, next) => {
     convictions: formData.convictions,
     underrepresented_group: formData.underrepresented_group,
     low_income: formData.low_income,
-    heard_about: formData.heard_about,
-    // in_project_underdog: formData.in_project_underdog,
+    heard_about: formData.heard_about, // will be updated to referred_by
   };
 
   try {
