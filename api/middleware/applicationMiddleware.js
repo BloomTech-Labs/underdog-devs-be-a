@@ -178,11 +178,21 @@ const validateMentorIntakeData = async (req, res, next) => {
 
 const sendData = (req, res, next) => {
   console.log(req);
-  const temp = req.application;
-  temp['created_at'] = Date.now();
-  temp['updated_at'] = Date.now();
-  temp['is_active'] = false;
-  temp['in_project_underdog'] = false;
+  if (req.role === 'mentee') {
+    const mentee = req.application;
+    mentee['created_at'] = Date.now();
+    mentee['updated_at'] = Date.now();
+    mentee['is_active'] = false;
+    mentee['in_project_underdog'] = false;
+  } else {
+    const mentor = req.application;
+    mentor['is_active'] = false;
+    mentor['accepting_new_mentees'] = false;
+    mentor['created_at'] = Date.now();
+    mentor['updated_at'] = Date.now();
+    mentor['commitment'] = false;
+    mentor['industry_knowledge'] = false;
+  }
 
   // our mentee intake schema is creating 17 tables, but the DS API is expecting 21. as of now, we have hard coded the missing 4 tables to be submitted right before axios makes the post request, but we will need to rollback and migrate a new schema table with all 21 required tables.
 
