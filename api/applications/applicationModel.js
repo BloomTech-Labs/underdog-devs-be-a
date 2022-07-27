@@ -29,7 +29,6 @@ const insertMentorIntake = async (newMentorApplication) => {
 };
 
 const insertMenteeIntake = async (newMenteeApplication) => {
-  // console.log(newMenteeApplication);
   const newMenteeIntake = await db('mentee_intake').insert(
     newMenteeApplication
   );
