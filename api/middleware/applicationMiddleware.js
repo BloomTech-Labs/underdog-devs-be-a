@@ -18,6 +18,7 @@ const cacheSignUpData = async (req, res, next) => {
   const role = req.params.role;
   const formData = req.body;
 
+  // missing created_at, updated_at
   const sharedFields = {
     profile_id: formData.profile_id,
     first_name: formData.first_name,
