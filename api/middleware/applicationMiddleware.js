@@ -30,13 +30,13 @@ const cacheSignUpData = async (req, res, next) => {
     job_help: formData.job_help,
     pair_programming: formData.pair_programming,
     other_info: formData.other_info,
+    referred_by: formData.referred_by,
     validate_status: 'pending',
   };
   const newMentorApplication = {
     ...sharedFields,
     current_company: formData.current_company,
     current_position: formData.current_position,
-    referred_by: formData.referred_by,
   };
   const newMenteeApplication = {
     ...sharedFields,
@@ -44,7 +44,6 @@ const cacheSignUpData = async (req, res, next) => {
     convictions: formData.convictions,
     underrepresented_group: formData.underrepresented_group,
     low_income: formData.low_income,
-    heard_about: formData.heard_about, // will be updated to referred_by
   };
 
   try {
@@ -178,20 +177,18 @@ const sendData = (req, res, next) => {
   if (req.role === 'mentee') {
     const mentee = req.application;
     mentee['created_at'] = Date.now();
-    mentee['updated_at'] = Date.now();
     mentee['is_active'] = false;
     mentee['in_project_underdog'] = false;
   } else {
     const mentor = req.application;
     mentor['created_at'] = Date.now();
-    mentor['updated_at'] = Date.now();
     mentor['is_active'] = false;
     mentor['accepting_new_mentees'] = false;
     mentor['commitment'] = false;
     mentor['industry_knowledge'] = false;
   }
 
-  // regarding the 'created_at' and 'updated_at' keys, we are planning on automating it on the DS side using MongoDB, so we will need to delete it once they implement it.
+  // regarding the 'created_at' keys, we are planning on automating it on the DS side using MongoDB, so we will need to delete it once they implement it.
   // we are going to leave this middleware in this format due to future changes to the database in the near future. updated 7/27/22.
   // migration schema and seeding has not been updated, once DS has finalized the schema then we can rollback and migrate to a new migration.
 
