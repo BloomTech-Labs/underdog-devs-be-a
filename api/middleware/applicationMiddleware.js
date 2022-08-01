@@ -176,12 +176,10 @@ const sendData = (req, res, next) => {
   console.log(req);
   if (req.role === 'mentee') {
     const mentee = req.application;
-    mentee['created_at'] = Date.now();
     mentee['is_active'] = false;
     mentee['in_project_underdog'] = false;
   } else {
     const mentor = req.application;
-    mentor['created_at'] = Date.now();
     mentor['is_active'] = false;
     mentor['accepting_new_mentees'] = false;
     mentor['commitment'] = false;
