@@ -185,11 +185,7 @@ const sendData = (req, res, next) => {
     mentor['commitment'] = false;
     mentor['industry_knowledge'] = false;
   }
-
-  // regarding the 'created_at' keys, we are planning on automating it on the DS side using MongoDB, so we will need to delete it once they implement it.
   // we are going to leave this middleware in this format due to future changes to the database in the near future. updated 7/27/22.
-  // migration schema and seeding has not been updated, once DS has finalized the schema then we can rollback and migrate to a new migration.
-
   axios
     .post(`${process.env.DS_API_URL}/create/${req.role}`, req.application)
     .then((res) => {
