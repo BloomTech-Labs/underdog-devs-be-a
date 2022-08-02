@@ -17,6 +17,7 @@ const { findById } = require('../profile/profileModel');
 const cacheSignUpData = async (req, res, next) => {
   const role = req.params.role;
   const formData = req.body;
+
   const sharedFields = {
     profile_id: formData.profile_id,
     first_name: formData.first_name,
@@ -28,8 +29,8 @@ const cacheSignUpData = async (req, res, next) => {
     tech_stack: formData.tech_stack,
     job_help: formData.job_help,
     pair_programming: formData.pair_programming,
-    referred_by: formData.referred_by,
     other_info: formData.other_info,
+    referred_by: formData.referred_by,
     validate_status: 'pending',
   };
   const newMentorApplication = {
@@ -40,10 +41,9 @@ const cacheSignUpData = async (req, res, next) => {
   const newMenteeApplication = {
     ...sharedFields,
     formerly_incarcerated: formData.formerly_incarcerated,
-    list_convictions: formData.list_convictions,
+    convictions: formData.convictions,
     underrepresented_group: formData.underrepresented_group,
     low_income: formData.low_income,
-    heard_about: formData.heard_about,
   };
 
   try {
@@ -173,6 +173,19 @@ const validateMentorIntakeData = async (req, res, next) => {
 };
 
 const sendData = (req, res, next) => {
+  console.log(req);
+  if (req.role === 'mentee') {
+    const mentee = req.application;
+    mentee['is_active'] = false;
+    mentee['in_project_underdog'] = false;
+  } else {
+    const mentor = req.application;
+    mentor['is_active'] = false;
+    mentor['accepting_new_mentees'] = false;
+    mentor['commitment'] = false;
+    mentor['industry_knowledge'] = false;
+  }
+  // we are going to leave this middleware in this format due to future changes to the database in the near future. updated 7/27/22.
   axios
     .post(`${process.env.DS_API_URL}/create/${req.role}`, req.application)
     .then((res) => {
