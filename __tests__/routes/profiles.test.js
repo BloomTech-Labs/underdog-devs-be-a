@@ -371,6 +371,10 @@ describe('Profile Router', () => {
 
         expect(actual).toBe(expected);
       });
+
+      // it('sets availability of mentor', () => {
+
+      // })
     });
   });
 });

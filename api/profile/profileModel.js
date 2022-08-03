@@ -36,6 +36,18 @@ const updateIsActive = async (profile_id, status) => {
     });
 };
 
+const updateAvailabilty = async (profile_id, availability) => {
+  const newAvailability = !availability;
+  db('profiles')
+    .where({ profile_id })
+    .update({
+      available: newAvailability,
+    })
+    .then(async () => {
+      return await db('profiles').select('available');
+    });
+};
+
 const remove = (id) => {
   return db('profiles').where({ id }).del();
 };
@@ -95,6 +107,7 @@ module.exports = {
   remove,
   findOrCreateProfile,
   updateIsActive,
+  updateAvailabilty,
   mentorApplicationData,
   menteeApplicationData,
   checkAverageAttendance,

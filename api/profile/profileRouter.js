@@ -363,6 +363,25 @@ router.put(
   }
 );
 
+router.put('/available/:profile_id', validateUser, async (req, res, next) => {
+  const { profile_id, role_id } = req.params;
+  try {
+    const profile = await Profiles.findById(profile_id);
+    role_id === 3 && profile.available
+      ? res
+          .status(201)
+          .json({ message: 'Your status has been set as Available' })
+      : res
+          .status(201)
+          .json({ message: 'Your status has been set as Unavailable' });
+  } catch (err) {
+    next({
+      status: 500,
+      message: 'Unable to change availability, please try again.',
+    });
+  }
+});
+
 //get match mentor by profile_id
 router.get('/match/:id', authRequired, (req, res, next) => {
   axios
