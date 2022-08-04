@@ -38,6 +38,8 @@ const updateIsActive = async (profile_id, status) => {
 
 const updateAvailabilty = async (profile_id, availability) => {
   const newAvailability = !availability;
+  availability = newAvailability;
+  console.log(availability);
   db('profiles')
     .where({ profile_id })
     .update({

@@ -1,6 +1,7 @@
 const express = require('express');
 const authRequired = require('../middleware/authRequired');
 const Profiles = require('./profileModel');
+const Roles = require('../roles/rolesModel');
 const router = express.Router();
 const axios = require('axios');
 const {
@@ -9,7 +10,7 @@ const {
 } = require('../middleware/permissionsRequired');
 const validation = require('../helpers/validation');
 const validateSelfUpdate = require('../../data/schemas/userProfileSchema');
-const { validateUser } = require('../middleware/generalMiddleware');
+const { validateUser } = require('../middleware/validationMiddleware');
 const dsService = require('../dsService/dsModel');
 validateUser;
 
@@ -364,10 +365,12 @@ router.put(
 );
 
 router.put('/available/:profile_id', validateUser, async (req, res, next) => {
-  const { profile_id, role_id } = req.params;
+  const { profile_id } = req.params;
   try {
     const profile = await Profiles.findById(profile_id);
-    role_id === 3 && profile.available
+    const role = await Roles.findByProfileId(profile_id);
+    console.log(profile);
+    role === 3 && profile.available
       ? res
           .status(201)
           .json({ message: 'Your status has been set as Available' })
