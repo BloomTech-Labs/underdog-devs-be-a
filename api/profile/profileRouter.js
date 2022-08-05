@@ -1,7 +1,6 @@
 const express = require('express');
 const authRequired = require('../middleware/authRequired');
 const Profiles = require('./profileModel');
-const Roles = require('../roles/rolesModel');
 const router = express.Router();
 const axios = require('axios');
 const {
@@ -129,28 +128,23 @@ router.get('/', authRequired, adminRequired, function (req, res, next) {
  *      404:
  *        description: 'Profile not found'
  */
-router.get(
-  '/:id',
-  authRequired,
-
-  async function (req, res, next) {
-    const id = String(req.params.id);
-    const attendance_average = await Profiles.checkAverageAttendance(id);
-    Profiles.findById(id)
-      .then((profile) => {
-        if (profile) {
-          res
-            .status(200)
-            .json({ ...profile, attendance_rate: attendance_average });
-        } else {
-          next({ status: 404, message: 'ProfileNotFound' });
-        }
-      })
-      .catch((err) => {
-        next({ status: 500, message: err.message });
-      });
-  }
-);
+router.get('/:id', authRequired, async function (req, res, next) {
+  const id = String(req.params.id);
+  const attendance_average = await Profiles.checkAverageAttendance(id);
+  Profiles.findById(id)
+    .then((profile) => {
+      if (profile) {
+        res
+          .status(200)
+          .json({ ...profile, attendance_rate: attendance_average });
+      } else {
+        next({ status: 404, message: 'ProfileNotFound' });
+      }
+    })
+    .catch((err) => {
+      next({ status: 500, message: err.message });
+    });
+});
 
 /**
  * @swagger
@@ -363,27 +357,6 @@ router.put(
     }
   }
 );
-
-router.put('/available/:profile_id', validateUser, async (req, res, next) => {
-  const { profile_id } = req.params;
-  try {
-    const profile = await Profiles.findById(profile_id);
-    const role = await Roles.findByProfileId(profile_id);
-    console.log(profile);
-    role === 3 && profile.available
-      ? res
-          .status(201)
-          .json({ message: 'Your status has been set as Available' })
-      : res
-          .status(201)
-          .json({ message: 'Your status has been set as Unavailable' });
-  } catch (err) {
-    next({
-      status: 500,
-      message: 'Unable to change availability, please try again.',
-    });
-  }
-});
 
 //get match mentor by profile_id
 router.get('/match/:id', authRequired, (req, res, next) => {

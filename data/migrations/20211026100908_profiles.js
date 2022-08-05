@@ -20,7 +20,6 @@ exports.up = (knex) => {
         .onUpdate('CASCADE');
       table.timestamps(true, true);
       table.boolean('is_active');
-      table.boolean('available');
       table.string('progress_status');
       table.float('attendance_rate').notNullable().unsigned().default(1.0);
     });
