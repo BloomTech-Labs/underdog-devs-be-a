@@ -1,4 +1,4 @@
-const Profile = require('../profile/profileModel');
+const { create } = require('../profile/profileModel');
 
 const createProfile = async (req, res, next) => {
   const tempProfileId = Math.random().toString(36).slice(-8);
@@ -12,7 +12,7 @@ const createProfile = async (req, res, next) => {
     role_id: req.params.role === 'mentor' ? 3 : 4,
   };
   try {
-    const profile = await Profile.create(newProfile);
+    const profile = await create(newProfile);
     req.profile = profile;
     next();
   } catch (err) {
