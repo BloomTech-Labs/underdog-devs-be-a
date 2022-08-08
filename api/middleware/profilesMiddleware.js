@@ -29,7 +29,6 @@ const checkAvailability = (req, res, next) => {
   axios
     .post(`${process.env.DS_API_URL}/update/${current_role}/${profile}`)
     .then((res) => {
-      //Not sure if this logic belongs in the axios call or if it should be written beforehand, ie. on line 28 of the file.
       if (current_role === 'mentor') {
         status = !status;
       }
@@ -37,7 +36,7 @@ const checkAvailability = (req, res, next) => {
     })
     .catch((err) => {
       next({
-        status: 500,
+        status: err.status,
         message: err.message,
       });
     });
