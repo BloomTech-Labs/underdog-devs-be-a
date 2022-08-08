@@ -1,5 +1,6 @@
 const express = require('express');
 const authRequired = require('../middleware/authRequired');
+const { checkAvailability } = require('../middleware/profilesMiddleware');
 const Profiles = require('./profileModel');
 const router = express.Router();
 const axios = require('axios');
@@ -379,6 +380,10 @@ router.get('/match/:id', authRequired, (req, res, next) => {
     .catch((err) => {
       next({ status: 500, message: err.message });
     });
+});
+
+router.post('/availability/:id', checkAvailability, (req, res, next) => {
+  next();
 });
 
 module.exports = router;
