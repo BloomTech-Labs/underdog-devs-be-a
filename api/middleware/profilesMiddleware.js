@@ -36,7 +36,10 @@ const checkAvailability = (req, res, next) => {
       next({ status: res.status, message: res.data });
     })
     .catch((err) => {
-      next(err);
+      next({
+        status: 500,
+        message: err.message,
+      });
     });
 };
 
