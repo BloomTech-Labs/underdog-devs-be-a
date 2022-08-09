@@ -1,5 +1,4 @@
 const { create } = require('../profile/profileModel');
-const axios = require('axios');
 
 const createProfile = async (req, res, next) => {
   const tempProfileId = Math.random().toString(36).slice(-8);
@@ -21,29 +20,6 @@ const createProfile = async (req, res, next) => {
   }
 };
 
-//This middleware connects to the new DS API endopint.
-const checkAvailability = (req, res, next) => {
-  const current_role = req.body.role_id;
-  const profile = req.body.profile_id;
-  let status = req.body.accepting_new_mentees;
-
-  axios
-    .post(`${process.env.DS_API_URL}/update/${current_role}/${profile}`)
-    .then((res) => {
-      if (current_role === 'mentor') {
-        status = !status;
-      }
-      next({ status: res.status, message: res.data });
-    })
-    .catch((err) => {
-      next({
-        status: err.status,
-        message: err.message,
-      });
-    });
-};
-
 module.exports = {
   createProfile,
-  checkAvailability,
 };

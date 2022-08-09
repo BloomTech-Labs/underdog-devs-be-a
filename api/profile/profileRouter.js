@@ -1,6 +1,5 @@
 const express = require('express');
 const authRequired = require('../middleware/authRequired');
-const { checkAvailability } = require('../middleware/profilesMiddleware');
 const Profiles = require('./profileModel');
 const router = express.Router();
 const axios = require('axios');
@@ -378,8 +377,25 @@ router.get('/match/:id', authRequired, (req, res, next) => {
 });
 
 //This route runs to the new DS API endpoint through the checkAvailability middleware that is found in the middleware folders.
-router.post('/availability/:id', checkAvailability, (req, res, next) => {
-  next();
+router.post('/availability/:profile_id', (req, res, next) => {
+  const { profile_id } = req.params;
+  const { accepting_new_mentees } = req.body;
+  console.log({ accepting_new_mentees });
+  axios
+    .post(`${process.env.DS_API_URL}/update/mentor/${profile_id}`, {
+      profile_id,
+      accepting_new_mentees,
+    })
+    .then((response) => {
+      console.log(response.data);
+      res.send({ status: res.status, message: res.data });
+    })
+    .catch((err) => {
+      next({
+        status: err.status,
+        message: err.message,
+      });
+    });
 });
 
 module.exports = router;
