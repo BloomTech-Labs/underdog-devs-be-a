@@ -382,4 +382,8 @@ router.post('/availability/:id', checkAvailability, (req, res, next) => {
   next();
 });
 
+router.post('/mentor-information/:id', (req, res, next) => {
+  next();
+});
+
 module.exports = router;
