@@ -382,6 +382,7 @@ router.get('/match/:id', authRequired, (req, res, next) => {
     });
 });
 
+//This route runs to the new DS API endpoint through the checkAvailability middleware that is found in the middleware folders.
 router.post('/availability/:id', checkAvailability, (req, res, next) => {
   next();
 });

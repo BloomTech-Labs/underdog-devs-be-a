@@ -21,6 +21,7 @@ const createProfile = async (req, res, next) => {
   }
 };
 
+//This middleware connects to the new DS API endopint.
 const checkAvailability = (req, res, next) => {
   const current_role = req.body.role_id;
   const profile = req.body.profile_id;
