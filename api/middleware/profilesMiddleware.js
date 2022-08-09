@@ -44,6 +44,21 @@ const checkAvailability = (req, res, next) => {
 };
 
 const mentorInfo = (req, res, next) => {
+  const location = req.body.city;
+  const availability = req.body.accepting_new_mentees;
+  const profile = req.body.profile_id;
+  // const mentees = req.body;
+
+  axios.post(`${process.env.DS_API_URL}/read/mentor`).then((res) => {
+    if (res.body.profile_id === profile) {
+      res.body.filter((results) => {
+        if (results === location || results === availability) {
+          console.log(results);
+          return results;
+        }
+      });
+    }
+  });
   next();
 };
 

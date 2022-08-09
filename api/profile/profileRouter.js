@@ -1,6 +1,9 @@
 const express = require('express');
 const authRequired = require('../middleware/authRequired');
-const { checkAvailability } = require('../middleware/profilesMiddleware');
+const {
+  checkAvailability,
+  mentorInfo,
+} = require('../middleware/profilesMiddleware');
 const Profiles = require('./profileModel');
 const router = express.Router();
 const axios = require('axios');
@@ -382,7 +385,7 @@ router.post('/availability/:id', checkAvailability, (req, res, next) => {
   next();
 });
 
-router.post('/mentor-information/:id', (req, res, next) => {
+router.post('/mentor-information/:id', mentorInfo, (req, res, next) => {
   next();
 });
 
