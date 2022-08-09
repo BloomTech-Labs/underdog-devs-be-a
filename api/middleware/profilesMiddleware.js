@@ -43,7 +43,12 @@ const checkAvailability = (req, res, next) => {
     });
 };
 
+const mentorInfo = (req, res, next) => {
+  next();
+};
+
 module.exports = {
   createProfile,
   checkAvailability,
+  mentorInfo,
 };
