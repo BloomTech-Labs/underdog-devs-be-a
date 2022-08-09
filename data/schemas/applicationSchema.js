@@ -25,7 +25,7 @@ const mentorApplicationSchema = yup.object().shape({
 
 const menteeApplicationSchema = yup.object().shape({
   ...sharedFields,
-  list_convictions: yup.string().trim(),
+  convictions: yup.string().trim(),
 });
 
 const applicationTicketSchema = yup.object().shape({
