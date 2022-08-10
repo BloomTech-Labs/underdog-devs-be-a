@@ -9,7 +9,7 @@ const {
 } = require('../middleware/permissionsRequired');
 const validation = require('../helpers/validation');
 const validateSelfUpdate = require('../../data/schemas/userProfileSchema');
-const { validateUser } = require('../middleware/generalMiddleware');
+const { validateUser } = require('../middleware/validationMiddleware');
 const dsService = require('../dsService/dsModel');
 validateUser;
 
