@@ -381,4 +381,22 @@ router.get('/match/:id', authRequired, (req, res, next) => {
     });
 });
 
+router.post('/mentor-information/:profile_id', (req, res, next) => {
+  const { profile_id } = req.body;
+  axios
+    .post(`${process.env.DS_API_URL}/read/mentor`, { profile_id })
+    .then((res) => {
+      res.data.result.map((results) => {
+        let profile_id = results.profile_id;
+        let city = [results.city, results.state];
+        let availability = results.accepting_new_mentees;
+        console.log(profile_id, city.join(', '), availability);
+        return profile_id, city.join(', '), availability;
+      });
+    })
+    .catch((err) => next(err));
+
+  next();
+});
+
 module.exports = router;
