@@ -375,7 +375,7 @@ router.put(
   }
 );
 
-// Finding User and Setting them to approved
+// Finding User and setting them to approved
 
 /**
  * @swagger
