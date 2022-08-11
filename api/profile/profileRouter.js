@@ -384,14 +384,12 @@ router.get('/match/:id', authRequired, (req, res, next) => {
 router.post('/availability/:profile_id', (req, res, next) => {
   const { profile_id } = req.params;
   const { accepting_new_mentees } = req.body;
-  console.log({ accepting_new_mentees });
   axios
     .post(`${process.env.DS_API_URL}/update/mentor/${profile_id}`, {
       profile_id,
       accepting_new_mentees,
     })
     .then((response) => {
-      console.log(response.data);
       res.send({ status: res.status, message: res.data });
     })
     .catch((err) => {
