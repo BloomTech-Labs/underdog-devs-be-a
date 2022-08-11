@@ -384,21 +384,20 @@ router.get('/match/:id', authRequired, (req, res, next) => {
 router.post('/mentor-information/', (req, res, next) => {
   axios
     .post(`${process.env.DS_API_URL}/read/mentor`, req.body)
-    .then((res) => {
-      const mentorInfo = res.data.result.map((results) => {
-        let mentorName = [results.first_name, results.last_name];
-        let city = [results.city, results.state];
-        let availability = results.accepting_new_mentees;
-        return mentorName
-          .join(' ')
-          .concat(', ', city.join(', '), ', ', availability);
+    .then((response) => {
+      const mentorInfo = response.data.result.map((results) => {
+        const data = {
+          name: `${results.first_name} ${results.last_name}`,
+          city: results.city,
+          state: results.state,
+          availability: results.accepting_new_mentees,
+        };
+        return data;
       });
       console.log('mentor info ', mentorInfo);
-      // return mentorInfo
+      res.send(mentorInfo);
     })
     .catch((err) => next(err));
-
-  next();
 });
 
 module.exports = router;
