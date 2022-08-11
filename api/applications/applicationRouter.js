@@ -375,6 +375,8 @@ router.put(
   }
 );
 
+// Finding User and Setting them to approved
+
 /**
  * @swagger
  * /application/{update-notes/:id}:
