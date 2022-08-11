@@ -394,7 +394,6 @@ router.post('/mentor-information/', (req, res, next) => {
         };
         return data;
       });
-      console.log('mentor info ', mentorInfo);
       res.send(mentorInfo);
     })
     .catch((err) => next(err));
