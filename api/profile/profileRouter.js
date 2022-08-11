@@ -381,18 +381,20 @@ router.get('/match/:id', authRequired, (req, res, next) => {
     });
 });
 
-router.post('/mentor-information/:profile_id', (req, res, next) => {
-  const { profile_id } = req.body;
+router.post('/mentor-information/', (req, res, next) => {
   axios
-    .post(`${process.env.DS_API_URL}/read/mentor`, { profile_id })
+    .post(`${process.env.DS_API_URL}/read/mentor`, req.body)
     .then((res) => {
-      res.data.result.map((results) => {
-        let profile_id = results.profile_id;
+      const mentorInfo = res.data.result.map((results) => {
+        let mentorName = [results.first_name, results.last_name];
         let city = [results.city, results.state];
         let availability = results.accepting_new_mentees;
-        console.log(profile_id, city.join(', '), availability);
-        return profile_id, city.join(', '), availability;
+        return mentorName
+          .join(' ')
+          .concat(', ', city.join(', '), ', ', availability);
       });
+      console.log('mentor info ', mentorInfo);
+      // return mentorInfo
     })
     .catch((err) => next(err));
 
