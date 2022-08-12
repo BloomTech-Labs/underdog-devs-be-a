@@ -185,7 +185,7 @@ router.get('/:role', authRequired, adminRequired, (req, res) => {
   if (req.params.role === 'mentor') {
     res.json([
       {
-        profile_id: '00u13omswyZM1xVya4x7',
+        profile_id: '5b2t85faI2n133TM',
         first_name: 'User',
         last_name: '6',
         role_name: 'mentor',
@@ -196,7 +196,7 @@ router.get('/:role', authRequired, adminRequired, (req, res) => {
   } else {
     res.json([
       {
-        profile_id: '00u13oned0U8XP8Mb4x7',
+        profile_id: '5b2t85faI2n133TM',
         first_name: 'User',
         last_name: '8',
         role_name: 'mentee',
@@ -210,6 +210,15 @@ router.get('/:role', authRequired, adminRequired, (req, res) => {
         role_name: 'mentee',
         created_at: '2022-03-11T22:34:47.794Z',
         application_id: 6,
+      },
+      {
+        profile_id: '5b2t85faI2n133TM',
+        first_name: 'User',
+        last_name: '10',
+        role_name: 'mentee',
+        created_at: '2022-03-11T22:34:47.794Z',
+        application_id: 6,
+        validate_status: 'pending',
       },
     ]);
   }
@@ -355,27 +364,55 @@ router.post(
 
 // registers a user with okta and approves their application ticket
 
-router.put(
-  '/approve/:id',
-  authRequired,
-  adminRequired,
-  checkApplicationExists,
-  findProfile,
-  registerOktaUser,
-  (req, res, next) => {
-    const application_id = req.application.application_id;
+// router.put(
+//   '/approve/:id',
+//   authRequired,
+//   adminRequired,
+//   checkApplicationExists,
+//   findProfile,
+//   registerOktaUser,
+//   (req, res, next) => {
+//     const application_id = req.application.application_id;
 
-    Application.updateTicket(application_id, { approved: true })
-      .then(() => {
-        res.status(200).json({
-          tempPassword: req.tempPassword,
-        });
-      })
-      .catch(next);
-  }
-);
+//     Application.updateTicket(application_id, { approved: true })
+//       .then(() => {
+//         res.status(200).json({
+//           tempPassword: req.tempPassword,
+//         });
+//       })
+//       .catch(next);
+//   }
+// );
 
 // Finding User and setting them to approved
+router.post('/approve/:profile_id', (req, res, next) => {
+  const { profile } = req.body;
+  const { profile_id } = req.params.profile_id;
+  axios
+    .post(`${baseURL}/update/mentee/${profile_id}`, {
+      profile_id,
+      validate_status: 'approved',
+    })
+    .then((res) => {
+      console.log('Finished Ticket finally');
+    });
+});
+
+/**
+ * 
+ * if (profile['accepting_new_mentees'] === null) {
+    axios
+      .post(`${baseURL}/update/mentee/${profile_id}`, {
+        profile_id: profile_id,
+        validate_status: 'approved',
+      })
+      .then((res) => {
+        console.log('Finished Ticket finally');
+      });
+  } else {
+    axios.post(`${baseURL}/update/mentor/${profile_id}`);
+  }
+ */
 
 /**
  * @swagger
