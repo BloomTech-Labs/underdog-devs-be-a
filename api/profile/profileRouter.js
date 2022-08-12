@@ -381,6 +381,13 @@ router.get('/match/:id', authRequired, (req, res, next) => {
     });
 });
 
+/*
+*Author: Melody McClure
+This post route goes to the DS API which does not accept a GET request for the information wanted in the service ticket.
+If the DS API allows that get request in the future, this route should be updated accordingly.
+This route was also built while the authorization tool was being changed from Okta to AuthO so there is currently not an authorization middleware in the route. Once that is completed, the middleware confirming this route is for use by admins only.
+*/
+
 router.post('/mentor-information/', (req, res, next) => {
   axios
     .post(`${process.env.DS_API_URL}/read/mentor`, req.body)
