@@ -74,16 +74,17 @@ Please see [this file](./__tests__/README.md) for more info.
         "progress_id": null
     }
 
-| Method | Endpoint                 | Required Request Body | Returns                           | User Auth    |
-| ------ | ------------------------ | --------------------- | --------------------------------- | ------------ |
-| GET    | `/profile`               | -                     | `get all profiles`                | `Admin`      |
-| GET    | `/profile/:id`           | -                     | `get profile by id`               | `Admin`      |
-| GET    | `/profile/current_user`  | -                     | `get current profile`             |              |
-| POST   | `/profile`               | `first/last, email`   | `create new profile`              |              |
-| PUT    | `/profile/`              |                       | `update current profile`          |              |
-| PUT    | `/profile/:id`           |                       | `update a profile by profile id`  | `Admin`      |
-| PUT    | `/profile/roles`         | `role`                | `update a profiles role`          | `Admin`      |
-| PUT    | `/profile/is_active/:id` | -                     | `activates/deactivates a profile` | `SuperAdmin` |
+| Method | Endpoint                            | Required Request Body   | Returns                           | User Auth    |
+| ------ | ----------------------------------- | ----------------------- | --------------------------------- | ------------ |
+| GET    | `/profile`                          | -                       | `get all profiles`                | `Admin`      |
+| GET    | `/profile/:id`                      | -                       | `get profile by id`               | `Admin`      |
+| GET    | `/profile/current_user`             | -                       | `get current profile`             |              |
+| POST   | `/profile`                          | `first/last, email`     | `create new profile`              |              |
+| PUT    | `/profile/`                         |                         | `update current profile`          |              |
+| PUT    | `/profile/:id`                      |                         | `update a profile by profile id`  | `Admin`      |
+| PUT    | `/profile/roles`                    | `role`                  | `update a profiles role`          | `Admin`      |
+| PUT    | `/profile/is_active/:id`            | -                       | `activates/deactivates a profile` | `SuperAdmin` |
+| POST   | `/profile/availability/:profile_id` | `accepting_new_mentees` | `update availability status`      | `User`       |
 
 ## Applications / Mentee-Mentor Intakes
 
