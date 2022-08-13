@@ -201,7 +201,7 @@ router.get('/:role', authRequired, adminRequired, (req, res) => {
         last_name: '8',
         role_name: 'mentee',
         created_at: '2022-03-11T22:34:47.794Z',
-        application_id: 2,
+        application_id: '5b2t85faI2n133TM',
       },
       {
         profile_id: '10',
@@ -386,15 +386,19 @@ router.post(
 
 // Finding User and setting them to approved
 router.post('/approve/:profile_id', (req, res, next) => {
-  const { profile } = req.body;
-  const { profile_id } = req.params.profile_id;
+  const { profile_id } = req.body;
+  // const { profile } = req.body.profile_id;
   axios
     .post(`${baseURL}/update/mentee/${profile_id}`, {
-      profile_id,
-      validate_status: 'approved',
+      validate_status: 'approved'
     })
     .then((res) => {
+      console.log(profile_id);
+      console.log(res);
       console.log('Finished Ticket finally');
+    })
+    .catch((err) => {
+      console.log(err);
     });
 });
 
