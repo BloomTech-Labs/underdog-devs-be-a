@@ -196,13 +196,13 @@ router.get('/:role', authRequired, adminRequired, (req, res) => {
   } else {
     res.json([
       {
-        profile_id: '5b2t85faI2n133TM',
+        profile_id: '506rV06k7cT8meR4',
         first_name: 'User',
         last_name: '8',
         role_name: 'mentee',
         created_at: '2022-03-11T22:34:47.794Z',
         application_id: 2,
-        // low_income: false,
+        low_income: false,
       },
       {
         profile_id: '10',
@@ -385,18 +385,14 @@ router.post(
 //   }
 // );
 
+// Author: Christwide Oscar
 // Finding User and setting them to approved
-router.post('/approve/:profile_id', (req, res, next) => {
-  const { profile_id } = req.body;
-  const { income } = req.body;
-  // const { profile } = req.body.profile_id;
-  if (income === false || income === true) {
+router.post('/approve/:profile_id', (req) => {
+  const { profile_id, low_income } = req.body;
+  if (low_income === false || low_income === true) {
     axios
       .post(`${baseURL}/update/mentee/${profile_id}`, {
         validate_status: 'approved',
-      })
-      .then((res) => {
-        console.log('Finished Ticket finally - mentees');
       })
       .catch((err) => {
         console.log(err);
@@ -406,8 +402,28 @@ router.post('/approve/:profile_id', (req, res, next) => {
       .post(`${baseURL}/update/mentor/${profile_id}`, {
         validate_status: 'approved',
       })
-      .then((res) => {
-        console.log('Finished Ticket finally - mentor');
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+});
+
+// Author: Farhaan Nishtar
+// Finding User and setting them to rejected
+router.post('/reject/:profile_id', (req) => {
+  const { profile_id, low_income } = req.body;
+  if (low_income === false || low_income === true) {
+    axios
+      .post(`${baseURL}/update/mentee/${profile_id}`, {
+        validate_status: 'rejected',
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } else {
+    axios
+      .post(`${baseURL}/update/mentor/${profile_id}`, {
+        validate_status: 'rejected',
       })
       .catch((err) => {
         console.log(err);
