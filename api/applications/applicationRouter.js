@@ -185,7 +185,7 @@ router.get('/:role', authRequired, adminRequired, (req, res) => {
   if (req.params.role === 'mentor') {
     res.json([
       {
-        profile_id: '00u13omswyZM1xVya4x7',
+        profile_id: '5b2t85faI2n133TM',
         first_name: 'User',
         last_name: '6',
         role_name: 'mentor',
@@ -196,12 +196,13 @@ router.get('/:role', authRequired, adminRequired, (req, res) => {
   } else {
     res.json([
       {
-        profile_id: '00u13oned0U8XP8Mb4x7',
+        profile_id: '506rV06k7cT8meR4',
         first_name: 'User',
         last_name: '8',
         role_name: 'mentee',
         created_at: '2022-03-11T22:34:47.794Z',
         application_id: 2,
+        low_income: false,
       },
       {
         profile_id: '10',
@@ -210,6 +211,15 @@ router.get('/:role', authRequired, adminRequired, (req, res) => {
         role_name: 'mentee',
         created_at: '2022-03-11T22:34:47.794Z',
         application_id: 6,
+      },
+      {
+        profile_id: '5b2t85faI2n133TM',
+        first_name: 'User',
+        last_name: '10',
+        role_name: 'mentee',
+        created_at: '2022-03-11T22:34:47.794Z',
+        application_id: 6,
+        validate_status: 'pending',
       },
     ]);
   }
@@ -355,25 +365,87 @@ router.post(
 
 // registers a user with okta and approves their application ticket
 
-router.put(
-  '/approve/:id',
-  authRequired,
-  adminRequired,
-  checkApplicationExists,
-  findProfile,
-  registerOktaUser,
-  (req, res, next) => {
-    const application_id = req.application.application_id;
+// router.put(
+//   '/approve/:id',
+//   authRequired,
+//   adminRequired,
+//   checkApplicationExists,
+//   findProfile,
+//   registerOktaUser,
+//   (req, res, next) => {
+//     const application_id = req.application.application_id;
 
-    Application.updateTicket(application_id, { approved: true })
-      .then(() => {
-        res.status(200).json({
-          tempPassword: req.tempPassword,
-        });
+//     Application.updateTicket(application_id, { approved: true })
+//       .then(() => {
+//         res.status(200).json({
+//           tempPassword: req.tempPassword,
+//         });
+//       })
+//       .catch(next);
+//   }
+// );
+
+// Author: Christwide Oscar
+// Finding Applicant and setting them to approved
+router.post('/approve/:profile_id', (req) => {
+  const { profile_id, low_income } = req.body;
+  if (low_income === false || low_income === true) {
+    axios
+      .post(`${baseURL}/update/mentee/${profile_id}`, {
+        validate_status: 'approved',
       })
-      .catch(next);
+      .catch((err) => {
+        console.log(err);
+      });
+  } else {
+    axios
+      .post(`${baseURL}/update/mentor/${profile_id}`, {
+        validate_status: 'approved',
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
-);
+});
+
+// Author: Farhaan Nishtar
+// Finding Applicant and setting them to rejected
+router.post('/reject/:profile_id', (req) => {
+  const { profile_id, low_income } = req.body;
+  if (low_income === false || low_income === true) {
+    axios
+      .post(`${baseURL}/update/mentee/${profile_id}`, {
+        validate_status: 'rejected',
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  } else {
+    axios
+      .post(`${baseURL}/update/mentor/${profile_id}`, {
+        validate_status: 'rejected',
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+});
+
+/**
+ * 
+ * if (profile['accepting_new_mentees'] === null) {
+    axios
+      .post(`${baseURL}/update/mentee/${profile_id}`, {
+        profile_id: profile_id,
+        validate_status: 'approved',
+      })
+      .then((res) => {
+        console.log('Finished Ticket finally');
+      });
+  } else {
+    axios.post(`${baseURL}/update/mentor/${profile_id}`);
+  }
+ */
 
 /**
  * @swagger
