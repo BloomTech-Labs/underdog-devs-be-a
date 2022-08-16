@@ -386,7 +386,7 @@ router.post(
 // );
 
 // Author: Christwide Oscar
-// Finding User and setting them to approved
+// Finding Applicant and setting them to approved
 router.post('/approve/:profile_id', (req) => {
   const { profile_id, low_income } = req.body;
   if (low_income === false || low_income === true) {
@@ -409,7 +409,7 @@ router.post('/approve/:profile_id', (req) => {
 });
 
 // Author: Farhaan Nishtar
-// Finding User and setting them to rejected
+// Finding Applicant and setting them to rejected
 router.post('/reject/:profile_id', (req) => {
   const { profile_id, low_income } = req.body;
   if (low_income === false || low_income === true) {
