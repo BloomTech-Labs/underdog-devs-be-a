@@ -396,9 +396,6 @@ router.post('/approve/:profile_id', (req, res, next) => {
         validate_status: 'approved',
       })
       .then((res) => {
-        console.log(req.body);
-        console.log(income);
-        // console.log(res);
         console.log('Finished Ticket finally - mentees');
       })
       .catch((err) => {
@@ -410,8 +407,6 @@ router.post('/approve/:profile_id', (req, res, next) => {
         validate_status: 'approved',
       })
       .then((res) => {
-        console.log(income);
-        // console.log(res);
         console.log('Finished Ticket finally - mentor');
       })
       .catch((err) => {
