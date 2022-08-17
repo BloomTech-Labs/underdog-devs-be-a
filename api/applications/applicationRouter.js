@@ -146,7 +146,7 @@ const { baseURL } = require('../../config/dsConfig');
 // });
 
 router.post('/', getMentors, getMentees, (req, res, next) => {
-   console.log('sanity check ', mentors)
+   console.log('sanity check ', req.role)
   next()
 });
 

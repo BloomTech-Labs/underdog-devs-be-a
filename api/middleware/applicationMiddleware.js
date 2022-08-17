@@ -197,7 +197,7 @@ const sendData = (req, res, next) => {
     });
 };
 
-const getMentors = (req, res, send) => {
+const getMentors = (req, res, next) => {
 
   axios
   .post(`${baseURL}/read/mentor`)
@@ -205,17 +205,20 @@ const getMentors = (req, res, send) => {
     const mentors = results.data.result
     // console.log(mentors)
     res.send(mentors)
+    req.role = 'mentor'
   })
+  .catch((err) => next(err))
 }
 
-const getMentees = (req, res, send) => {
+const getMentees = (req, res, next) => {
   axios
-    .post(`${baseURL}/read/mentee`, req.body = mentors)
-    .then(results => {
-      const mentees = results.data.result
-      // console.log(mentees)
-      res.send(mentees)
-    })
+  .post(`${baseURL}/read/mentee`, req.body = mentors)
+  .then(results => {
+    const mentees = results.data.result
+    // console.log(mentees)
+    res.send(mentees)
+  })
+  .catch((err) => next(err))
 }
 
 module.exports = {
