@@ -20,4 +20,6 @@ const createProfile = async (req, res, next) => {
   }
 };
 
-module.exports = { createProfile };
+module.exports = {
+  createProfile,
+};
