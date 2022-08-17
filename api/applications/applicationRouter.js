@@ -145,9 +145,9 @@ const { baseURL } = require('../../config/dsConfig');
 //   }
 // });
 
-router.post('/', getMentors, (req, res, next) => {
+router.post('/', getMentors, getMentees, (req, res, next) => {
   // console.log(req.body)
-  // console.log('sanity check ', mentor.validate_status)
+  console.log('sanity check ')
     // catch((err) => next(err))
   next()
 });

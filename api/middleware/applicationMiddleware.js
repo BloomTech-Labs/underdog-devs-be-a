@@ -197,52 +197,29 @@ const sendData = (req, res, next) => {
     });
 };
 
-const getMentors = async (req, res, next) => {
-
-  try {
-    await axios
+const getMentors =  (req, res, next) => {
+      axios
       .post(`${baseURL}/read/mentor`)
       .then(results => {
-       results.data.result.map(mentor => mentor)
-       // console.log(mentors.validate_status)
-       // next(res.data)
+       const mentors = results.data.result.map(mentor => mentor)
+       res.send(mentors)
       })
-      // console.log(req.body)
-      console.log(res)
-  } catch (err) {
-    next(err)
-  }
-  next()
+      .catch((err) => next(err))
+      next()
 }
 
-const getMentees = async (req, res, next) => {
-  try {
-    await axios
+const getMentees =  (req, res, next) => {
+     axios
       .post(`${baseURL}/read/mentee`)
       .then(results => {
-        const mentees = results.data.result
-        // console.log(mentees)
+        const mentees = results.data.result.map(mentee => mentee)
         res.send(mentees)
       })
-  } catch (err) {
-    next(err)
-  }
+      .catch((err) => next(err))
   next()
 }
 
-// const getMentees = async (req, res, next) => {
-//   try {
-//     await axios
-//       .post(`${baseURL}/read/mentee`)
-//       .then(results => {
-//         const mentees = results.data.result
-//       console.log(mentees)
-//       res.send(mentees)
-//     })
-//   } catch (err) {
-//     next(err)
-//   }
-// }
+
 
 module.exports = {
   cacheSignUpData,
