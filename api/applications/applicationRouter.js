@@ -8,10 +8,8 @@ const {
   checkApplicationExists,
   checkRole,
   sendData,
-  findProfile,
 } = require('../middleware/applicationMiddleware');
 const { createProfile } = require('../middleware/profilesMiddleware');
-const { registerOktaUser } = require('../middleware/oktaAuth');
 const validation = require('../helpers/validation');
 const axios = require('axios');
 const { baseURL } = require('../../config/dsConfig');
@@ -196,7 +194,7 @@ router.get('/:role', authRequired, adminRequired, (req, res) => {
   } else {
     res.json([
       {
-        profile_id: '506rV06k7cT8meR4',
+        profile_id: '1myy2P3Rli1h4873',
         first_name: 'User',
         last_name: '8',
         role_name: 'mentee',
@@ -362,28 +360,6 @@ router.post(
  *      '401':
  *        $ref: '#/components/responses/UnauthorizedError'
  */
-
-// registers a user with okta and approves their application ticket
-
-// router.put(
-//   '/approve/:id',
-//   authRequired,
-//   adminRequired,
-//   checkApplicationExists,
-//   findProfile,
-//   registerOktaUser,
-//   (req, res, next) => {
-//     const application_id = req.application.application_id;
-
-//     Application.updateTicket(application_id, { approved: true })
-//       .then(() => {
-//         res.status(200).json({
-//           tempPassword: req.tempPassword,
-//         });
-//       })
-//       .catch(next);
-//   }
-// );
 
 // Author: Christwide Oscar
 // Finding Applicant and setting them to approved
