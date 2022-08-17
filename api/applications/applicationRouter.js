@@ -8,6 +8,8 @@ const {
   checkApplicationExists,
   checkRole,
   sendData,
+  getMentors,
+  getMentees,
   findProfile,
 } = require('../middleware/applicationMiddleware');
 const { createProfile } = require('../middleware/profilesMiddleware');
@@ -134,13 +136,18 @@ const { baseURL } = require('../../config/dsConfig');
 //     email: 'llama0012@maildrop.cc',
 //   },
 // ];
-router.get('/', authRequired, adminRequired, async (req, res, next) => {
-  try {
-    const requestedApplications = await Application.getApplications();
-    res.status(200).json(requestedApplications);
-  } catch (err) {
-    next({ message: err.message });
-  }
+// router.get('/', authRequired, adminRequired, async (req, res, next) => {
+//   try {
+//     const requestedApplications = await Application.getApplications();
+//     res.status(200).json(requestedApplications);
+//   } catch (err) {
+//     next({ message: err.message });
+//   }
+// });
+
+router.post('/', getMentors, getMentees, (req, res, next) => {
+   console.log('sanity check ', mentors)
+  next()
 });
 
 /**
@@ -181,49 +188,49 @@ router.get('/', authRequired, adminRequired, async (req, res, next) => {
 
 // get pending application tickets by role
 
-router.get('/:role', authRequired, adminRequired, (req, res) => {
-  if (req.params.role === 'mentor') {
-    res.json([
-      {
-        profile_id: '5b2t85faI2n133TM',
-        first_name: 'User',
-        last_name: '6',
-        role_name: 'mentor',
-        created_at: '2022-03-11T22:34:47.794Z',
-        application_id: 5,
-      },
-    ]);
-  } else {
-    res.json([
-      {
-        profile_id: '506rV06k7cT8meR4',
-        first_name: 'User',
-        last_name: '8',
-        role_name: 'mentee',
-        created_at: '2022-03-11T22:34:47.794Z',
-        application_id: 2,
-        low_income: false,
-      },
-      {
-        profile_id: '10',
-        first_name: 'User',
-        last_name: '10',
-        role_name: 'mentee',
-        created_at: '2022-03-11T22:34:47.794Z',
-        application_id: 6,
-      },
-      {
-        profile_id: '5b2t85faI2n133TM',
-        first_name: 'User',
-        last_name: '10',
-        role_name: 'mentee',
-        created_at: '2022-03-11T22:34:47.794Z',
-        application_id: 6,
-        validate_status: 'pending',
-      },
-    ]);
-  }
-});
+// router.get('/:role', authRequired, adminRequired, (req, res) => {
+//   if (req.params.role === 'mentor') {
+//     res.json([
+//       {
+//         profile_id: '5b2t85faI2n133TM',
+//         first_name: 'User',
+//         last_name: '6',
+//         role_name: 'mentor',
+//         created_at: '2022-03-11T22:34:47.794Z',
+//         application_id: 5,
+//       },
+//     ]);
+//   } else {
+//     res.json([
+//       {
+//         profile_id: '506rV06k7cT8meR4',
+//         first_name: 'User',
+//         last_name: '8',
+//         role_name: 'mentee',
+//         created_at: '2022-03-11T22:34:47.794Z',
+//         application_id: 2,
+//         low_income: false,
+//       },
+//       {
+//         profile_id: '10',
+//         first_name: 'User',
+//         last_name: '10',
+//         role_name: 'mentee',
+//         created_at: '2022-03-11T22:34:47.794Z',
+//         application_id: 6,
+//       },
+//       {
+//         profile_id: '5b2t85faI2n133TM',
+//         first_name: 'User',
+//         last_name: '10',
+//         role_name: 'mentee',
+//         created_at: '2022-03-11T22:34:47.794Z',
+//         application_id: 6,
+//         validate_status: 'pending',
+//       },
+//     ]);
+//   }
+// });
 
 /**
  * @swagger
@@ -432,7 +439,7 @@ router.post('/reject/:profile_id', (req) => {
 });
 
 /**
- * 
+ *
  * if (profile['accepting_new_mentees'] === null) {
     axios
       .post(`${baseURL}/update/mentee/${profile_id}`, {
@@ -533,7 +540,7 @@ router.put(
  *                $ref: '#/components/schemas/Application'
  *              example:
  *                message: {"result": [{"profile_id": "4F177Y8xr4Ap1q0y","first_name": "Raiden","last_name": "Nelson","email": "fake@email.com","city": "Ashland","state": "Oregon","country": "USA",
-"formerly_incarcerated": true,"underrepresented_group": true,"low_income": true,"list_convictions": ["Infraction"],"subject": "General Programming","experience_level": "Expert","job_help": false,"industry_knowledge": false,"pair_programming": false,"other_info": "Notes"}]} 
+"formerly_incarcerated": true,"underrepresented_group": true,"low_income": true,"list_convictions": ["Infraction"],"subject": "General Programming","experience_level": "Expert","job_help": false,"industry_knowledge": false,"pair_programming": false,"other_info": "Notes"}]}
  *      '401':
  *        $ref: '#/components/responses/UnauthorizedError'
  */

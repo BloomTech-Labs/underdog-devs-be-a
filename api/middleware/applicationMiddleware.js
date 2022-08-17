@@ -13,6 +13,7 @@ const {
   applicationTicketSchema,
 } = require('../../data/schemas/applicationSchema');
 const { findById } = require('../profile/profileModel');
+const { baseURL } = require('../../config/dsConfig');
 
 const cacheSignUpData = async (req, res, next) => {
   const role = req.params.role;
@@ -196,6 +197,27 @@ const sendData = (req, res, next) => {
     });
 };
 
+const getMentors = (req, res, send) => {
+
+  axios
+  .post(`${baseURL}/read/mentor`)
+  .then(results => {
+    const mentors = results.data.result
+    // console.log(mentors)
+    res.send(mentors)
+  })
+}
+
+const getMentees = (req, res, send) => {
+  axios
+    .post(`${baseURL}/read/mentee`, req.body = mentors)
+    .then(results => {
+      const mentees = results.data.result
+      // console.log(mentees)
+      res.send(mentees)
+    })
+}
+
 module.exports = {
   cacheSignUpData,
   checkApplicationExists,
@@ -205,4 +227,6 @@ module.exports = {
   validateMenteeIntakeData,
   validateMentorIntakeData,
   sendData,
+  getMentors,
+  getMentees,
 };
