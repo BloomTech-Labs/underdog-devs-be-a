@@ -146,10 +146,7 @@ const { baseURL } = require('../../config/dsConfig');
 // });
 
 router.post('/', getMentors, getMentees, (req, res, next) => {
-  // console.log(req.body)
-  console.log('sanity check ')
-    // catch((err) => next(err))
-  next()
+   console.log('sanity check ', res)
 });
 
 /**

@@ -197,26 +197,31 @@ const sendData = (req, res, next) => {
     });
 };
 
-const getMentors =  (req, res, next) => {
-      axios
+const getMentors = async (req, res, next) => {
+  try {
+    await axios
       .post(`${baseURL}/read/mentor`)
       .then(results => {
        const mentors = results.data.result.map(mentor => mentor)
-       res.send(mentors)
+        res.json({ mentors })
       })
-      .catch((err) => next(err))
-      next()
+  } catch (err) {
+    next(err)
+  }
 }
 
-const getMentees =  (req, res, next) => {
-     axios
+const getMentees = async (req, res, next) => {
+  try {
+    await axios
       .post(`${baseURL}/read/mentee`)
       .then(results => {
         const mentees = results.data.result.map(mentee => mentee)
-        res.send(mentees)
+        console.log(mentees)
+        res.json({ mentees })
       })
-      .catch((err) => next(err))
-  next()
+  } catch (err) {
+    next(err)
+  }
 }
 
 
