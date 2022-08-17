@@ -85,6 +85,7 @@ Please see [this file](./__tests__/README.md) for more info.
 | PUT    | `/profile/roles`             | `role`                | `update a profiles role`                     | `Admin`      |  false   |
 | PUT    | `/profile/is_active/:id`     | -                     | `activates/deactivates a profile`            | `SuperAdmin` |  false   |
 | POST   | `/profile/mentor-information`| -                     | `mentor name, city, state, and availability` |              |  true    |
+| POST   | `/profile/availability/:profile_id` | `accepting_new_mentees` | `update availability status`      | `User`       |
 
 ## Applications / Mentee-Mentor Intakes
 

@@ -6,7 +6,7 @@ const {
   checkMenteeProgress,
   validateProgressId,
 } = require('./progressionMiddleware');
-const { validateUser } = require('../middleware/generalMiddleware');
+const { validateUser } = require('../middleware/validationMiddleware');
 const {
   mentorRequired,
   adminRequired,
