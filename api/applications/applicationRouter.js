@@ -145,8 +145,10 @@ const { baseURL } = require('../../config/dsConfig');
 //   }
 // });
 
-router.post('/', getMentors, getMentees, (req, res, next) => {
-   console.log('sanity check ', req.role)
+router.post('/', getMentors, (req, res, next) => {
+  // console.log(req.body)
+  // console.log('sanity check ', mentor.validate_status)
+    // catch((err) => next(err))
   next()
 });
 
@@ -188,49 +190,49 @@ router.post('/', getMentors, getMentees, (req, res, next) => {
 
 // get pending application tickets by role
 
-// router.get('/:role', authRequired, adminRequired, (req, res) => {
-//   if (req.params.role === 'mentor') {
-//     res.json([
-//       {
-//         profile_id: '5b2t85faI2n133TM',
-//         first_name: 'User',
-//         last_name: '6',
-//         role_name: 'mentor',
-//         created_at: '2022-03-11T22:34:47.794Z',
-//         application_id: 5,
-//       },
-//     ]);
-//   } else {
-//     res.json([
-//       {
-//         profile_id: '506rV06k7cT8meR4',
-//         first_name: 'User',
-//         last_name: '8',
-//         role_name: 'mentee',
-//         created_at: '2022-03-11T22:34:47.794Z',
-//         application_id: 2,
-//         low_income: false,
-//       },
-//       {
-//         profile_id: '10',
-//         first_name: 'User',
-//         last_name: '10',
-//         role_name: 'mentee',
-//         created_at: '2022-03-11T22:34:47.794Z',
-//         application_id: 6,
-//       },
-//       {
-//         profile_id: '5b2t85faI2n133TM',
-//         first_name: 'User',
-//         last_name: '10',
-//         role_name: 'mentee',
-//         created_at: '2022-03-11T22:34:47.794Z',
-//         application_id: 6,
-//         validate_status: 'pending',
-//       },
-//     ]);
-//   }
-// });
+router.get('/:role', authRequired, adminRequired, (req, res) => {
+  if (req.params.role === 'mentor') {
+    res.json([
+      {
+        profile_id: '5b2t85faI2n133TM',
+        first_name: 'User',
+        last_name: '6',
+        role_name: 'mentor',
+        created_at: '2022-03-11T22:34:47.794Z',
+        application_id: 5,
+      },
+    ]);
+  } else {
+    res.json([
+      {
+        profile_id: '506rV06k7cT8meR4',
+        first_name: 'User',
+        last_name: '8',
+        role_name: 'mentee',
+        created_at: '2022-03-11T22:34:47.794Z',
+        application_id: 2,
+        low_income: false,
+      },
+      {
+        profile_id: '10',
+        first_name: 'User',
+        last_name: '10',
+        role_name: 'mentee',
+        created_at: '2022-03-11T22:34:47.794Z',
+        application_id: 6,
+      },
+      {
+        profile_id: '5b2t85faI2n133TM',
+        first_name: 'User',
+        last_name: '10',
+        role_name: 'mentee',
+        created_at: '2022-03-11T22:34:47.794Z',
+        application_id: 6,
+        validate_status: 'pending',
+      },
+    ]);
+  }
+});
 
 /**
  * @swagger
