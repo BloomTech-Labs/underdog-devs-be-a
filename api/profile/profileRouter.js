@@ -406,7 +406,7 @@ router.post('/mentor-information/', (req, res, next) => {
     .catch((err) => next(err));
 });
 
-*Authors: Melody McClure & Miguel Ledesma
+/*Authors: Melody McClure & Miguel Ledesma
 This POST route goes to the DS API.
 This route was also built while the authorization tool was being changed from Okta to AuthO so there is currently not an authorization middleware in the route. Once that is completed, the middleware confirming this route is for use a MENTOR only.
 */
