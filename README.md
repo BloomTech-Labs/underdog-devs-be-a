@@ -74,16 +74,17 @@ Please see [this file](./__tests__/README.md) for more info.
         "progress_id": null
     }
 
-| Method | Endpoint                            | Required Request Body   | Returns                           | User Auth    |
-| ------ | ----------------------------------- | ----------------------- | --------------------------------- | ------------ |
-| GET    | `/profile`                          | -                       | `get all profiles`                | `Admin`      |
-| GET    | `/profile/:id`                      | -                       | `get profile by id`               | `Admin`      |
-| GET    | `/profile/current_user`             | -                       | `get current profile`             |              |
-| POST   | `/profile`                          | `first/last, email`     | `create new profile`              |              |
-| PUT    | `/profile/`                         |                         | `update current profile`          |              |
-| PUT    | `/profile/:id`                      |                         | `update a profile by profile id`  | `Admin`      |
-| PUT    | `/profile/roles`                    | `role`                  | `update a profiles role`          | `Admin`      |
-| PUT    | `/profile/is_active/:id`            | -                       | `activates/deactivates a profile` | `SuperAdmin` |
+| Method | Endpoint                     | Required Request Body | Returns                                      | User Auth    |  DS API? |
+| ------ | ---------------------------- | --------------------- | -------------------------------------------- | ------------ | -------- |
+| GET    | `/profile`                   | -                     | `get all profiles`                           | `Admin`      |  false   |
+| GET    | `/profile/:id`               | -                     | `get profile by id`                          | `Admin`      |  false   |
+| GET    | `/profile/current_user`      | -                     | `get current profile`                        |              |  false   |
+| POST   | `/profile`                   | `first/last, email`   | `create new profile`                         |              |  false   |
+| PUT    | `/profile/`                  |                       | `update current profile`                     |              |  false   |
+| PUT    | `/profile/:id`               |                       | `update a profile by profile id`             | `Admin`      |  false   |
+| PUT    | `/profile/roles`             | `role`                | `update a profiles role`                     | `Admin`      |  false   |
+| PUT    | `/profile/is_active/:id`     | -                     | `activates/deactivates a profile`            | `SuperAdmin` |  false   |
+| POST   | `/profile/mentor-information`| -                     | `mentor name, city, state, and availability` |              |  true    |
 | POST   | `/profile/availability/:profile_id` | `accepting_new_mentees` | `update availability status`      | `User`       |
 
 ## Applications / Mentee-Mentor Intakes
