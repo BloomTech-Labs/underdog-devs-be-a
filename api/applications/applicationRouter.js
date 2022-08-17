@@ -177,6 +177,8 @@ router.get('/', authRequired, adminRequired, async (req, res, next) => {
  *        $ref: '#/components/responses/UnauthorizedError'
  */
 
+// Starting here BL-250 Farhaan and Christ
+
 // get pending application tickets by role
 
 router.get('/:role', authRequired, adminRequired, (req, res) => {
