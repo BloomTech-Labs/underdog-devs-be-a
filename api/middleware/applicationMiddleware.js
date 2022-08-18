@@ -197,34 +197,39 @@ const sendData = (req, res, next) => {
     });
 };
 
-const getMentors = async (req, res, next) => {
+const getAllUsers = async (req, res, next) => {
+  const mentorData = await axios
+    .post(`${baseURL}/read/mentor`)
+    .then((results) => {
+      const mentors = results.data.result.map((mentor) => mentor);
+      // res.json({ mentors })
+      return mentors;
+    });
+
+  const menteeData = await axios
+    .post(`${baseURL}/read/mentee`)
+    .then((results) => {
+      const mentees = results.data.result.map((mentee) => mentee);
+      // res.json({ mentees })
+      return mentees;
+    });
+
+  const users = mentorData.concat(menteeData);
+
   try {
-    await axios
-      .post(`${baseURL}/read/mentor`)
-      .then(results => {
-       const mentors = results.data.result.map(mentor => mentor)
-        res.json({ mentors })
-      })
+    res.send({ users });
   } catch (err) {
-    next(err)
+    next(err);
   }
-}
+};
 
-const getMentees = async (req, res, next) => {
-  try {
-    await axios
-      .post(`${baseURL}/read/mentee`)
-      .then(results => {
-        const mentees = results.data.result.map(mentee => mentee)
-        console.log(mentees)
-        res.json({ mentees })
-      })
-  } catch (err) {
-    next(err)
-  }
-}
-
-
+// const getMentees = async (req, res, next) => {
+//   try {
+//   return menteeData
+// } catch (err) {
+//   next(err)
+// }
+// }
 
 module.exports = {
   cacheSignUpData,
@@ -235,6 +240,5 @@ module.exports = {
   validateMenteeIntakeData,
   validateMentorIntakeData,
   sendData,
-  getMentors,
-  getMentees,
+  getAllUsers,
 };
