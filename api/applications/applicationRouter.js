@@ -144,6 +144,10 @@ const { baseURL } = require('../../config/dsConfig');
 // });
 
 router.post('/', readAllUsers, (req, res, next) => {
+  const {validate_status} = req.body
+  if (validate_status === 'pending') {
+
+  }
   next();
 });
 
@@ -391,25 +395,26 @@ router.post(
 
 // Author: Christwide Oscar
 // Finding Applicant and setting them to approved
-router.post('/approve/:profile_id', (req) => {
-  const { profile_id, low_income } = req.body;
-  if (low_income === false || low_income === true) {
-    axios
-      .post(`${baseURL}/update/mentee/${profile_id}`, {
-        validate_status: 'approved',
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  } else {
-    axios
-      .post(`${baseURL}/update/mentor/${profile_id}`, {
-        validate_status: 'approved',
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
+router.post('/approve/:profile_id', updateUser, (req) => {
+  const { profile_id, validate_status } = req.body;
+    validate_status = {validate_status: 'approved'}
+  // if (low_income === false || low_income === true) {
+  //   axios
+  //     .post(`${baseURL}/update/mentee/${profile_id}`, {
+  //       validate_status: 'approved',
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // } else {
+  //   axios
+  //     .post(`${baseURL}/update/mentor/${profile_id}`, {
+  //       validate_status: 'approved',
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }
 });
 
 // Author: Farhaan Nishtar
