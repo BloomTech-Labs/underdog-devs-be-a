@@ -362,10 +362,10 @@ router.post(
  */
 
 // Author: Christwide Oscar
-// Finding Applicant and setting them to approved
+// Finding applicant and differentiating between mentors and mentees. Setting their application status to 'approved' from pending
 router.post('/approve/:profile_id', (req) => {
   const { profile_id, low_income } = req.body;
-  if (low_income === false || low_income === true) {
+  if (typeof low_income !== undefined) {
     axios
       .post(`${baseURL}/update/mentee/${profile_id}`, {
         validate_status: 'approved',
@@ -385,10 +385,10 @@ router.post('/approve/:profile_id', (req) => {
 });
 
 // Author: Farhaan Nishtar
-// Finding Applicant and setting them to rejected
+// Finding applicant and setting them to rejected
 router.post('/reject/:profile_id', (req) => {
   const { profile_id, low_income } = req.body;
-  if (low_income === false || low_income === true) {
+  if (typeof low_income !== undefined) {
     axios
       .post(`${baseURL}/update/mentee/${profile_id}`, {
         validate_status: 'rejected',
@@ -406,22 +406,6 @@ router.post('/reject/:profile_id', (req) => {
       });
   }
 });
-
-/**
- * 
- * if (profile['accepting_new_mentees'] === null) {
-    axios
-      .post(`${baseURL}/update/mentee/${profile_id}`, {
-        profile_id: profile_id,
-        validate_status: 'approved',
-      })
-      .then((res) => {
-        console.log('Finished Ticket finally');
-      });
-  } else {
-    axios.post(`${baseURL}/update/mentor/${profile_id}`);
-  }
- */
 
 /**
  * @swagger
