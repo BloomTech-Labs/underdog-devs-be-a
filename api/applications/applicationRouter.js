@@ -8,10 +8,9 @@ const {
   checkApplicationExists,
   checkRole,
   sendData,
-  getAllUsers,
-  // findProfile,
 } = require('../middleware/applicationMiddleware');
 const { createProfile } = require('../middleware/profilesMiddleware');
+const { getAllUsers } = require('../middleware/readAllUserMiddleware');
 // const { registerOktaUser } = require('../middleware/oktaAuth');
 const validation = require('../helpers/validation');
 const axios = require('axios');
