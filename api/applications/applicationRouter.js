@@ -10,7 +10,7 @@ const {
   sendData,
 } = require('../middleware/applicationMiddleware');
 const { createProfile } = require('../middleware/profilesMiddleware');
-const { getAllUsers } = require('../middleware/readAllUserMiddleware');
+const { readAllUsers } = require('../middleware/userDBMiddleware');
 // const { registerOktaUser } = require('../middleware/oktaAuth');
 const validation = require('../helpers/validation');
 const axios = require('axios');
@@ -143,7 +143,7 @@ const { baseURL } = require('../../config/dsConfig');
 //   }
 // });
 
-router.post('/', getAllUsers, (req, res, next) => {
+router.post('/', readAllUsers, (req, res, next) => {
   next();
 });
 

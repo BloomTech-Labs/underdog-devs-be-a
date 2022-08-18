@@ -1,7 +1,7 @@
 const axios = require('axios');
 const { baseURL } = require('../../config/dsConfig');
 
-const getAllUsers = async (req, res, next) => {
+const readAllUsers = async (req, res, next) => {
   try {
     const mentorData = await axios
       .post(`${baseURL}/read/mentor`)
@@ -25,4 +25,4 @@ const getAllUsers = async (req, res, next) => {
   }
 };
 
-module.exports = { getAllUsers };
+module.exports = { readAllUsers };
