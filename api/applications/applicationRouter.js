@@ -346,7 +346,7 @@ router.post(
 //   }
 // );
 
-router.post('/approve/:profile_id', updateUser, (req) => {
+router.post('/approve/:profile_id', updateUser, (req, res) => {
   req.info.map(status => {
     if (status.validate_status === 'pending') {
       status.validate_status = status.validate_status === 'approved'
