@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Roles = require('./rolesModel');
 
-const { validateUser } = require('../middleware/generalMiddleware');
+const { validateUser } = require('../middleware/validationMiddleware');
 const { validateRoleId, checkCurrentRoleId } = require('./rolesMiddleware');
 const authRequired = require('../middleware/authRequired');
 const { adminRequired } = require('../middleware/permissionsRequired');

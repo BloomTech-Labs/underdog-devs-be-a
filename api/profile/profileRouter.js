@@ -9,7 +9,7 @@ const {
 } = require('../middleware/permissionsRequired');
 const validation = require('../helpers/validation');
 const validateSelfUpdate = require('../../data/schemas/userProfileSchema');
-const { validateUser } = require('../middleware/generalMiddleware');
+const { validateUser } = require('../middleware/validationMiddleware');
 const dsService = require('../dsService/dsModel');
 validateUser;
 
@@ -378,6 +378,56 @@ router.get('/match/:id', authRequired, (req, res, next) => {
     })
     .catch((err) => {
       next({ status: 500, message: err.message });
+    });
+});
+
+/*
+*Author: Melody McClure
+This post route goes to the DS API which does not accept a GET request for the information wanted in the service ticket.
+If the DS API allows that get request in the future, this route should be updated accordingly.
+This route was also built while the authorization tool was being changed from Okta to AuthO so there is currently not an authorization middleware in the route. Once that is completed, the middleware confirming this route is for use by admins only.
+*/
+
+router.post('/mentor-information/', (req, res, next) => {
+  axios
+    .post(`${process.env.DS_API_URL}/read/mentor`, req.body)
+    .then((response) => {
+      const mentorInfo = response.data.result.map((results) => {
+        const data = {
+          name: `${results.first_name} ${results.last_name}`,
+          city: results.city,
+          state: results.state,
+          availability: results.accepting_new_mentees,
+        };
+        return data;
+      });
+      res.send(mentorInfo);
+    })
+    .catch((err) => next(err));
+});
+
+/*Authors: Melody McClure & Miguel Ledesma
+This POST route goes to the DS API.
+This route was also built while the authorization tool was being changed from Okta to AuthO so there is currently not an authorization middleware in the route. Once that is completed, the middleware confirming this route is for use a MENTOR only.
+*/
+
+router.post('/availability/:profile_id', (req, res, next) => {
+  const { profile_id } = req.params;
+  const { accepting_new_mentees } = req.body;
+  axios
+    .post(`${process.env.DS_API_URL}/update/mentor/${profile_id}`, {
+      profile_id,
+      accepting_new_mentees,
+    })
+    // eslint-disable-next-line no-unused-vars
+    .then((response) => {
+      res.send({ status: res.status, message: res.data });
+    })
+    .catch((err) => {
+      next({
+        status: err.status,
+        message: err.message,
+      });
     });
 });
 

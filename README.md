@@ -74,16 +74,18 @@ Please see [this file](./__tests__/README.md) for more info.
         "progress_id": null
     }
 
-| Method | Endpoint                 | Required Request Body | Returns                           | User Auth    |
-| ------ | ------------------------ | --------------------- | --------------------------------- | ------------ |
-| GET    | `/profile`               | -                     | `get all profiles`                | `Admin`      |
-| GET    | `/profile/:id`           | -                     | `get profile by id`               | `Admin`      |
-| GET    | `/profile/current_user`  | -                     | `get current profile`             |              |
-| POST   | `/profile`               | `first/last, email`   | `create new profile`              |              |
-| PUT    | `/profile/`              |                       | `update current profile`          |              |
-| PUT    | `/profile/:id`           |                       | `update a profile by profile id`  | `Admin`      |
-| PUT    | `/profile/roles`         | `role`                | `update a profiles role`          | `Admin`      |
-| PUT    | `/profile/is_active/:id` | -                     | `activates/deactivates a profile` | `SuperAdmin` |
+| Method | Endpoint                     | Required Request Body | Returns                                      | User Auth    |  DS API? |
+| ------ | ---------------------------- | --------------------- | -------------------------------------------- | ------------ | -------- |
+| GET    | `/profile`                   | -                     | `get all profiles`                           | `Admin`      |  false   |
+| GET    | `/profile/:id`               | -                     | `get profile by id`                          | `Admin`      |  false   |
+| GET    | `/profile/current_user`      | -                     | `get current profile`                        |              |  false   |
+| POST   | `/profile`                   | `first/last, email`   | `create new profile`                         |              |  false   |
+| PUT    | `/profile/`                  |                       | `update current profile`                     |              |  false   |
+| PUT    | `/profile/:id`               |                       | `update a profile by profile id`             | `Admin`      |  false   |
+| PUT    | `/profile/roles`             | `role`                | `update a profiles role`                     | `Admin`      |  false   |
+| PUT    | `/profile/is_active/:id`     | -                     | `activates/deactivates a profile`            | `SuperAdmin` |  false   |
+| POST   | `/profile/mentor-information`| -                     | `mentor name, city, state, and availability` |              |  true    |
+| POST   | `/profile/availability/:profile_id` | `accepting_new_mentees` | `update availability status`      | `User`       |
 
 ## Applications / Mentee-Mentor Intakes
 
@@ -101,45 +103,51 @@ Please see [this file](./__tests__/README.md) for more info.
 ###### Mentor intake schema:
 
     {
-        "profile_id": '00u13oned0U8XP8Mb4x7',
-        "email": 'fakeemail2@gmail.com',
-        "country": 'USA',
-        "state": 'California',
-        "city": 'San Francisco',
-        "first_name": 'Hotdog',
-        "last_name": 'Jeopardy',
-        "current_company": 'Amazin',
-        "current_position": 'Front End Developer',
+        "profile_id": "string",
+        "first_name": "string",
+        "last_name": "string",
+        "email": "user@example.com",
+        "country": "string",
+        "state": "string",
+        "city": "string",
+        "current_company": "string",
+        "current_position": "string",
+        "tech_stack": [
+            "string"
+        ],
         "job_help": true,
         "industry_knowledge": true,
-        "pair_programming": false,
-        "tech_stack": 'frontend'
-        "experience_level": 'expert',
-        "other_info": 'none',
-        "validateStatus: 'pending',
+        "pair_programming": true,
+        "commitment": true,
+        "referred_by": "string",
+        "other_info": "string",
+        "validate_status": "pending",
+        "is_active": false,
+        "accepting_new_mentees": false
     }
 
 ###### Mentee intake schema:
 
     {
-        "profile_id": '12',
-        "email": 'fakeemail1@gmail.com',
-        "country": 'USA',
-        "state": 'California',
-        "city": 'San Francisco',
-        "first_name": 'Joe',
-        "last_name": 'Baseball',
+        "profile_id": "string",
+        "first_name": "string",
+        "last_name": "string",
+        "email": "user@example.com",
+        "country": "string",
+        "state": "string",
+        "city": "string",
         "formerly_incarcerated": true,
-        "list_convictions": 'coded too much',
-        "tech_stack": 'frontend'
-        "experience_level": beginner',
         "underrepresented_group": true,
-        "low_income": false,
+        "low_income": true,
+        "convictions": "string",
+        "tech_stack": "string",
         "job_help": true,
-        "industry_knowledge": true,
-        "pair_programming": false,
-        "other_info": 'Not really',
-        "validateStatus: 'pending',
+        "pair_programming": true,
+        "referred_by": "string",
+        "other_info": "string",
+        "validate_status": "approved",
+        "is_active": true,
+        "in_project_underdog": true
     }
 
 | Method | Endpoint                        | Required Request Body                                                            | Returns                                                          | User Auth |
