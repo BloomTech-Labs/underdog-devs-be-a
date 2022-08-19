@@ -10,7 +10,7 @@ const {
   sendData,
 } = require('../middleware/applicationMiddleware');
 const { createProfile } = require('../middleware/profilesMiddleware');
-const { readAllUsers } = require('../middleware/userDBMiddleware');
+const { readAllUsers, updateUser } = require('../middleware/userDBMiddleware');
 // const { registerOktaUser } = require('../middleware/oktaAuth');
 const validation = require('../helpers/validation');
 const axios = require('axios');
@@ -91,64 +91,17 @@ const { baseURL } = require('../../config/dsConfig');
  *        $ref: '#/components/responses/UnauthorizedError'
  */
 
-// get all pending application tickets
-// const dummyData = [
-//   {
-//     profile_id: '00u13omswyZM1xVya4x7',
-//     first_name: 'User',
-//     last_name: '6',
-//     role_name: 'mentor',
-//     created_at: '2022-03-11T22:34:47.794Z',
-//     application_id: 5,
-//     application_notes: '',
-//     email: 'llama006@maildrop.cc',
-//   },
-//   {
-//     profile_id: '10',
-//     first_name: 'User',
-//     last_name: '10',
-//     role_name: 'mentee',
-//     created_at: '2022-03-11T22:34:47.794Z',
-//     application_id: 6,
-//     application_notes: '',
-//     email: 'llama0010@maildrop.cc',
-//   },
-//   {
-//     profile_id: '00u13oned0U8XP8Mb4x7',
-//     first_name: 'User',
-//     last_name: '8',
-//     role_name: 'mentee',
-//     created_at: '2022-03-11T22:34:47.794Z',
-//     application_id: 2,
-//     application_notes: '',
-//     email: 'llama008@maildrop.cc',
-//   },
-//   {
-//     profile_id: '12',
-//     first_name: 'User',
-//     last_name: '12',
-//     role_name: 'pending',
-//     created_at: '2022-03-11T22:34:47.794Z',
-//     application_id: 1,
-//     application_notes: '',
-//     email: 'llama0012@maildrop.cc',
-//   },
-// ];
-// router.get('/', authRequired, adminRequired, async (req, res, next) => {
-//   try {
-//     const requestedApplications = await Application.getApplications();
-//     res.status(200).json(requestedApplications);
-//   } catch (err) {
-//     next({ message: err.message });
-//   }
-// });
-
+/*
+  Author: Melody McClure
+  This post route will read the 'readAllUsers' middleware and send back only the users who have applications in a pending validation status.
+*/
 router.post('/', readAllUsers, (req, res, next) => {
-  const {validate_status} = req.body
-  if (validate_status === 'pending') {
-
-  }
-  next();
+  req.info.map(status => {
+    if (status.validate_status === 'pending') {
+      console.log(status)
+      res.send({status})
+    }
+  })
 });
 
 /**
@@ -393,11 +346,18 @@ router.post(
 //   }
 // );
 
+router.post('/approve/:profile_id', updateUser, (req) => {
+  req.info.map(status => {
+    if (status.validate_status === 'pending') {
+      status.validate_status = status.validate_status === 'approved'
+      console.log(status)
+      res.send({ status })
+    }
+  })
+});
+
 // Author: Christwide Oscar
 // Finding Applicant and setting them to approved
-router.post('/approve/:profile_id', updateUser, (req) => {
-  const { profile_id, validate_status } = req.body;
-    validate_status = {validate_status: 'approved'}
   // if (low_income === false || low_income === true) {
   //   axios
   //     .post(`${baseURL}/update/mentee/${profile_id}`, {
@@ -415,7 +375,6 @@ router.post('/approve/:profile_id', updateUser, (req) => {
   //       console.log(err);
   //     });
   // }
-});
 
 // Author: Farhaan Nishtar
 // Finding Applicant and setting them to rejected
