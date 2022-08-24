@@ -1,15 +1,14 @@
-const OktaJwtVerifier = require('@okta/jwt-verifier');
-const oktaVerifierConfig = require('../../config/okta');
-const Profiles = require('../profile/profileModel');
-const oktaJwtVerifier = new OktaJwtVerifier(oktaVerifierConfig.config);
+/* The following lines are commented out for the linter.
+    Profiles will be needed when Auth0 is implemented */
+// const Profiles = require('../profile/profileModel');
 
-const makeProfileObj = (claims) => {
-  return {
-    id: claims.sub,
-    email: claims.email,
-    name: claims.name,
-  };
-};
+// const makeProfileObj = (claims) => {
+//   return {
+//     id: claims.sub,
+//     email: claims.email,
+//     name: claims.name,
+//   };
+// };
 /**
  * A simple middleware that asserts valid Okta idToken and sends 401 responses
  * if the token is not present or fails validation. If the token is valid its
@@ -17,24 +16,15 @@ const makeProfileObj = (claims) => {
  */
 const authRequired = async (req, res, next) => {
   try {
-    // Check if there's a token in the auth header
-    const authHeader = req.headers.authorization || '';
-    const match = authHeader.match(/Bearer (.+)/);
-    if (!match) {
-      next({
-        status: 401,
-        message: 'Missing idToken',
-      });
-    }
+    const fakeProfile = {
+      first_name: 'Test',
+      last_name: 'Test',
+      role_id: 1,
+      profile_id: '00ulthapbErVUwVJy4x6',
+    };
 
     // Verify that the token is valid
-    const idToken = match[1];
-    const oktaData = await oktaJwtVerifier.verifyAccessToken(
-      idToken,
-      oktaVerifierConfig.expectedAudience
-    );
-    const jwtUserObj = makeProfileObj(oktaData.claims);
-    const profile = await Profiles.findOrCreateProfile(jwtUserObj);
+    const profile = fakeProfile;
 
     if (profile) {
       req.profile = profile;
