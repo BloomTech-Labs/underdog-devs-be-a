@@ -95,13 +95,13 @@ const { baseURL } = require('../../config/dsConfig');
   Author: Melody McClure
   This post route will read the 'readAllUsers' middleware and send back only the users who have applications in a pending validation status.
 */
-router.post('/', readAllUsers, (req, res, next) => {
-  req.info.map(status => {
+router.post('/', readAllUsers, (req, res) => {
+  req.info.map((status) => {
     if (status.validate_status === 'pending') {
-      console.log(status)
-      res.send({status})
+      console.log(status);
+      res.send({ status });
     }
-  })
+  });
 });
 
 /**
@@ -347,34 +347,34 @@ router.post(
 // );
 
 router.post('/approve/:profile_id', updateUser, (req, res) => {
-  req.info.map(status => {
+  req.info.map((status) => {
     if (status.validate_status === 'pending') {
-      status.validate_status = status.validate_status === 'approved'
-      console.log(status)
-      res.send({ status })
+      status.validate_status = status.validate_status === 'approved';
+      console.log(status);
+      res.send({ status });
     }
-  })
+  });
 });
 
 // Author: Christwide Oscar
 // Finding Applicant and setting them to approved
-  // if (low_income === false || low_income === true) {
-  //   axios
-  //     .post(`${baseURL}/update/mentee/${profile_id}`, {
-  //       validate_status: 'approved',
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // } else {
-  //   axios
-  //     .post(`${baseURL}/update/mentor/${profile_id}`, {
-  //       validate_status: 'approved',
-  //     })
-  //     .catch((err) => {
-  //       console.log(err);
-  //     });
-  // }
+// if (low_income === false || low_income === true) {
+//   axios
+//     .post(`${baseURL}/update/mentee/${profile_id}`, {
+//       validate_status: 'approved',
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//     });
+// } else {
+//   axios
+//     .post(`${baseURL}/update/mentor/${profile_id}`, {
+//       validate_status: 'approved',
+//     })
+//     .catch((err) => {
+//       console.log(err);
+//     });
+// }
 
 // Author: Farhaan Nishtar
 // Finding Applicant and setting them to rejected
