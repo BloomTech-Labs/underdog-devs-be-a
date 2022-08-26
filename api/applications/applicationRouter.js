@@ -364,6 +364,7 @@ router.post('/approve/:profile_id', (req, res) => {
       .then((result) => {
         console.log(result.data.result);
         console.log('I am a mentor');
+        res.send({ status: result.status, message: result.data });
       })
       .catch((err) => {
         console.log({ err });
