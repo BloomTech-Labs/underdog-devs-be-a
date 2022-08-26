@@ -10,7 +10,7 @@ const {
   sendData,
 } = require('../middleware/applicationMiddleware');
 const { createProfile } = require('../middleware/profilesMiddleware');
-const { readAllUsers, updateUser } = require('../middleware/userDBMiddleware');
+const { readAllUsers } = require('../middleware/userDBMiddleware');
 // const { registerOktaUser } = require('../middleware/oktaAuth');
 const validation = require('../helpers/validation');
 const axios = require('axios');
@@ -345,16 +345,52 @@ router.post(
 //       .catch(next);
 //   }
 // );
+/*
+FE discerns if the user is a mentor/mentee and sends back the appropriate shape:
+mentor = {validate_status & tech_stack} 
+mentee = {validate_status}
+this endpoint can then send the validate status to the appropriate endpoint depending on whether the tech_stack is present or not
+*/
+router.post('/approve/:profile_id', (req, res) => {
+  const isMentor = req.body.tech_stack;
+  console.log(req.body);
 
-router.post('/approve/:profile_id', updateUser, (req, res) => {
-  req.info.map((status) => {
-    if (status.validate_status === 'pending') {
-      status.validate_status = status.validate_status === 'approved';
-      console.log(status);
-      res.send({ status });
-    }
-  });
+  if (isMentor) {
+    axios
+      .post(`${baseURL}/update/mentor/${req.params}`, {
+        validate_status: req.body.validate_status,
+      })
+      .then((result) => {
+        console.log(result.data.result);
+        console.log('I am a mentor');
+      })
+      .catch((err) => {
+        console.log({ err });
+      });
+  } else {
+    axios
+      .post(`${baseURL}/update/mentee/${req.params}`, {
+        validate_status: req.body.validate_status, // {validate_status: approved}
+      })
+      .then((result) => {
+        // res.send(result);
+        console.log(result.data.result);
+        console.log('I am a mentee');
+        res.end();
+      })
+      .catch((err) => {
+        console.log({ err });
+      });
+  }
 });
+// req.info.map((status) => {
+//   if (status.validate_status === 'pending') {
+//     status.validate_status = status.validate_status === 'approved';
+//     console.log(status);
+//     res.send({ status });
+//   }
+// });
+// });
 
 // Author: Christwide Oscar
 // Finding Applicant and setting them to approved
