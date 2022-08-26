@@ -353,12 +353,11 @@ this endpoint can then send the validate status to the appropriate endpoint depe
 */
 router.post('/approve/:profile_id', (req, res) => {
   const isMentor = req.body.tech_stack;
-  console.log(req.body);
 
   if (isMentor) {
     axios
       .post(`${baseURL}/update/mentor/${req.params}`, {
-        validate_status: req.body.validate_status,
+        validate_status: req.body.validate_status, // {validate_status: approved}
       })
       .then((result) => {
         console.log(result.data.result);
@@ -374,8 +373,9 @@ router.post('/approve/:profile_id', (req, res) => {
       })
       .then((result) => {
         // res.send(result);
-        console.log(result.data.result);
+        console.log(result.data);
         console.log('I am a mentee');
+        res.send(result.data);
         res.end();
       })
       .catch((err) => {
