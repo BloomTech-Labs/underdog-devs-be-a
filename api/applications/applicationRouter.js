@@ -98,7 +98,6 @@ const { baseURL } = require('../../config/dsConfig');
 router.post('/', readAllUsers, (req, res) => {
   req.info.map((status) => {
     if (status.validate_status === 'pending') {
-      console.log(status);
       res.send({ status });
     }
   });
@@ -291,105 +290,45 @@ router.post(
 
 /**
  * @swagger
- * /application/{approve/:id}:
+ * /application/{update-validate_status/:id}:
  *  put:
- *    summary: Registers profile with okta, updates application ticket "approved" to true, returns a temporary password
- *    description: If a pending application with this profile ID exists, middlware will fetch that profile from the database. This object is passed along into registerOktaUser where its shaped and sent to Oktas API using their clients createUser method.
+ *    summary: Updates validate_status of a given user
+ *    description: user is fetched from MongoDB by the profile_id in req.params, and is modified by the validate_status selected by the user (approved/rejected)
  *    tags:
  *      - application
  *    security:
- *      - okta: [authRequired, adminRequired]
+ *      - auth0: [authRequired, adminRequired]
  *    parameters:
  *      - in: param
  *        name: profile id
- *        schema:
- *          type: string
- *        description: Profile ID of pending applicant
  *    responses:
  *      '200':
- *        description: Response from successful put
+ *        description: Response from successful post to MongoDB
  *        content:
  *          application/json:
  *            schema:
  *              type: object
- *              properties:
- *                tempPassword:
- *                  description: temporary password for admins to give to approved users
- *                  type: string
  *              items:
- *                $ref: '#/components/schemas/Application'
- *              example:
- *                message: "3sdfi324"
+ *                status: 200
+ *                message: {
+ *                  result: true
+ *                    }
  *      '401':
  *        $ref: '#/components/responses/UnauthorizedError'
- */
 
-// registers a user with okta and approves their application ticket
-
-// router.put(
-//   '/approve/:id',
-//   authRequired,
-//   adminRequired,
-//   checkApplicationExists,
-//   findProfile,
-//   registerOktaUser,
-//   (req, res, next) => {
-//     const application_id = req.application.application_id;
-
-//     Application.updateTicket(application_id, { approved: true })
-//       .then(() => {
-//         res.status(200).json({
-//           tempPassword: req.tempPassword,
-//         });
-//       })
-//       .catch(next);
-//   }
-// );
-/*
-FE discerns if the user is a mentor/mentee and sends back the appropriate shape:  {validate_status & role_name} 
-code utilizes role_name to differentiate mentees/mentors and will handle accordingly.
+FE discerns if the user is a mentor/mentee and sends back the appropriate shape: 
+mentor = {validate_status & current_company }
 mentee = {validate_status}
 this endpoint can then send the validate status to the appropriate endpoint depending on whether the tech_stack is present or not
 */
-
-//to be deleted?
-// router.post('/approve/:profile_id', (req, res, next) => {
-//   const isMentor = req.body.current_company;
-//   const { profile_id } = req.params;
-
-//   if (isMentor) {
-//     axios
-//       .post(`${baseURL}/update/mentor/${profile_id}`, {
-//         validate_status: req.body.validate_status, // {validate_status: approved}
-//       })
-//       .then((result) => {
-//         res.send({ status: result.status, message: result.data });
-//       })
-//       .catch((err) => {
-//         next({ status: res.status, message: err });
-//       });
-//   } else {
-//     axios
-//       .post(`${baseURL}/update/mentee/${profile_id}`, {
-//         validate_status: req.body.validate_status, // {validate_status: approved}
-//       })
-//       .then((result) => {
-//         res.send({ status: result.status, message: result.data });
-//       })
-//       .catch((err) => {
-//         next({ status: res.status, message: err });
-//       });
-//   }
-// });
-
 router.post('/update-validate_status/:profile_id', (req, res, next) => {
   const isMentor = req.body.current_company;
   const { profile_id } = req.params;
 
   if (isMentor) {
     axios
-      .post(`${process.env.DS_API_URL}/update/mentor/${profile_id}`, {
-        validate_status: req.body.validate_status, // {validate_status: approved}
+      .post(`${baseURL}/update/mentor/${profile_id}`, {
+        validate_status: req.body.validate_status,
       })
       .then((result) => {
         res.send({ status: result.status, message: result.data });
@@ -399,8 +338,8 @@ router.post('/update-validate_status/:profile_id', (req, res, next) => {
       });
   } else {
     axios
-      .post(`${process.env.DS_API_URL}/update/mentee/${profile_id}`, {
-        validate_status: req.body.validate_status, // {validate_status: approved}
+      .post(`${baseURL}/update/mentee/${profile_id}`, {
+        validate_status: req.body.validate_status,
       })
       .then((result) => {
         res.send({ status: result.status, message: result.data });
@@ -410,22 +349,6 @@ router.post('/update-validate_status/:profile_id', (req, res, next) => {
       });
   }
 });
-
-/**
- *
- * if (profile['accepting_new_mentees'] === null) {
-    axios
-      .post(`${baseURL}/update/mentee/${profile_id}`, {
-        profile_id: profile_id,
-        validate_status: 'approved',
-      })
-      .then((res) => {
-        console.log('Finished Ticket finally');
-      });
-  } else {
-    axios.post(`${baseURL}/update/mentor/${profile_id}`);
-  }
- */
 
 /**
  * @swagger
