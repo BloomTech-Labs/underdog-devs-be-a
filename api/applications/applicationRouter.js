@@ -346,94 +346,67 @@ router.post(
 //   }
 // );
 /*
-FE discerns if the user is a mentor/mentee and sends back the appropriate shape:
-mentor = {validate_status & tech_stack} 
+FE discerns if the user is a mentor/mentee and sends back the appropriate shape:  {validate_status & role_name} 
+code utilizes role_name to differentiate mentees/mentors and will handle accordingly.
 mentee = {validate_status}
 this endpoint can then send the validate status to the appropriate endpoint depending on whether the tech_stack is present or not
 */
-router.post('/approve/:profile_id', (req, res) => {
-  const isMentor = req.body.tech_stack;
+
+//to be deleted?
+// router.post('/approve/:profile_id', (req, res, next) => {
+//   const isMentor = req.body.current_company;
+//   const { profile_id } = req.params;
+
+//   if (isMentor) {
+//     axios
+//       .post(`${baseURL}/update/mentor/${profile_id}`, {
+//         validate_status: req.body.validate_status, // {validate_status: approved}
+//       })
+//       .then((result) => {
+//         res.send({ status: result.status, message: result.data });
+//       })
+//       .catch((err) => {
+//         next({ status: res.status, message: err });
+//       });
+//   } else {
+//     axios
+//       .post(`${baseURL}/update/mentee/${profile_id}`, {
+//         validate_status: req.body.validate_status, // {validate_status: approved}
+//       })
+//       .then((result) => {
+//         res.send({ status: result.status, message: result.data });
+//       })
+//       .catch((err) => {
+//         next({ status: res.status, message: err });
+//       });
+//   }
+// });
+
+router.post('/update-validate_status/:profile_id', (req, res, next) => {
+  const isMentor = req.body.current_company;
   const { profile_id } = req.params;
-  console.log(req.params, profile_id);
 
   if (isMentor) {
     axios
-      .post(`${baseURL}/update/mentor/${profile_id}`, {
+      .post(`${process.env.DS_API_URL}/update/mentor/${profile_id}`, {
         validate_status: req.body.validate_status, // {validate_status: approved}
       })
       .then((result) => {
-        console.log(result.data.result);
-        console.log('I am a mentor');
         res.send({ status: result.status, message: result.data });
       })
       .catch((err) => {
-        console.log({ err });
+        next({ status: res.status, message: err });
       });
   } else {
     axios
-      .post(`${baseURL}/update/mentee/${profile_id}`, {
+      .post(`${process.env.DS_API_URL}/update/mentee/${profile_id}`, {
         validate_status: req.body.validate_status, // {validate_status: approved}
       })
       .then((result) => {
-        // res.send(result);
-        console.log(result.data);
-        console.log('I am a mentee');
         res.send({ status: result.status, message: result.data });
-        // res.end();
       })
       .catch((err) => {
-        console.log({ err });
-      });
-  }
-});
-// req.info.map((status) => {
-//   if (status.validate_status === 'pending') {
-//     status.validate_status = status.validate_status === 'approved';
-//     console.log(status);
-//     res.send({ status });
-//   }
-// });
-// });
-
-// Author: Christwide Oscar
-// Finding Applicant and setting them to approved
-// if (low_income === false || low_income === true) {
-//   axios
-//     .post(`${baseURL}/update/mentee/${profile_id}`, {
-//       validate_status: 'approved',
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// } else {
-//   axios
-//     .post(`${baseURL}/update/mentor/${profile_id}`, {
-//       validate_status: 'approved',
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// }
-
-// Author: Farhaan Nishtar
-// Finding Applicant and setting them to rejected
-router.post('/reject/:profile_id', (req) => {
-  const { profile_id, low_income } = req.body;
-  if (low_income === false || low_income === true) {
-    axios
-      .post(`${baseURL}/update/mentee/${profile_id}`, {
-        validate_status: 'rejected',
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  } else {
-    axios
-      .post(`${baseURL}/update/mentor/${profile_id}`, {
-        validate_status: 'rejected',
-      })
-      .catch((err) => {
-        console.log(err);
+        next({ status: res.status, message: err });
       });
   }
 });
