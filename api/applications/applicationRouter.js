@@ -96,11 +96,7 @@ const { baseURL } = require('../../config/dsConfig');
   This post route will read the 'readAllUsers' middleware and send back only the users who have applications in a pending validation status.
 */
 router.post('/', readAllUsers, (req, res) => {
-  req.info.map((status) => {
-    if (status.validate_status === 'pending') {
-      res.send({ status });
-    }
-  });
+  res.status(200).json(req.info);
 });
 
 /**

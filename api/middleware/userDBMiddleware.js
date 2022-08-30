@@ -46,7 +46,6 @@ const readAllUsers = async (req, res, next) => {
 
     const users = mentorData.concat(menteeData);
     req.info = users;
-    res.json({ users });
   } catch (err) {
     next(err);
   }
