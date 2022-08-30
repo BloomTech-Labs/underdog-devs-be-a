@@ -96,7 +96,7 @@ const { baseURL } = require('../../config/dsConfig');
   This post route will read the 'readAllUsers' middleware and send back only the users who have applications in a pending validation status.
 */
 router.post('/', readAllUsers, (req, res) => {
-  res.status(200).json(req.info);
+  res.status(200).jsonsend(req.info);
 });
 
 /**
@@ -312,10 +312,10 @@ router.post(
  *      '401':
  *        $ref: '#/components/responses/UnauthorizedError'
 
-FE discerns if the user is a mentor/mentee and sends back the appropriate shape: 
+NOTE: FE discerns if the user is a mentor/mentee and sends back the appropriate shape: 
 mentor = {validate_status & current_company }
 mentee = {validate_status}
-this endpoint can then send the validate status to the appropriate endpoint depending on whether the tech_stack is present or not
+this endpoint can then send the validate status to the appropriate endpoint depending on whether the current_company is present or not
 */
 router.post('/update-validate_status/:profile_id', (req, res, next) => {
   const isMentor = req.body.current_company;
