@@ -9,7 +9,6 @@ const {
 } = require('../middleware/applicationMiddleware');
 const { createProfile } = require('../middleware/profilesMiddleware');
 const { readAllUsers } = require('../middleware/userDBMiddleware');
-// const { registerOktaUser } = require('../middleware/oktaAuth');
 const validation = require('../helpers/validation');
 const axios = require('axios');
 const { baseURL } = require('../../config/dsConfig');
