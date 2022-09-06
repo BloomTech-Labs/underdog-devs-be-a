@@ -11,7 +11,7 @@ const {
   menteeApplicationSchema,
   applicationTicketSchema,
 } = require('../../data/schemas/applicationSchema');
-// const { findById } = require('../profile/profileModel');
+const { findById } = require('../profile/profileModel');
 
 const cacheSignUpData = async (req, res, next) => {
   const role = req.params.role;
@@ -118,19 +118,19 @@ const checkRole = async (req, res, next) => {
   }
 };
 
-//to be removed once build above is completed
-// const profile = await findById(req.params.id);
+const findProfile = async (req, res, next) => {
+  const profile = await findById(req.params.id);
 
-// if (profile) {
-//   req.profile = profile;
-//   next();
-// } else {
-//   next({
-//     status: 404,
-//     message: `no profiles with profile_id: ${req.params.id} were found`,
-//   });
-// }
-// };
+  if (profile) {
+    req.profile = profile;
+    next();
+  } else {
+    next({
+      status: 404,
+      message: `no profiles with profile_id: ${req.params.id} were found`,
+    });
+  }
+};
 
 const validateStatusRequest = (req, res, next) => {
   const payload = req.body.validate_status;
@@ -213,6 +213,7 @@ module.exports = {
   checkApplicationExists,
   validateStatusRequest,
   checkRole,
+  findProfile,
   validateApplicationTicket,
   validateMenteeIntakeData,
   validateMentorIntakeData,
