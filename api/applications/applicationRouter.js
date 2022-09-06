@@ -149,7 +149,7 @@ router.post(
 /**
  * @swagger
  * /application/{update-validate_status/:id}:
- *  put:
+ *  post:
  *    summary: Updates validate_status of a given user
  *    description: user is fetched from MongoDB by the profile_id in req.params, and is modified by the validate_status selected by the user (approved/rejected)
  *    tags:
@@ -171,8 +171,7 @@ router.post(
  *                message: {
  *                  result: true
  *                    }
- *      '401':
- *        $ref: '#/components/responses/UnauthorizedError'
+ *      '422': valid strings for the validate_status include:'pending', 'approved', 'rejected'.
  */
 /*
 NOTE: FE discerns if the user is a mentor/mentee and sends back the appropriate shape: 
