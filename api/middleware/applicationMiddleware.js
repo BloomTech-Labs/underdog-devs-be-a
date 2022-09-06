@@ -1,4 +1,5 @@
 const axios = require('axios');
+// const { baseURL } = '../../config/dsConfig';
 // const { baseURL } = require('../../config/dsConfig');
 const {
   getTicketById,
@@ -12,7 +13,7 @@ const {
   menteeApplicationSchema,
   applicationTicketSchema,
 } = require('../../data/schemas/applicationSchema');
-const { findById } = require('../profile/profileModel');
+// const { findById } = require('../profile/profileModel');
 
 const cacheSignUpData = async (req, res, next) => {
   const role = req.params.role;
@@ -119,19 +120,43 @@ const checkRole = async (req, res, next) => {
   }
 };
 
-const findProfile = async (req, res, next) => {
-  const profile = await findById(req.params.id);
+// const findProfile = async (req, res) => {
+// const { profile_id } = req.params;
+// const mentorProfile = axios
+//   .post(`${baseURL}/read/mentor`, { profile_id: profile_id })
+//   .then((result) => {
+//     console.log(result);
+//     res.end();
+//   })
+//   .catch((err) => {
+//     console.log({ err });
+//     res.end();
+//   });
+// const menteeProfile = axios
+//   .post(`${baseURL}/read/mentor`, { profile_id: profile_id })
+//   .then((result) => {
+//     console.log(result);
+//     res.end();
+//   })
+//   .catch((err) => {
+//     console.log({ err });
+//     res.end();
+//   });
+// }
 
-  if (profile) {
-    req.profile = profile;
-    next();
-  } else {
-    next({
-      status: 404,
-      message: `no profiles with profile_id: ${req.params.id} were found`,
-    });
-  }
-};
+//to be removed once build above is completed
+// const profile = await findById(req.params.id);
+
+// if (profile) {
+//   req.profile = profile;
+//   next();
+// } else {
+//   next({
+//     status: 404,
+//     message: `no profiles with profile_id: ${req.params.id} were found`,
+//   });
+// }
+// };
 
 const validateApplicationTicket = async (req, res, next) => {
   const payload = req.body;
@@ -200,7 +225,7 @@ module.exports = {
   cacheSignUpData,
   checkApplicationExists,
   checkRole,
-  findProfile,
+  // findProfile,
   validateApplicationTicket,
   validateMenteeIntakeData,
   validateMentorIntakeData,

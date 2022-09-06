@@ -7,8 +7,8 @@ const {
   cacheSignUpData,
   sendData,
 } = require('../middleware/applicationMiddleware');
+const { getAllApplications } = require('./applicationModel');
 const { createProfile } = require('../middleware/profilesMiddleware');
-const { readAllUsers } = require('../middleware/userDBMiddleware');
 const validation = require('../helpers/validation');
 const axios = require('axios');
 const { baseURL } = require('../../config/dsConfig');
@@ -17,57 +17,22 @@ const { baseURL } = require('../../config/dsConfig');
  * @swagger
  * components:
  *  schemas:
- *    Mentor example:
- *      {
-      "profile_id": "805ff5x334yBv7Og",
-      "first_name": "Zavier",
-      "last_name": "Bailey",
-      "email": "Zavier.Bailey@gmail.com",
-      "country": "U.S.",
-      "state": "New Mexico",
-      "city": "New Town",
-      "current_company": "Uber",
-      "current_position": "Data Scientist",
-      "tech_stack": [
-        "iOS"
-      ],
-      "commitment": true,
-      "job_help": true,
-      "industry_knowledge": true,
-      "pair_programming": true,
-      "referred_by": "Family",
-      "other_info": "anything else may be written here",
-      "validate_status": "pending",
-      "is_active": true,
-      "accepting_new_mentees": true,
-      "created_at": "2022-08-26T15:15:48.109000"
-    }
-
-    Mentee example:
-      {
-      "profile_id": "j0346WB7lMj10kk8",
-      "first_name": "Nathan",
-      "last_name": "Gomez",
-      "email": "Nathan.Gomez@gmail.com",
-      "country": "U.S.",
-      "state": "of Columbia",
-      "city": "Washington",
-      "formerly_incarcerated": true,
-      "underrepresented_group": false,
-      "low_income": true,
-      "convictions": "Felony, Misdemeanor",
-      "tech_stack": "Design UI/UX",
-      "job_help": false,
-      "pair_programming": false,
-      "referred_by": "Friend",
-      "other_info": "anything else may be written here",
-      "validate_status": "approved",
-      "is_active": true,
-      "in_project_underdog": false,
-      "created_at": "2022-08-26T15:15:42.401000",
-      "updated_at": "2022-08-29T17:45:42.331000"
-    }
-
+ *    Users:
+ *      type: object
+ *      required:
+ *        - email
+ *        - role
+ *      properties:
+ *        email:
+ *          type: string
+ *          description: unique identifier for each profile that references their auth0 and DS API profiles
+ *        role:
+ *          type: integer
+ *          description: integer between 1-4 which sets authorization levels for navigating the app
+ *      example:
+ *        email: testuser101@gmail.com
+ *        role: 3
+ */
 
 /**
  * @swagger
@@ -102,10 +67,22 @@ const { baseURL } = require('../../config/dsConfig');
   This post route will read the 'readAllUsers' middleware and send back only the users who have applications in a pending validation status.
   authRequired, and AdminRequired imports have been left (commented out) because they will likely be needed when auth0 is implemented.
 */
-router.post('/', readAllUsers, (req, res) => {
-  const users = req.info;
-  res.status(200).json({ users });
+router.post('/', (req, res) => {
+  console.log(req.body);
+  const query = req.body;
+  getAllApplications(query)
+    .then((results) => {
+      res.send(results);
+    })
+    .catch((err) => {
+      res.send(err.message);
+    });
 });
+
+// router.post('/', readAllUsers, (req, res) => {
+//   const users = req.info;
+//   res.status(200).json({ users });
+// });
 
 /**
  * @swagger
@@ -195,42 +172,31 @@ router.post(
  *                    }
  *      '401':
  *        $ref: '#/components/responses/UnauthorizedError'
-
+ */
+/*
 NOTE: FE discerns if the user is a mentor/mentee and sends back the appropriate shape: 
 mentor = {validate_status & current_company }
 mentee = {validate_status}
 this endpoint can then send the validate status to the appropriate endpoint depending on whether the current_company is present or not
   
 authRequired, and AdminRequired imports have been left (commented out) because they will likely be needed when auth0 is implemented.
-
 */
 router.post('/update-validate_status/:profile_id', (req, res, next) => {
   const isMentor = req.body.current_company;
   const { profile_id } = req.params;
 
-  if (isMentor) {
-    axios
-      .post(`${baseURL}/update/mentor/${profile_id}`, {
-        validate_status: req.body.validate_status,
-      })
-      .then((result) => {
-        res.send({ status: result.status, message: result.data });
-      })
-      .catch((err) => {
-        next({ status: res.status, message: err });
-      });
-  } else {
-    axios
-      .post(`${baseURL}/update/mentee/${profile_id}`, {
-        validate_status: req.body.validate_status,
-      })
-      .then((result) => {
-        res.send({ status: result.status, message: result.data });
-      })
-      .catch((err) => {
-        next({ status: res.status, message: err });
-      });
-  }
+  const role = isMentor ? 'mentor' : 'mentee';
+
+  axios
+    .post(`${baseURL}/update/${role}/${profile_id}`, {
+      validate_status: req.body.validate_status,
+    })
+    .then((result) => {
+      res.send({ status: result.status, message: result.data });
+    })
+    .catch((err) => {
+      next({ status: err.status, message: err.message });
+    });
 });
 
 module.exports = router;
