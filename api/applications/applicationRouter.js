@@ -6,6 +6,7 @@ const router = express.Router();
 const {
   cacheSignUpData,
   sendData,
+  validateStatusRequest,
 } = require('../middleware/applicationMiddleware');
 const { getAllApplications } = require('./applicationModel');
 const { createProfile } = require('../middleware/profilesMiddleware');
@@ -181,22 +182,26 @@ this endpoint can then send the validate status to the appropriate endpoint depe
   
 authRequired, and AdminRequired imports have been left (commented out) because they will likely be needed when auth0 is implemented.
 */
-router.post('/update-validate_status/:profile_id', (req, res, next) => {
-  const isMentor = req.body.current_company;
-  const { profile_id } = req.params;
+router.post(
+  '/update-validate_status/:profile_id',
+  validateStatusRequest,
+  (req, res, next) => {
+    const isMentor = req.body.current_company;
+    const { profile_id } = req.params;
 
-  const role = isMentor ? 'mentor' : 'mentee';
+    const role = isMentor ? 'mentor' : 'mentee';
 
-  axios
-    .post(`${baseURL}/update/${role}/${profile_id}`, {
-      validate_status: req.body.validate_status,
-    })
-    .then((result) => {
-      res.send({ status: result.status, message: result.data });
-    })
-    .catch((err) => {
-      next({ status: err.status, message: err.message });
-    });
-});
+    axios
+      .post(`${baseURL}/update/${role}/${profile_id}`, {
+        validate_status: req.body.validate_status,
+      })
+      .then((result) => {
+        res.send({ status: result.status, message: result.data });
+      })
+      .catch((err) => {
+        next({ status: err.status, message: err.message });
+      });
+  }
+);
 
 module.exports = router;

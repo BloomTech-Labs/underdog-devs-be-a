@@ -1,6 +1,4 @@
 const axios = require('axios');
-// const { baseURL } = '../../config/dsConfig';
-// const { baseURL } = require('../../config/dsConfig');
 const {
   getTicketById,
   getMentorIntake,
@@ -120,30 +118,6 @@ const checkRole = async (req, res, next) => {
   }
 };
 
-// const findProfile = async (req, res) => {
-// const { profile_id } = req.params;
-// const mentorProfile = axios
-//   .post(`${baseURL}/read/mentor`, { profile_id: profile_id })
-//   .then((result) => {
-//     console.log(result);
-//     res.end();
-//   })
-//   .catch((err) => {
-//     console.log({ err });
-//     res.end();
-//   });
-// const menteeProfile = axios
-//   .post(`${baseURL}/read/mentor`, { profile_id: profile_id })
-//   .then((result) => {
-//     console.log(result);
-//     res.end();
-//   })
-//   .catch((err) => {
-//     console.log({ err });
-//     res.end();
-//   });
-// }
-
 //to be removed once build above is completed
 // const profile = await findById(req.params.id);
 
@@ -157,6 +131,19 @@ const checkRole = async (req, res, next) => {
 //   });
 // }
 // };
+
+const validateStatusRequest = (req, res, next) => {
+  const payload = req.body.validate_status;
+  if (
+    payload !== 'pending' &&
+    payload !== 'approved' &&
+    payload !== 'rejected'
+  ) {
+    next({ status: 422, message: 'invalid input' });
+  } else {
+    next();
+  }
+};
 
 const validateApplicationTicket = async (req, res, next) => {
   const payload = req.body;
@@ -224,8 +211,8 @@ const sendData = (req, res, next) => {
 module.exports = {
   cacheSignUpData,
   checkApplicationExists,
+  validateStatusRequest,
   checkRole,
-  // findProfile,
   validateApplicationTicket,
   validateMenteeIntakeData,
   validateMentorIntakeData,
