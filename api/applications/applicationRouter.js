@@ -80,11 +80,6 @@ router.post('/', (req, res) => {
     });
 });
 
-// router.post('/', readAllUsers, (req, res) => {
-//   const users = req.info;
-//   res.status(200).json({ users });
-// });
-
 /**
  * @swagger
  * /application/{new/:role}:
