@@ -416,12 +416,11 @@ router.post('/availability/:profile_id', (req, res, next) => {
   const { accepting_new_mentees } = req.body;
   axios
     .post(`${process.env.DS_API_URL}/update/mentor/${profile_id}`, {
-      profile_id,
       accepting_new_mentees,
     })
     // eslint-disable-next-line no-unused-vars
     .then((response) => {
-      res.send({ status: res.status, message: res.data });
+      res.send({ status: response.status, message: response.data });
     })
     .catch((err) => {
       next({

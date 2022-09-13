@@ -78,6 +78,93 @@ router.post('/', (req, res) => {
     .catch((err) => {
       res.send(err.message);
     });
+    
+// get pending application tickets by role
+
+router.get('/:role', authRequired, adminRequired, (req, res) => {
+  if (req.params.role === 'mentor') {
+    res.json([
+      {
+        profile_id: '5b2t85faI2n133TM',
+        first_name: 'User',
+        last_name: '6',
+        role_name: 'mentor',
+        created_at: '2022-03-11T22:34:47.794Z',
+        application_id: 5,
+      },
+    ]);
+  } else {
+    res.json([
+      {
+        profile_id: '1myy2P3Rli1h4873',
+        first_name: 'User',
+        last_name: '8',
+        role_name: 'mentee',
+        created_at: '2022-03-11T22:34:47.794Z',
+        application_id: 2,
+        low_income: false,
+      },
+      {
+        profile_id: '10',
+        first_name: 'User',
+        last_name: '10',
+        role_name: 'mentee',
+        created_at: '2022-03-11T22:34:47.794Z',
+        application_id: 6,
+      },
+      {
+        profile_id: '5b2t85faI2n133TM',
+        first_name: 'User',
+        last_name: '10',
+        role_name: 'mentee',
+        created_at: '2022-03-11T22:34:47.794Z',
+        application_id: 6,
+        validate_status: 'pending',
+      },
+    ]);
+  }
+});
+
+/**
+ * @swagger
+ * /application/{profileId/:id}:
+ *  get:
+ *    summary: Get the list of pending applicants by profile ID
+ *    description: Provides a JSON array of applications (as objects) where 'approved' key is falsy
+ *    tags:
+ *      - application
+ *    security:
+ *      - okta: [authRequired, adminRequired]
+ *    parameters:
+ *      - in: param
+ *        name: profile ID
+ *        schema:
+ *          type: string
+ *        description: A request parameter that accepts profile ID
+ *    responses:
+ *      '200':
+ *        description: An array of application objects
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                $ref: '#/components/schemas/Application'
+ *              example:
+ *                - profile_id: "00u13omswyZM1xVya4x7"
+ *                  first_name: "User"
+ *                  last_name: "6"
+ *                  role_name: "mentor"
+ *                  created_at: "2022-02-02T18:43:53.607Z"
+ *                  application_id: 5
+ *      '401':
+ *        $ref: '#/components/responses/UnauthorizedError'
+ */
+
+// get application by profile id
+
+router.get('/profileId/:id', checkApplicationExists, checkRole, (req, res) => {
+  res.status(200).json(req.intakeData);
 });
 
 /**
