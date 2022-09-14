@@ -3,6 +3,7 @@ const authRequired = require('../middleware/authRequired');
 const Profiles = require('./profileModel');
 const router = express.Router();
 const axios = require('axios');
+const { baseURL } = require('../../config/dsConfig');
 const {
   adminRequired,
   superAdminRequired,
@@ -366,7 +367,7 @@ router.put(
 //get match mentor by profile_id
 router.get('/match/:id', authRequired, (req, res, next) => {
   axios
-    .post(`${process.env.DS_API_URL}/match/${req.params.id}/?n_matches=5`)
+    .post(`${baseURL}/match/${req.params.id}/?n_matches=5`)
     .then((results) => {
       let mentors = [];
       results.data.result.map(async (x) => {
@@ -390,7 +391,7 @@ This route was also built while the authorization tool was being changed from Ok
 
 router.post('/mentor-information/', (req, res, next) => {
   axios
-    .post(`${process.env.DS_API_URL}/read/mentor`, req.body)
+    .post(`${baseURL}/read/mentor`, req.body)
     .then((response) => {
       const mentorInfo = response.data.result.map((results) => {
         const data = {
@@ -406,6 +407,7 @@ router.post('/mentor-information/', (req, res, next) => {
     .catch((err) => next(err));
 });
 
+/*
 *Authors: Melody McClure & Miguel Ledesma
 This POST route goes to the DS API.
 This route was also built while the authorization tool was being changed from Okta to AuthO so there is currently not an authorization middleware in the route. Once that is completed, the middleware confirming this route is for use a MENTOR only.
@@ -415,7 +417,7 @@ router.post('/availability/:profile_id', (req, res, next) => {
   const { profile_id } = req.params;
   const { accepting_new_mentees } = req.body;
   axios
-    .post(`${process.env.DS_API_URL}/update/mentor/${profile_id}`, {
+    .post(`${baseURL}/update/mentor/${profile_id}`, {
       profile_id,
       accepting_new_mentees,
     })

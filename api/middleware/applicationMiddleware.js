@@ -1,5 +1,5 @@
 const axios = require('axios');
-// const { baseURL } = require('../../config/dsConfig');
+const { baseURL } = require('../../config/dsConfig');
 const {
   getTicketById,
   getMentorIntake,
@@ -187,7 +187,7 @@ const sendData = (req, res, next) => {
   }
   // we are going to leave this middleware in this format due to future changes to the database in the near future. updated 7/27/22.
   axios
-    .post(`${process.env.DS_API_URL}/create/${req.role}`, req.application)
+    .post(`${baseURL}/create/${req.role}`, req.application)
     .then((res) => {
       next({ status: res.status, message: res.data });
     })
