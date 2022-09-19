@@ -7,6 +7,8 @@ const {
   cacheSignUpData,
   sendData,
   validateStatusRequest,
+  checkApplicationExists,
+  checkRole,
 } = require('../middleware/applicationMiddleware');
 const { getAllApplications } = require('./applicationModel');
 const { createProfile } = require('../middleware/profilesMiddleware');
@@ -78,10 +80,10 @@ router.post('/', (req, res) => {
     .catch((err) => {
       res.send(err.message);
     });
-    
+});
 // get pending application tickets by role
 
-router.get('/:role', authRequired, adminRequired, (req, res) => {
+router.get('/:role', (req, res) => {
   if (req.params.role === 'mentor') {
     res.json([
       {
