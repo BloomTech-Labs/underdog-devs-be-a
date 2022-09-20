@@ -407,8 +407,7 @@ router.post('/mentor-information/', (req, res, next) => {
     .catch((err) => next(err));
 });
 
-/*
-*Authors: Melody McClure & Miguel Ledesma
+/*Authors: Melody McClure & Miguel Ledesma
 This POST route goes to the DS API.
 This route was also built while the authorization tool was being changed from Okta to AuthO so there is currently not an authorization middleware in the route. Once that is completed, the middleware confirming this route is for use a MENTOR only.
 */
@@ -417,13 +416,12 @@ router.post('/availability/:profile_id', (req, res, next) => {
   const { profile_id } = req.params;
   const { accepting_new_mentees } = req.body;
   axios
-    .post(`${baseURL}/update/mentor/${profile_id}`, {
-      profile_id,
+    .post(`${process.env.DS_API_URL}/update/mentor/${profile_id}`, {
       accepting_new_mentees,
     })
     // eslint-disable-next-line no-unused-vars
     .then((response) => {
-      res.send({ status: res.status, message: res.data });
+      res.send({ status: response.status, message: response.data });
     })
     .catch((err) => {
       next({

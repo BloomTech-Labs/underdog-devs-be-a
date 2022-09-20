@@ -1,3 +1,5 @@
+const axios = require('axios');
+const { baseURL } = require('../../config/dsConfig');
 const db = require('../../data/db-config');
 
 const getTicketById = async (ticket_id) => {
@@ -64,21 +66,30 @@ const updateTicket = async (application_id) => {
   return result;
 };
 
-const getApplications = () => {
-  return db('profiles as p')
-    .join('roles as r', 'p.role_id', 'r.role_id')
-    .join('tickets as t', 'p.profile_id', 't.submitted_by')
-    .select(
-      't.ticket_id as application_id',
-      'p.profile_id',
-      'p.first_name',
-      'p.last_name',
-      'p.email',
-      'p.created_at',
-      'r.role_name'
-    )
-    .where('t.ticket_type', 2)
-    .where('t.ticket_status', 'pending');
+//tag the mentors/mentees during this search.
+const getAllApplications = async (query) => {
+  const mentorData = await axios
+    .post(`${baseURL}/read/mentor`, query)
+    .then((results) => {
+      const mentors = results.data.result;
+      return mentors;
+    })
+    .catch((err) => {
+      return { err };
+    });
+
+  const menteeData = await axios
+    .post(`${baseURL}/read/mentee`, query)
+    .then((results) => {
+      const mentees = results.data.result;
+      return mentees;
+    })
+    .catch((err) => {
+      return { err };
+    });
+
+  const users = mentorData.concat(menteeData);
+  return users;
 };
 
 module.exports = {
@@ -91,5 +102,5 @@ module.exports = {
   getMenteeSubject,
   updateApplicationNotes,
   updateTicket,
-  getApplications,
+  getAllApplications,
 };

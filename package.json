@@ -4,6 +4,9 @@
   "private": false,
   "license": "MIT",
   "repository": "github:Lambda-School-Labs/labs-api-starter",
+  "engines": {
+    "node": "16.7.0"
+  },
   "scripts": {
     "start": "node server.js",
     "watch:dev": "nodemon",
