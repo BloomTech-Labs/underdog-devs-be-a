@@ -15,6 +15,8 @@ const { createProfile } = require('../middleware/profilesMiddleware');
 const validation = require('../helpers/validation');
 const axios = require('axios');
 const { baseURL } = require('../../config/dsConfig');
+const { issuer } = require('../../config/auth0');
+const Profiles = require('../profile/profileModel');
 
 /**
  * @swagger
@@ -269,20 +271,51 @@ router.post(
   '/update-validate_status/:profile_id',
   validateStatusRequest,
   (req, res, next) => {
-    const isMentor = req.body.current_company;
+    const { role, email, status } = req.body;
     const { profile_id } = req.params;
-
-    const role = isMentor ? 'mentor' : 'mentee';
+    const payload = {
+      email,
+      connection: 'Initial-Connection',
+    };
+    console.log({ email, role, status });
 
     axios
       .post(`${baseURL}/update/${role}/${profile_id}`, {
-        validate_status: req.body.validate_status,
+        validate_status: status,
+      })
+      .then((res) => {
+        if (res.data.result) {
+          // this url is coming back "unauthorized"
+          axios
+            .post(`${issuer}api/v2/users`, payload)
+            .then((res) => {
+              let { user_id } = res.data.identities.user_id;
+              let newProfile = {
+                email,
+                user_id,
+              };
+              return Profiles.create(newProfile);
+            })
+            .then(() => {
+              res.json({ result: true });
+            })
+            .catch((err) => {
+              console.log('level 2 catch', err);
+              next({
+                /* status: err.statusCode, message */
+              });
+            });
+        } else {
+          console.log('DS response false');
+          next({});
+        }
       })
       .then((result) => {
         res.send({ status: result.status, message: result.data });
       })
       .catch((err) => {
-        next({ status: err.status, message: err.message });
+        console.log('level 1 catch', err);
+        next({ status: err.status, message: err.detail.msg });
       });
   }
 );
