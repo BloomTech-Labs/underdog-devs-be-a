@@ -5,17 +5,24 @@ const router = express.Router();
 const jwt = require('jwt-decode');
 const { adminRequired } = require('../middleware/permissionsRequired');
 const authRequired = require('../middleware/authRequired');
+const axios = require('axios');
+const baseURL = require('../../config/dsConfig');
 
-//get all assignments
+//get all assignments for current user
 
-router.get('/', authRequired, adminRequired, (req, res, next) => {
-  Assignment.findAll()
-    .then((assignments) => {
-      res.status(200).json(assignments);
+router.get('/', authRequired, (req, res, next) => {
+  const { profile_id, role } = req.body;
+  const payload = {
+    id: profile_id,
+    type: role,
+  };
+  axios
+    .post(`${baseURL}/assignment`, payload)
+    .then((dsRes) => {
+      const results = dsRes.data[role === 'mentor' ? 'mentee' : 'mentor'];
+      res.json(results);
     })
-    .catch((err) => {
-      next({ status: 500, message: err.message });
-    });
+    .catch(next);
 });
 
 // get all the mentees a mentor has by the mentor's id
