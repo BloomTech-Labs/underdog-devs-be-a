@@ -8,7 +8,7 @@ const authRequired = require('../middleware/authRequired');
 const axios = require('axios');
 const baseURL = require('../../config/dsConfig');
 
-//get all assignments for current user
+// get all assignments for current user
 
 router.get('/', authRequired, (req, res, next) => {
   const { profile_id, role } = req.body;
