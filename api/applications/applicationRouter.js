@@ -280,6 +280,10 @@ router.post(
       await axios.post(`${baseURL}/update/${role}/${profile_id}`, {
         validate_status: status,
       });
+      if (status === 'rejected') {
+        res.json({ status: 200, message: `${role} rejected!` });
+        return;
+      }
     } catch (err) {
       next({
         status: err.response.status,
@@ -321,7 +325,10 @@ router.post(
       return;
     }
 
-    res.json({ message: 'Success!' });
+    res.json({
+      status: 201,
+      message: `${role} application approved and user created!`,
+    });
   }
 );
 
