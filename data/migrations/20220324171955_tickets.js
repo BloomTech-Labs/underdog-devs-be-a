@@ -7,34 +7,34 @@ exports.up = function (knex) {
         .integer('ticket_type')
         .unsigned()
         .notNullable()
-        .references('ticket_type_id')
-        .inTable('ticket_types')
-        .onDelete('CASCADE')
-        .onUpdate('CASCADE');
+        // .references('ticket_type_id')
+        // .inTable('ticket_types')
+        // .onDelete('CASCADE')
+        // .onUpdate('CASCADE');
       table.string('ticket_status').notNullable();
       table.string('ticket_subject').notNullable();
       table
         .string('requested_for')
         .unsigned()
-        .references('profile_id')
-        .inTable('profiles')
-        .onDelete('CASCADE')
-        .onUpdate('CASCADE');
+        // .references('profile_id')
+        // .inTable('profiles')
+        // .onDelete('CASCADE')
+        // .onUpdate('CASCADE');
       table
         .string('submitted_by')
         .unsigned()
         .notNullable()
-        .references('profile_id')
-        .inTable('profiles')
-        .onDelete('CASCADE')
-        .onUpdate('CASCADE');
+        // .references('profile_id')
+        // .inTable('profiles')
+        // .onDelete('CASCADE')
+        // .onUpdate('CASCADE');
       table
         .string('approved_by')
         .unsigned()
-        .references('profile_id')
-        .inTable('profiles')
-        .onDelete('CASCADE')
-        .onUpdate('CASCADE');
+        // .references('profile_id')
+        // .inTable('profiles')
+        // .onDelete('CASCADE')
+        // .onUpdate('CASCADE');
       table.boolean('urgent').default(false);
       table.string('notes');
     });

@@ -3,10 +3,10 @@ exports.up = function (knex) {
     table
       .integer('progress_id')
       .unsigned()
-      .references('progress_id')
-      .inTable('mentee_progression')
-      .onUpdate('CASCADE')
-      .onDelete('CASCADE');
+      // .references('progress_id')
+      // .inTable('mentee_progression')
+      // .onUpdate('CASCADE')
+      // .onDelete('CASCADE');
   });
 };
 

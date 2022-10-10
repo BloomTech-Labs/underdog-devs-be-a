@@ -9,18 +9,18 @@ exports.up = function (knex) {
         .string('mentor_id')
         .unsigned()
         .notNullable()
-        .references('profile_id')
-        .inTable('profiles')
-        .onDelete('CASCADE')
-        .onUpdate('CASCADE');
+        // .references('profile_id')
+        // .inTable('profiles')
+        // .onDelete('CASCADE')
+        // .onUpdate('CASCADE');
       table
         .string('mentee_id')
         .unsigned()
         .notNullable()
-        .references('profile_id')
-        .inTable('profiles')
-        .onDelete('CASCADE')
-        .onUpdate('CASCADE');
+        // .references('profile_id')
+        // .inTable('profiles')
+        // .onDelete('CASCADE')
+        // .onUpdate('CASCADE');
     });
 };
 

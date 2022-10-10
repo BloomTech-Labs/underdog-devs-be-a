@@ -7,10 +7,10 @@ exports.up = function (knex) {
         .string('profile_id')
         .notNullable()
         .unsigned()
-        .references('profile_id')
-        .inTable('profiles')
-        .onDelete('RESTRICT')
-        .onUpdate('RESTRICT');
+        // .references('profile_id')
+        // .inTable('profiles')
+        // .onDelete('RESTRICT')
+        // .onUpdate('RESTRICT');
       table.string('first_name').notNullable();
       table.string('last_name').notNullable();
       table.string('email').notNullable();

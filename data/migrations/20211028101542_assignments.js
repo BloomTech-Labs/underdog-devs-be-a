@@ -6,17 +6,17 @@ exports.up = (knex) => {
       table
         .string('mentor_id')
         .notNullable()
-        .references('profile_id')
-        .inTable('profiles')
-        .onDelete('RESTRICT')
-        .onUpdate('RESTRICT');
+        // .references('profile_id')
+        // .inTable('profiles')
+        // .onDelete('RESTRICT')
+        // .onUpdate('RESTRICT');
       table
         .string('mentee_id')
         .notNullable()
-        .references('profile_id')
-        .inTable('profiles')
-        .onDelete('RESTRICT')
-        .onUpdate('RESTRICT');
+        // .references('profile_id')
+        // .inTable('profiles')
+        // .onDelete('RESTRICT')
+        // .onUpdate('RESTRICT');
     });
 };
 
