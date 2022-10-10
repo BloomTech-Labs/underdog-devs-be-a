@@ -15,7 +15,8 @@ const { createProfile } = require('../middleware/profilesMiddleware');
 const validation = require('../helpers/validation');
 const axios = require('axios');
 const { baseURL } = require('../../config/dsConfig');
-const { issuer } = require('../../config/auth0');
+const { issuer, connection } = require('../../config/auth0');
+const { passGenerator } = require('../helpers/passGenerator');
 const Profiles = require('../profile/profileModel');
 
 /**
@@ -275,7 +276,8 @@ router.post(
     const { profile_id } = req.params;
     const payload = {
       email,
-      connection: 'Initial-Connection',
+      password: passGenerator(),
+      connection,
     };
     console.log({ email, role, status });
 
