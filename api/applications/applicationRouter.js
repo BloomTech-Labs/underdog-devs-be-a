@@ -274,25 +274,41 @@ router.post(
   async (req, res, next) => {
     const { role, email, status } = req.body;
     const { profile_id } = req.params;
-    const payload = {
-      email,
-      password: passGenerator(),
-      connection,
-    };
+    let user_id;
 
     try {
       await axios.post(`${baseURL}/update/${role}/${profile_id}`, {
         validate_status: status,
       });
+    } catch (err) {
+      next({
+        status: err.response.status,
+        message: err.response.data.detail[0].msg,
+      });
+      return;
+    }
 
+    try {
+      const payload = {
+        email,
+        password: passGenerator(),
+        connection,
+      };
       const authData = await axios.post(`${issuer}api/v2/users`, payload, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      const { user_id } = authData.data.identities[0];
-      console.log(user_id);
+      user_id = authData.data.identities[0].user_id;
+    } catch (err) {
+      next({
+        status: err.response.data.statusCode,
+        message: `${err.response.data.error}: ${err.response.data.message}`,
+      });
+      return;
+    }
 
+    try {
       const newProfile = {
         user_id,
         profile_id,
@@ -300,51 +316,12 @@ router.post(
       };
 
       await Profiles.create(newProfile);
-
-      res.json({ message: 'Success!' });
     } catch (err) {
-      console.log(err);
-      next(err);
+      next({ status: 422, message: err.message });
+      return;
     }
 
-    // axios
-    //   .post(`${baseURL}/update/${role}/${profile_id}`, {
-    //     validate_status: status,
-    //   })
-    //   .then((res) => {
-    //     if (res.data.result) {
-    //       // this url is coming back "unauthorized"
-    //       axios
-    //         .post(`${issuer}api/v2/users`, payload)
-    //         .then((res) => {
-    //           let { user_id } = res.data.identities.user_id;
-    //           let newProfile = {
-    //             email,
-    //             user_id,
-    //           };
-    //           return Profiles.create(newProfile);
-    //         })
-    //         .then(() => {
-    //           res.json({ result: true });
-    //         })
-    //         .catch((err) => {
-    //           console.log('level 2 catch', err);
-    //           next({
-    //             /* status: err.statusCode, message */
-    //           });
-    //         });
-    //     } else {
-    //       console.log('DS response false');
-    //       next({});
-    //     }
-    //   })
-    //   .then((result) => {
-    //     res.send({ status: result.status, message: result.data });
-    //   })
-    //   .catch((err) => {
-    //     console.log('level 1 catch', err);
-    //     next({ status: err.status, message: err.detail.msg });
-    //   });
+    res.json({ message: 'Success!' });
   }
 );
 
