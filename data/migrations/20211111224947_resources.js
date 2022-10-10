@@ -10,17 +10,17 @@ exports.up = function (knex) {
       table.boolean('assigned').notNullable().defaultTo(false);
       table
         .string('current_assignee')
-        // .references('profile_id')
-        // .inTable('profiles')
-        // .onUpdate('RESTRICT')
-        // .onDelete('RESTRICT')
+        .references('profile_id')
+        .inTable('profiles')
+        .onUpdate('RESTRICT')
+        .onDelete('RESTRICT')
         .defaultTo(null);
       table
         .string('previous_assignee')
-        // .references('profile_id')
-        // .inTable('profiles')
-        // .onUpdate('RESTRICT')
-        // .onDelete('RESTRICT')
+        .references('profile_id')
+        .inTable('profiles')
+        .onUpdate('RESTRICT')
+        .onDelete('RESTRICT')
         .defaultTo(null);
       table.string('monetary_value');
       table.boolean('deductible_donation');

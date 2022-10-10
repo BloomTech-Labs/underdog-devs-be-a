@@ -8,10 +8,10 @@ exports.up = function (knex) {
         .integer('note_id')
         .unsigned()
         .notNullable()
-        // .references('note_id')
-        // .inTable('notes')
-        // .onDelete('CASCADE')
-        // .onUpdate('CASCADE');
+        .references('note_id')
+        .inTable('notes')
+        .onDelete('CASCADE')
+        .onUpdate('CASCADE');
       table.timestamps(true, true);
     });
 };

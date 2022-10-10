@@ -9,17 +9,17 @@ exports.up = function (knex) {
       table.integer('meeting_end_date').notNullable().unsigned();
       table
         .string('host_id')
-        // .references('profile_id')
-        // .inTable('profiles')
-        // .onUpdate('RESTRICT')
-        // .onDelete('RESTRICT')
+        .references('profile_id')
+        .inTable('profiles')
+        .onUpdate('RESTRICT')
+        .onDelete('RESTRICT')
         .notNullable();
       table
         .string('attendee_id')
-        // .references('profile_id')
-        // .inTable('profiles')
-        // .onUpdate('RESTRICT')
-        // .onDelete('RESTRICT')
+        .references('profile_id')
+        .inTable('profiles')
+        .onUpdate('RESTRICT')
+        .onDelete('RESTRICT')
         .notNullable();
       table.string('meeting_notes').defaultTo(null);
       table
