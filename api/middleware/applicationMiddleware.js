@@ -133,19 +133,6 @@ const findProfile = async (req, res, next) => {
   }
 };
 
-const validateStatusRequest = (req, res, next) => {
-  const payload = req.body.validate_status;
-  if (
-    payload !== 'pending' &&
-    payload !== 'approved' &&
-    payload !== 'rejected'
-  ) {
-    next({ status: 422, message: 'invalid input' });
-  } else {
-    next();
-  }
-};
-
 const validateApplicationTicket = async (req, res, next) => {
   const payload = req.body;
   try {
@@ -212,7 +199,6 @@ const sendData = (req, res, next) => {
 module.exports = {
   cacheSignUpData,
   checkApplicationExists,
-  validateStatusRequest,
   checkRole,
   findProfile,
   validateApplicationTicket,

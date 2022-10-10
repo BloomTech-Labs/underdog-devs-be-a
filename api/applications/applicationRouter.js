@@ -6,7 +6,6 @@ const router = express.Router();
 const {
   cacheSignUpData,
   sendData,
-  validateStatusRequest,
   checkApplicationExists,
   checkRole,
 } = require('../middleware/applicationMiddleware');
@@ -268,68 +267,64 @@ this endpoint can then send the validate status to the appropriate endpoint depe
   
 authRequired, and AdminRequired imports have been left (commented out) because they will likely be needed when auth0 is implemented.
 */
-router.post(
-  '/update-validate_status/:profile_id',
-  validateStatusRequest,
-  async (req, res, next) => {
-    const { role, email, status } = req.body;
-    const { profile_id } = req.params;
-    let user_id;
+router.post('/update-validate_status/:profile_id', async (req, res, next) => {
+  const { role, email, status } = req.body;
+  const { profile_id } = req.params;
+  let user_id;
 
-    try {
-      await axios.post(`${baseURL}/update/${role}/${profile_id}`, {
-        validate_status: status,
-      });
-      if (status === 'rejected') {
-        res.json({ status: 200, message: `${role} rejected!` });
-        return;
-      }
-    } catch (err) {
-      next({
-        status: err.response.status,
-        message: err.response.data.detail[0].msg,
-      });
-      return;
-    }
-
-    try {
-      const payload = {
-        email,
-        password: passGenerator(),
-        connection,
-      };
-      const authData = await axios.post(`${issuer}api/v2/users`, payload, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      user_id = authData.data.identities[0].user_id;
-    } catch (err) {
-      next({
-        status: err.response.data.statusCode,
-        message: `${err.response.data.error}: ${err.response.data.message}`,
-      });
-      return;
-    }
-
-    try {
-      const newProfile = {
-        user_id,
-        profile_id,
-        role,
-      };
-
-      await Profiles.create(newProfile);
-    } catch (err) {
-      next({ status: 422, message: err.message });
-      return;
-    }
-
-    res.json({
-      status: 201,
-      message: `${role} application approved and user created!`,
+  try {
+    await axios.post(`${baseURL}/update/${role}/${profile_id}`, {
+      validate_status: status,
     });
+    if (status === 'rejected') {
+      res.json({ status: 200, message: `${role} rejected!` });
+      return;
+    }
+  } catch (err) {
+    next({
+      status: err.response.status,
+      message: err.response.data.detail[0].msg,
+    });
+    return;
   }
-);
+
+  try {
+    const payload = {
+      email,
+      password: passGenerator(),
+      connection,
+    };
+    const authData = await axios.post(`${issuer}api/v2/users`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    user_id = authData.data.identities[0].user_id;
+  } catch (err) {
+    next({
+      status: err.response.data.statusCode,
+      message: `${err.response.data.error}: ${err.response.data.message}`,
+    });
+    return;
+  }
+
+  try {
+    const newProfile = {
+      user_id,
+      profile_id,
+      role,
+    };
+
+    await Profiles.create(newProfile);
+  } catch (err) {
+    next({ status: 422, message: err.message });
+    return;
+  }
+
+  res.json({
+    status: 201,
+    message: `${role} application approved and user created!`,
+  });
+});
 
 module.exports = router;
