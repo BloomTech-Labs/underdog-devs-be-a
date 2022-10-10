@@ -291,6 +291,7 @@ router.post(
         },
       });
       const { user_id } = authData.data.identities[0];
+      console.log(user_id);
 
       const newProfile = {
         user_id,
