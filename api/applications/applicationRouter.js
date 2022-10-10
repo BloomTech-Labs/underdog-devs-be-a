@@ -290,7 +290,8 @@ router.post(
           Authorization: `Bearer ${token}`,
         },
       });
-      const { user_id } = authData.data.identities.user_id;
+      const { user_id } = authData.data.identities[0];
+
       const newProfile = {
         user_id,
         profile_id,
@@ -301,6 +302,7 @@ router.post(
 
       res.json({ message: 'Success!' });
     } catch (err) {
+      console.log(err);
       next(err);
     }
 
