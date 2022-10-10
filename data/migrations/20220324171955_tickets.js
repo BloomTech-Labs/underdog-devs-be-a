@@ -7,10 +7,10 @@ exports.up = function (knex) {
         .integer('ticket_type')
         .unsigned()
         .notNullable()
-        // .references('ticket_type_id')
-        // .inTable('ticket_types')
-        // .onDelete('CASCADE')
-        // .onUpdate('CASCADE');
+        .references('ticket_type_id')
+        .inTable('ticket_types')
+        .onDelete('CASCADE')
+        .onUpdate('CASCADE');
       table.string('ticket_status').notNullable();
       table.string('ticket_subject').notNullable();
       table
