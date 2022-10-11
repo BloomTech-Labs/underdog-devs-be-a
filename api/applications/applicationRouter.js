@@ -256,7 +256,7 @@ router.post(
  *                status: 200
  *                message: 'Mentor / mentee rejected!'
  *      '201':
- *        description: Response from successful application / applicant approval (all pieces / hops successful)
+ *        description: Response from successful application / applicant approval (all three pieces / both calls successful)
  *        content:
  *          application/json:
  *            schema:
@@ -264,17 +264,35 @@ router.post(
  *              items:
  *                status: 201
  *                message:  'Mentor / mentee application approved and user created!'
- *      '422': valid strings for the validate_status include:'pending', 'approved', 'rejected'.
+ *      '422':
+ *        description: Response from error on first call involving DS API with some failure probably related to MongoDB where status flag update failed
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              items:
+ *                status: 422
+ *                message:  "unexpected value; permitted: 'approved', 'rejected', 'pending'"
+ *       '409':
+ *         description: Response from error on second call involving Auth0 with some failure related to creating / provisioning a new user
+ *         note: many different error responses are possible with many different status codes, the most common one is shown below
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 status: 409
+ *                 message:  'User already exists.'
+ *      '422':
+ *        description: Response from error on third operation involving database operation with some failure related to Postgres where insertion of new profile failed
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              items:
+ *                status: 422
+ *                message:  'insert into \"profiles\" (\"profile_id\", \"role\") values ($1, $2) returning * - null value in column \"user_id\" of relation \"profiles\" violates not-null constraint'
  */
-
-/*
-NOTE: FE discerns if the user is a mentor/mentee and sends back the appropriate shape: 
-mentor = {validate_status & current_company }
-mentee = {validate_status}
-this endpoint can then send the validate status to the appropriate endpoint depending on whether the current_company is present or not
-  
-authRequired, and AdminRequired imports have been left (commented out) because they will likely be needed when auth0 is implemented.
-*/
 
 router.post('/update-validate_status/:profile_id', async (req, res, next) => {
   const { role, email, status } = req.body;
