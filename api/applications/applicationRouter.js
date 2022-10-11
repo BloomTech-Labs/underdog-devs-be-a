@@ -234,10 +234,10 @@ router.post(
 
 /**
  * @swagger
- * /application/{update-validate_status/:id}:
+ * /application/update-validate_status/:profile_id:
  *  post:
- *    summary: Updates validate_status of a given user
- *    description: user is fetched from MongoDB by the profile_id in req.params, and is modified by the validate_status selected by the user (approved/rejected)
+ *    summary: Updates validate_status of a given user, provisions a new Auth0 user, and inserts a new profile into the Profiles table for that user
+ *    description: First, the status flag on the user's profile is updated in the DS API (MongoDB). Second, a corresponding new user is provisioned in Auth0. Third, the new Auth0 user ID is packaged with other information and inserted into the profiles table as a new user profile.
  *    tags:
  *      - application
  *    security:
@@ -267,6 +267,7 @@ this endpoint can then send the validate status to the appropriate endpoint depe
   
 authRequired, and AdminRequired imports have been left (commented out) because they will likely be needed when auth0 is implemented.
 */
+
 router.post('/update-validate_status/:profile_id', async (req, res, next) => {
   const { role, email, status } = req.body;
   const { profile_id } = req.params;
