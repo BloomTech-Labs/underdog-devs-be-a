@@ -10,14 +10,15 @@ const baseURL = require('../../config/dsConfig');
 
 // get all assignments for current user
 
-router.get('/', authRequired, (req, res, next) => {
-  const { profile_id, role } = req.body;
+router.get('/:profile_id', authRequired, (req, res, next) => {
+  const { profile_id } = req.params;
+  const { role } = req.body;
   const payload = {
-    id: profile_id,
-    type: role,
+    user_id: profile_id,
+    user_type: role,
   };
   axios
-    .post(`${baseURL}/assignment`, payload)
+    .post(`${baseURL}/read/match`, payload)
     .then((dsRes) => {
       const results = dsRes.data[role === 'mentor' ? 'mentee' : 'mentor'];
       res.json(results);
