@@ -241,24 +241,32 @@ router.post(
  *    tags:
  *      - application
  *    security:
- *      - auth0: [authRequired, adminRequired]
+ *      - auth0: [authRequired, adminRequired] (currently not incorporated into endpoint, but may need to added back after additional Auth0 integration work)
  *    parameters:
  *      - in: param
  *        name: profile id
  *    responses:
  *      '200':
- *        description: Response from successful post to MongoDB
+ *        description: Response from successful application / applicant rejection
  *        content:
  *          application/json:
  *            schema:
  *              type: object
  *              items:
  *                status: 200
- *                message: {
- *                  result: true
- *                    }
+ *                message: 'Mentor / mentee rejected!'
+ *      '201':
+ *        description: Response from successful application / applicant approval (all pieces / hops successful)
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              items:
+ *                status: 201
+ *                message:  'Mentor / mentee application approved and user created!'
  *      '422': valid strings for the validate_status include:'pending', 'approved', 'rejected'.
  */
+
 /*
 NOTE: FE discerns if the user is a mentor/mentee and sends back the appropriate shape: 
 mentor = {validate_status & current_company }
