@@ -1,8 +1,6 @@
 const express = require('express');
 const Assignment = require('./assignmentsModel');
-const Profiles = require('../profile/profileModel');
 const router = express.Router();
-const jwt = require('jwt-decode');
 const { adminRequired } = require('../middleware/permissionsRequired');
 const authRequired = require('../middleware/authRequired');
 const axios = require('axios');
@@ -20,7 +18,7 @@ router.get('/', authRequired, adminRequired, (req, res, next) => {
     });
 });
 
-// get all assignments for current user
+// get all assignments by profile ID
 
 router.get('/:profile_id', authRequired, (req, res, next) => {
   const { profile_id } = req.params;
@@ -36,92 +34,6 @@ router.get('/:profile_id', authRequired, (req, res, next) => {
       res.json(results);
     })
     .catch(next);
-});
-
-// get all the mentees a mentor has by the mentor's id
-
-router.get(
-  '/mentor/:id',
-  authRequired,
-  validProfileID,
-  adminRequired,
-  (req, res, next) => {
-    const id = req.params.id;
-    Assignment.findByMentorId(id)
-      .then((mentees) => {
-        if (mentees) {
-          res.status(200).json(mentees);
-        } else {
-          res
-            .status(404)
-            .json({ error: 'Assignment Not Found, Check mentor ID' });
-        }
-      })
-      .catch((err) => {
-        next({ status: 500, message: err.message });
-      });
-  }
-);
-
-// get all the mentors a mentee has by the mentee's id
-
-router.get(
-  '/mentee/:id',
-  authRequired,
-  validProfileID,
-  adminRequired,
-  (req, res, next) => {
-    const id = req.params.id;
-    Assignment.findByMenteeId(id)
-      .then((mentors) => {
-        if (mentors) {
-          res.status(200).json(mentors);
-        } else {
-          res
-            .status(404)
-            .json({ error: 'Assignment Not Found, Check mentee ID' });
-        }
-      })
-      .catch((err) => {
-        next({ status: 500, message: err.message });
-      });
-  }
-);
-
-//get current users mentors
-
-router.get('/mymentors', authRequired, (req, res, next) => {
-  const token = req.headers.authorization;
-  const User = jwt(token);
-  Assignment.findByMenteeId(User.sub)
-    .then((mentors) => {
-      if (mentors) {
-        res.status(200).json(mentors);
-      } else {
-        res.status(404).json({ error: 'Mentors not found' });
-      }
-    })
-    .catch((err) => {
-      next({ status: 500, message: err.message });
-    });
-});
-
-//get current users mentees
-
-router.get('/mymentees', authRequired, (req, res, next) => {
-  const token = req.headers.authorization;
-  const User = jwt(token);
-  Assignment.findByMentorId(User.sub)
-    .then((mentees) => {
-      if (mentees) {
-        res.status(200).json(mentees);
-      } else {
-        res.status(404).json({ error: 'Mentees not found' });
-      }
-    })
-    .catch((err) => {
-      next({ status: 500, message: err.message });
-    });
 });
 
 // create a new assignment between a mentor and mentee
@@ -220,24 +132,6 @@ function validAssignID(req, res, next) {
         next({
           status: 404,
           message: 'Invalid assignment ID',
-        });
-      }
-    })
-    .catch(next);
-}
-
-//validate the profile_id
-
-function validProfileID(req, res, next) {
-  Profiles.findById(req.params.id)
-    .then((profile) => {
-      if (profile) {
-        req.profile = profile;
-        next();
-      } else {
-        next({
-          status: 404,
-          message: 'Invalid ID',
         });
       }
     })
