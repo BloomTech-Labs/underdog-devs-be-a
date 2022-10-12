@@ -10,7 +10,7 @@ const dummyData = [
   {
     mentor_id: 'ba1ac6b7-5b29-449f-8d7e-84a04061510a',
     mentee_id: 'aa388259-28a9-4fa3-a988-ec08070a4f2e',
-  }
+  },
 ];
 
 exports.seed = function (knex) {
