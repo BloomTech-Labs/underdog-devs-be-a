@@ -1,18 +1,27 @@
-function passGenerator() {
-  let password = '';
-  const chars = [
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-    '0123456789',
-    'abcdefghijklmnopqrstuvwxyz',
-    '!@#$%^&*()',
-  ];
-  for (let i = 0; i < 4; i++) {
-    const randNum1 = Math.floor(Math.random() * chars[i].length);
-    const randNum2 = Math.floor(Math.random() * chars[i].length);
-    password += chars[i].charAt(randNum1);
-    password += chars[i].charAt(randNum2);
+const crypto = require('crypto');
+
+const generatePassword = (length) => {
+  let password = createPassword(length);
+  while (checkRegex(password) === false) {
+    password = createPassword(length);
   }
   return password;
-}
+};
 
-module.exports = { passGenerator };
+const createPassword = (length) => {
+  const allChars =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()_?';
+
+  let password = Array.from(crypto.getRandomValues(new Uint32Array(length)))
+    .map((x) => allChars[x % allChars.length])
+    .join('');
+  return password;
+};
+
+const checkRegex = (password) => {
+  let regex = new RegExp('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])');
+  if (regex.test(password)) return true;
+  else return false;
+};
+
+module.exports = { generatePassword };
