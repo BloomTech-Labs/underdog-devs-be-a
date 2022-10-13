@@ -318,7 +318,7 @@ router.post('/update-validate_status/:profile_id', async (req, res, next) => {
   try {
     const payload = {
       email,
-      password: passGenerator(),
+      password: passGenerator(8),
       connection,
     };
     const authData = await axios.post(`${issuer}api/v2/users`, payload, {

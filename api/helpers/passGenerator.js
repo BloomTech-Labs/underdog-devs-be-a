@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 
-const generatePassword = (length) => {
+const passGenerator = (length) => {
   let password = createPassword(length);
   while (checkRegex(password) === false) {
     password = createPassword(length);
@@ -24,4 +24,4 @@ const checkRegex = (password) => {
   else return false;
 };
 
-module.exports = { generatePassword };
+module.exports = { passGenerator };
