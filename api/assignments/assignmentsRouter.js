@@ -4,7 +4,7 @@ const router = express.Router();
 const { adminRequired } = require('../middleware/permissionsRequired');
 const authRequired = require('../middleware/authRequired');
 const axios = require('axios');
-const baseURL = require('../../config/dsConfig');
+const { baseURL } = require('../../config/dsConfig');
 
 // possible endpoint for admin use case of retrieving all matches / assignments (needs to be refactored to point to DS API instead of Postgres BE)
 
@@ -26,7 +26,6 @@ router.get('/:role/:profile_id', (req, res, next) => {
     user_id: profile_id,
     user_type: role,
   };
-
   axios
     .post(`${baseURL}/read/match`, payload)
     .then((dsRes) => {
@@ -34,7 +33,6 @@ router.get('/:role/:profile_id', (req, res, next) => {
       res.json(results);
     })
     .catch((err) => {
-      console.log(err);
       next(err);
     });
 });
