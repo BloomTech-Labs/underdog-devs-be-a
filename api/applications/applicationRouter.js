@@ -6,7 +6,6 @@ const router = express.Router();
 const {
   cacheSignUpData,
   sendData,
-  validateStatusRequest,
   checkApplicationExists,
   checkRole,
 } = require('../middleware/applicationMiddleware');
@@ -15,6 +14,9 @@ const { createProfile } = require('../middleware/profilesMiddleware');
 const validation = require('../helpers/validation');
 const axios = require('axios');
 const { baseURL } = require('../../config/dsConfig');
+const { issuer, connection, token } = require('../../config/auth0');
+const { passGenerator } = require('../helpers/passGenerator');
+const Profiles = require('../profile/profileModel');
 
 /**
  * @swagger
@@ -232,59 +234,124 @@ router.post(
 
 /**
  * @swagger
- * /application/{update-validate_status/:id}:
+ * /application/update-validate_status/:profile_id:
  *  post:
- *    summary: Updates validate_status of a given user
- *    description: user is fetched from MongoDB by the profile_id in req.params, and is modified by the validate_status selected by the user (approved/rejected)
+ *    summary: Updates validate_status of a given user, provisions a new Auth0 user, and inserts a new profile into the Profiles table for that user
+ *    description: First, the status flag on the user's profile is updated in the DS API (MongoDB). Second, a corresponding new user is provisioned in Auth0. Third, the new Auth0 user ID is packaged with other information and inserted into the profiles table as a new user profile.
  *    tags:
  *      - application
  *    security:
- *      - auth0: [authRequired, adminRequired]
+ *      - auth0: [authRequired, adminRequired] (currently not incorporated into endpoint, but may need to added back after additional Auth0 integration work)
  *    parameters:
  *      - in: param
  *        name: profile id
  *    responses:
  *      '200':
- *        description: Response from successful post to MongoDB
+ *        description: Response from successful application / applicant rejection
  *        content:
  *          application/json:
  *            schema:
  *              type: object
  *              items:
  *                status: 200
- *                message: {
- *                  result: true
- *                    }
- *      '422': valid strings for the validate_status include:'pending', 'approved', 'rejected'.
+ *                message: 'Mentor / mentee rejected!'
+ *      '201':
+ *        description: Response from successful application / applicant approval (all three pieces / both calls successful)
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              items:
+ *                status: 201
+ *                message:  'Mentor / mentee application approved and user created!'
+ *      '422':
+ *        description: Response from error on first call involving DS API with some failure probably related to MongoDB where status flag update failed
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              items:
+ *                status: 422
+ *                message:  "unexpected value; permitted: 'approved', 'rejected', 'pending'"
+ *       '409':
+ *         description: Response from error on second call involving Auth0 with some failure related to creating / provisioning a new user
+ *         note: many different error responses are possible with many different status codes, the most common one is shown below
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               items:
+ *                 status: 409
+ *                 message:  'User already exists.'
+ *      '422':
+ *        description: Response from error on third operation involving database operation with some failure related to Postgres where insertion of new profile failed
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              items:
+ *                status: 422
+ *                message:  'insert into \"profiles\" (\"profile_id\", \"role\") values ($1, $2) returning * - null value in column \"user_id\" of relation \"profiles\" violates not-null constraint'
  */
-/*
-NOTE: FE discerns if the user is a mentor/mentee and sends back the appropriate shape: 
-mentor = {validate_status & current_company }
-mentee = {validate_status}
-this endpoint can then send the validate status to the appropriate endpoint depending on whether the current_company is present or not
-  
-authRequired, and AdminRequired imports have been left (commented out) because they will likely be needed when auth0 is implemented.
-*/
-router.post(
-  '/update-validate_status/:profile_id',
-  validateStatusRequest,
-  (req, res, next) => {
-    const isMentor = req.body.current_company;
-    const { profile_id } = req.params;
 
-    const role = isMentor ? 'mentor' : 'mentee';
+router.post('/update-validate_status/:profile_id', async (req, res, next) => {
+  const { role, email, status } = req.body;
+  const { profile_id } = req.params;
+  let user_id;
 
-    axios
-      .post(`${baseURL}/update/${role}/${profile_id}`, {
-        validate_status: req.body.validate_status,
-      })
-      .then((result) => {
-        res.send({ status: result.status, message: result.data });
-      })
-      .catch((err) => {
-        next({ status: err.status, message: err.message });
-      });
+  try {
+    await axios.post(`${baseURL}/update/${role}/${profile_id}`, {
+      validate_status: status,
+    });
+    if (status === 'rejected') {
+      res.json({ status: 200, message: `${role} rejected!` });
+      return;
+    }
+  } catch (err) {
+    next({
+      status: err.response.status,
+      message: err.response.data.detail[0].msg,
+    });
+    return;
   }
-);
+
+  try {
+    const payload = {
+      email,
+      password: passGenerator(8),
+      connection,
+    };
+    const authData = await axios.post(`${issuer}api/v2/users`, payload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    user_id = authData.data.identities[0].user_id;
+  } catch (err) {
+    next({
+      status: err.response.data.statusCode,
+      message: `${err.response.data.error}: ${err.response.data.message}`,
+    });
+    return;
+  }
+
+  try {
+    const newProfile = {
+      user_id,
+      profile_id,
+      role,
+    };
+
+    await Profiles.create(newProfile);
+  } catch (err) {
+    next({ status: 422, message: err.message });
+    return;
+  }
+
+  res.json({
+    status: 201,
+    message: `${role} application approved and user created!`,
+  });
+});
 
 module.exports = router;
