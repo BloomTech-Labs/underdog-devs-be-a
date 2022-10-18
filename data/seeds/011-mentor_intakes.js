@@ -1,7 +1,7 @@
 const dummyData = [
   {
     // if changing 'profile_id' or creating new dummy data, use data generated in 002-profiles seed or this seed will error (5/27/2022 LA)
-    profile_id: '00ultwew80Onb2vOT4x6',
+    profile_id: 'e1465095-e695-4e02-8fb2-19ed5bf5a132',
     first_name: 'Frank',
     last_name: 'Fusco',
     email: 'fakeFrank2@gmail.com',
@@ -20,7 +20,7 @@ const dummyData = [
     validate_status: 'pending',
   },
   {
-    profile_id: '00ultwz1n9ORpNFc04x6',
+    profile_id: '882eb36a-d154-480d-89d4-a1cad1aa7330',
     first_name: 'Paul',
     last_name: 'St. Germain',
     email: 'fakePaul2@gmail.com',
@@ -39,7 +39,7 @@ const dummyData = [
     validate_status: 'pending',
   },
   {
-    profile_id: '00ulthapbErVUwVJy4x6',
+    profile_id: 'ba1ac6b7-5b29-449f-8d7e-84a04061510a',
     first_name: 'Robert',
     last_name: 'Sharp',
     email: 'fakeRobert2@gmail.com',
