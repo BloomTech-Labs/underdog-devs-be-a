@@ -8,22 +8,23 @@ exports.seed = function (knex) {
         {
           review_id: 1,
           review: 'positive',
-          mentor_id: '00u13oned0U8XP8Mb4x7',
-          mentee_id: 12,
+          mentor_id: 'e1465095-e695-4e02-8fb2-19ed5bf5a132',
+          mentee_id: '50ef4f37-b8bd-4c93-a9a3-625e38c2c5cb',
           rating: false,
         },
         {
           review_id: 2,
           review: 'negative',
-          mentor_id: '00u13oned0U8XP8Mb4x7',
-          mentee_id: 10,
+          mentor_id: 'e1465095-e695-4e02-8fb2-19ed5bf5a132',
+          mentee_id: 'aa388259-28a9-4fa3-a988-ec08070a4f2e',
           rating: true,
         },
         {
           review_id: 3,
           review: 'positive',
-          mentor_id: '00u13omswyZM1xVya4x7',
-          mentee_id: 7,
+          mentor_id: '882eb36a-d154-480d-89d4-a1cad1aa7330',
+          mentee_id: 'c2fa3005-91a4-4ed0-8227-77c6e1bf3747',
+          rating: true
         },
       ]);
     });
