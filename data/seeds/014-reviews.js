@@ -24,7 +24,7 @@ exports.seed = function (knex) {
           review: 'positive',
           mentor_id: '882eb36a-d154-480d-89d4-a1cad1aa7330',
           mentee_id: 'c2fa3005-91a4-4ed0-8227-77c6e1bf3747',
-          rating: true
+          rating: true,
         },
       ]);
     });
