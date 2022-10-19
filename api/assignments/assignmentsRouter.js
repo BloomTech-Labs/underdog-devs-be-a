@@ -32,7 +32,7 @@ router.get('/:role/:profile_id', (req, res, next) => {
       res.json(dsRes.data.result);
     })
     .catch((err) => {
-      next(err);
+      next({ status: err.response.status, message: err.response.statusText });
     });
 });
 
