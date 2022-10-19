@@ -29,8 +29,7 @@ router.get('/:role/:profile_id', (req, res, next) => {
   axios
     .post(`${baseURL}/read/match`, payload)
     .then((dsRes) => {
-      const results = dsRes.data[role === 'mentor' ? 'mentee' : 'mentor'];
-      res.json(results);
+      res.json(dsRes.data.result);
     })
     .catch((err) => {
       next(err);
