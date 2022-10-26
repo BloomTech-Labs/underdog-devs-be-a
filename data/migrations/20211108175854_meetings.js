@@ -2,30 +2,33 @@ exports.up = function (knex) {
   return knex.schema
     .raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"')
     .createTable('meetings', function (table) {
-      table.increments('meeting_id').notNullable().unique().primary();
+      table.increments('meeting_id', 36).notNullable().unique().primary();
       table.timestamps(true, true);
-      table.string('meeting_topic').notNullable();
-      table.integer('meeting_start_date').notNullable().unsigned();
+      table.string('meeting_topic', 255).notNullable();
+      table.integer('meeting_start_time').notNullable().unsigned();
       table.integer('meeting_end_date').notNullable().unsigned();
       table
-        .string('host_id')
+        .string('mentor_id', 36)
         .references('profile_id')
         .inTable('profiles')
         .onUpdate('RESTRICT')
         .onDelete('RESTRICT')
         .notNullable();
       table
-        .string('attendee_id')
+        .string('mentee_id', 36)
         .references('profile_id')
         .inTable('profiles')
         .onUpdate('RESTRICT')
         .onDelete('RESTRICT')
         .notNullable();
-      table.string('meeting_notes').defaultTo(null);
+      table.string('admin_meeting_notes', 2000).defaultTo(null);
       table
         .enu('meeting_missed', ['Missed', 'Pending', 'Attended'])
         .notNullable()
         .defaultTo('Pending');
+      table.string('mentor_meeting_notes', 2000).defaultTo(null);
+      table.string('mentee_meeting_notes', 2000).defaultTo(null);
+
     });
 };
 
