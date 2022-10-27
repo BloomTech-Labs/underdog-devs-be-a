@@ -37,9 +37,9 @@ const authRequired = (req, res, next) => {
 //method to grab the current authenticated user from the req.auth0User  and save it to req.body.user to be used globally in the server
 const authProfile = async (req, res, next) => {
   try {
-    const user = await req.auth0User;
-    if (user) {
-      req.body.user = user;
+    const profile = await req.auth0User;
+    if (profile) {
+      req.body.profile = profile;
       //----------------
       // below code was used with okta to create user profile and save it to the db, when I tried to use it with auth0 I receive error message:
       //"insert into \"profiles\" (\"email\", \"id\", \"name\") values ($1, $2, $3) returning * - column \"email\" of relation \"profiles\" does not exist"
