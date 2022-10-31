@@ -2,7 +2,6 @@ exports.up = function (knex) {
   return knex.schema
     .raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"')
     .createTable('meetings', function (table) {
-<<<<<<< HEAD
       table.string('meeting_id').notNullable().unique().primary();
       table.string('meeting_topic').notNullable();
       table.timestamps(true, true);
@@ -10,47 +9,26 @@ exports.up = function (knex) {
       table.string('meeting_end_time').notNullable().unsigned();
       table
         .string('mentor_id')
-=======
-      table.string('meeting_id', 36).notNullable().unique().primary();
-      table.timestamps(true, true);
-      table.string('meeting_topic', 255).notNullable();
-      table.dateTime('meeting_start_time').notNullable().unsigned();
-      table.dateTime('meeting_end_time').notNullable().unsigned();
-      table
-        .string('mentor_id', 36)
->>>>>>> be0e2fd1fdc07145381e9a175a09b3e3916dc52f
         .references('profile_id')
         .inTable('profiles')
         .onUpdate('RESTRICT')
         .onDelete('RESTRICT')
         .notNullable();
       table
-<<<<<<< HEAD
         .string('mentee_id')
-=======
-        .string('mentee_id', 36)
->>>>>>> be0e2fd1fdc07145381e9a175a09b3e3916dc52f
         .references('profile_id')
         .inTable('profiles')
         .onUpdate('RESTRICT')
         .onDelete('RESTRICT')
         .notNullable();
-<<<<<<< HEAD
         table.string('admin_meeting_notes')
              table.string('mentor_meeting_notes').defaultTo(null);
         table.string('mentee_meeting_notes').defaultTo(null);
 
       table
         .enu('meeting_missed_by_mentee', ['Missed', 'Pending', 'Attended'])
-=======
-      table.string('admin_meeting_notes', 2000).defaultTo(null);
-      table
-        .enu('meeting_missed_by_mentee', ['Missed', 'Attended'])
->>>>>>> be0e2fd1fdc07145381e9a175a09b3e3916dc52f
         .notNullable()
         .defaultTo('Pending');
-      table.string('mentor_meeting_notes', 2000).defaultTo(null);
-      table.string('mentee_meeting_notes', 2000).defaultTo(null);
 
     });
 };
