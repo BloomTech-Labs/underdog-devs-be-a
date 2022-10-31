@@ -223,25 +223,21 @@ function validNewMeeting(req, res, next) {
     res.status(400).json({
       message: 'Missing meeting_topic field',
     });
-  } else if (!meeting.meeting_date) {
+  } else if (!meeting.meeting_start_time) {
     res.status(400).json({
-      message: 'Missing meeting_date field',
+      message: 'Missing meeting_start_time field',
     });
-  } else if (!meeting.meeting_start_date) {
+  } else if (!meeting.meeting_end_time) {
     res.status(400).json({
-      message: 'Missing meeting_start_date field',
+      message: 'Missing meeting_end_time field',
     });
-  } else if (!meeting.meeting_end_date) {
+  } else if (!meeting.mentor_id) {
     res.status(400).json({
-      message: 'Missing meeting_end_date field',
+      message: 'Missing mentor_id field',
     });
-  } else if (!meeting.host_id) {
+  } else if (!meeting.mentee_id) {
     res.status(400).json({
-      message: 'Missing host_id field',
-    });
-  } else if (!meeting.attendee_id) {
-    res.status(400).json({
-      message: 'Missing attendee_id field',
+      message: 'Missing mentee_id field',
     });
   } else {
     next();
