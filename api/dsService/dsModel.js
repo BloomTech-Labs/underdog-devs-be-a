@@ -14,6 +14,8 @@ const postMeeting = (meeting) => {
   return dsClient.post(`/Meetings/create`, meeting);
 };
 
+//below chunk has been commented out for the linter... Once we have DS working, we can uncomment and utilize this code...
+
 /*
 //update meeting needs to be verified with DS... This may or may not work, but currently it can't be tested...
 //for now, we will just update the local db

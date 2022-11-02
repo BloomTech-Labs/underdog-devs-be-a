@@ -1,7 +1,10 @@
 const express = require('express');
 const Meeting = require('../meetings/meetingsModel');
 const Profiles = require('../profile/profileModel');
-//const dsService = require('../dsService/dsModel');
+//import below has been commented out until we have DS working. Also note, in dsModel.js, the commented out code has been commented out for the linter... Once we have DS working, we can uncomment and utilize this code...
+/*
+const dsService = require('../dsService/dsModel');
+*/
 const router = express.Router();
 const jwt = require('jwt-decode');
 const authRequired = require('../middleware/authRequired');
