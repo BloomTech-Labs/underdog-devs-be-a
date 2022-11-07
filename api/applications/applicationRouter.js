@@ -4,14 +4,11 @@ const Application = require('./applicationModel');
 const router = express.Router();
 // const { adminRequired } = require('../middleware/permissionsRequired.js');
 const {
-  cacheSignUpData,
-  sendData,
   checkApplicationExists,
   checkRole,
 } = require('../middleware/applicationMiddleware');
 const { getAllApplications } = require('./applicationModel');
-const { createProfile } = require('../middleware/profilesMiddleware');
-const validation = require('../helpers/validation');
+//const validation = require('../helpers/validation');
 const axios = require('axios');
 const { baseURL } = require('../../config/dsConfig');
 const { issuer, connection, token } = require('../../config/auth0');
@@ -210,10 +207,7 @@ router.get('/profileId/:id', checkApplicationExists, checkRole, (req, res) => {
 //this only works for the mentor application because we are passing the mentorApplicationSchema directly (6/4/2022)
 router.post(
   '/new/:role',
-  validation(),
-  createProfile,
-  cacheSignUpData,
-  sendData,
+  //validation(),
   (req, res, next) => {
     //this applicationTicket object works for the existing backend db schema for "tickets". Both likely need to be updated (6/4/2022)
     const applicationTicket = {
