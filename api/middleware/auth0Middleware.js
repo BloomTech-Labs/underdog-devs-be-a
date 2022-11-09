@@ -16,7 +16,12 @@ const verifyJwt = jwt({
   algorithms: ['RS256'],
   requestProperty: 'auth0User',
 }).unless({
-  path: ['/', /^\/application\/.*/, /^\/roles\/.*/],
+  path: [
+    '/',
+    /^\/application\/.*/,
+    /^\/roles\/.*/,
+    /^\/update-validate_status\/.*/,
+  ],
 });
 //************ */
 //in the above line add all public endpoints (routes with no need for auth) as a string inside the path array [] <=
