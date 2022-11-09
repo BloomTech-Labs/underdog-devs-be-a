@@ -1,5 +1,3 @@
-const axios = require('axios');
-const { baseURL } = require('../../config/dsConfig');
 const {
   getTicketById,
   getMentorIntake,
@@ -172,30 +170,6 @@ const validateMentorIntakeData = async (req, res, next) => {
   }
 };
 
-const sendData = (req, res, next) => {
-  console.log(req);
-  if (req.role === 'mentee') {
-    const mentee = req.application;
-    mentee['is_active'] = false;
-    mentee['in_project_underdog'] = false;
-  } else {
-    const mentor = req.application;
-    mentor['is_active'] = false;
-    mentor['accepting_new_mentees'] = false;
-    mentor['commitment'] = false;
-    mentor['industry_knowledge'] = false;
-  }
-  // we are going to leave this middleware in this format due to future changes to the database in the near future. updated 7/27/22.
-  axios
-    .post(`${baseURL}/create/${req.role}`, req.application)
-    .then((res) => {
-      next({ status: res.status, message: res.data });
-    })
-    .catch(() => {
-      next({ status: res.status });
-    });
-};
-
 module.exports = {
   cacheSignUpData,
   checkApplicationExists,
@@ -204,5 +178,4 @@ module.exports = {
   validateApplicationTicket,
   validateMenteeIntakeData,
   validateMentorIntakeData,
-  sendData,
 };
