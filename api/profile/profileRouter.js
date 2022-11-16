@@ -25,6 +25,33 @@ router.get('/current_user_profile/', authRequired, async (req, res, next) => {
   }
 });
 
+// gets all profiles
+
+router.get('/', authRequired, adminRequired, async (req, res, next) => {
+  try {
+    const profiles = await Profiles.findAll();
+    res.status(200).json(profiles);
+  } catch (err) {
+    next({ status: 500, message: err.message });
+  }
+});
+
+// get all profiles by role
+
+router.get(
+  '/role/:role',
+  authRequired,
+  adminRequired,
+  async (req, res, next) => {
+    try {
+      const profiles = await Profiles.findByRole(req.params.role);
+      res.status(200).json(profiles);
+    } catch (err) {
+      next({ status: 500, message: err.message });
+    }
+  }
+);
+
 /**
  * @swagger
  * components:
