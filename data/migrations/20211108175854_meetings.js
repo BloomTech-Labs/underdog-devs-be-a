@@ -21,15 +21,14 @@ exports.up = function (knex) {
         .onUpdate('RESTRICT')
         .onDelete('RESTRICT')
         .notNullable();
-        table.string('admin_meeting_notes')
-             table.string('mentor_meeting_notes').defaultTo(null);
-        table.string('mentee_meeting_notes').defaultTo(null);
+      table.string('admin_meeting_notes');
+      table.string('mentor_meeting_notes').defaultTo(null);
+      table.string('mentee_meeting_notes').defaultTo(null);
 
       table
         .enu('meeting_missed_by_mentee', ['Missed', 'Pending', 'Attended'])
         .notNullable()
         .defaultTo('Pending');
-
     });
 };
 
