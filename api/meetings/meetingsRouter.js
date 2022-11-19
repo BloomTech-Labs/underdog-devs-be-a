@@ -39,7 +39,7 @@ router.get(
         if (meetings) {
           res.status(200).json(meetings);
         } else {
-          res.status(404).json({ error: 'Meetings not found' });
+          res.status(400).json({ error: 'Meetings not found' });
         }
       })
       .catch((err) => {
