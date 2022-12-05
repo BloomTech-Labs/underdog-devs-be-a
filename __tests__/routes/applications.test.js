@@ -219,4 +219,102 @@ describe('Application Router', () => {
       });
     });
   });
+
+  // This block describes the expected behaviour of the POST request for submitting new mentor/mentee profile applications
+  describe('[POST] /application/new/:role', () => {
+    // create some mock variables to submit with each test
+    // split this to test endpoints separately (ie, valid and invalid mentor - valid and invalid mentee)
+    const validMentee = {
+      city: 'Portland',
+      convictions: 'String Data',
+      country: 'United States',
+      email: 'joe2@mageddon.com',
+      first_name: 'Joe',
+      formerly_incarcerated: true,
+      job_help: true,
+      last_name: 'Mageddon',
+      low_income: true,
+      other_info: 'No',
+      pair_programming: false,
+      referred_by: 'coworker',
+      state: 'Oregon',
+      tech_stack: 'Design UI/UX',
+      underrepresented_group: false,
+      validate_status: 'pending',
+      is_active: false,
+      in_project_underdog: false,
+      profile_id: '4e157cae-af53-4645-a865-53a62bcfc08e',
+    };
+
+    const validMentor = {
+      city: 'Hartford',
+      commitment: false,
+      country: 'United States',
+      current_company: 'AWS',
+      current_position: 'Engineering Manager',
+      email: 'gilly@woisley.com',
+      first_name: 'Gilly',
+      industry_knowledge: true,
+      job_help: true,
+      last_name: 'Woisley',
+      other_info: 'Kindness',
+      pair_programming: true,
+      referred_by: 'facebook',
+      state: 'Connecticut',
+      tech_stack: [
+        'Backend',
+        'Frontend',
+        'Career Development',
+        'Design UI/UX',
+        'iOS',
+        'Android',
+        'Data Science',
+      ],
+      true: true,
+      validate_status: 'pending',
+    };
+    let role, res;
+
+    describe('new mentor endpoint tests', () => {
+      role = 'mentor';
+      beforeAll(async () => {
+        res = await request(app)
+          .post(`/application/new/${role}`)
+          .payload({})
+          .send();
+      });
+
+      it('success', () => {
+        // test should expect a status 200 when sending properly formatted payload
+        role = 'mentor';
+        const expected = 200;
+        const actual = res.status;
+      });
+
+      it('failure', () => {
+        // returns status 400 when sending properly formatted payload to mentee endpoint
+      });
+    });
+
+    describe('new mentee endpoint tests', () => {
+      role = 'mentee';
+      beforeAll(async () => {
+        res = await request(app).post(
+          `/application/new/${role}`,
+          (validMentee) => { }
+        );
+      });
+      request(app).post();
+
+      it('invalid mentor application', () => {
+        // returns error code 400/401/404 according to error in payload formatting
+        // consider checking for issue specific error messages too
+      });
+
+      it('invalid mentee application', () => {
+        // returns error code 400/401/404 according to error in payload formatting
+        // consider checking for issue specific error messages too
+      });
+    });
+  });
 });
