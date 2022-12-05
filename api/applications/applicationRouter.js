@@ -7,7 +7,7 @@ const {
   checkApplicationExists,
   checkRole,
 } = require('../middleware/applicationMiddleware');
-const crypto = require('crypto');
+const { v4: uuidv4 } = require('uuid');
 const { getAllApplications } = require('./applicationModel');
 const validation = require('../helpers/validation');
 const axios = require('axios');
@@ -207,7 +207,7 @@ router.get('/profileId/:id', checkApplicationExists, checkRole, (req, res) => {
 // create a new user profile and application ticket
 //this only works for the mentor application because we are passing the mentorApplicationSchema directly (6/4/2022)
 router.post('/new/:role', validation(), async (req, res, next) => {
-  let uuid = crypto.randomUUID();
+  let uuid = uuidv4();
   try {
     if (req.params.role === 'mentee') {
       const mentee = req.body;
@@ -228,14 +228,6 @@ router.post('/new/:role', validation(), async (req, res, next) => {
       .then((res) => {
         next({ status: res.status, message: res.data });
       });
-  } catch (err) {
-    next(err);
-    return;
-  }
-
-  try {
-    const newProfile = { user_id: uuid };
-    await Profiles.create(newProfile);
   } catch (err) {
     next(err);
     return;
@@ -357,7 +349,6 @@ router.post('/update-validate_status/:profile_id', async (req, res, next) => {
     next({ status: 422, message: err.message });
     return;
   }
-
   res.json({
     status: 201,
     message: `${role} application approved and user created!`,

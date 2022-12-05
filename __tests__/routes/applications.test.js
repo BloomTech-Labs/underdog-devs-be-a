@@ -272,6 +272,7 @@ describe('Application Router', () => {
       ],
       true: true,
       validate_status: 'pending',
+      profile_id: '4e157cae-af53-4645-a865-53a62bcfc08e',
     };
     let role, res;
 
