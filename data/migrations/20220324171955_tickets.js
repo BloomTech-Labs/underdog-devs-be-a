@@ -1,4 +1,4 @@
-ticket_idexports.up = function (knex) {
+exports.up = function (knex) {
   return knex.schema
     .raw('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"')
     .createTable('tickets', function (table) {
