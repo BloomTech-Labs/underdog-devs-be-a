@@ -160,7 +160,7 @@ router.get('/:role', (req, res) => {
  *                  created_at: "2022-02-02T18:43:53.607Z"
  *                  application_id: 5
  *      '401':
- *        $ref: '#/components/responses/UnauthorizedError'
+ *        $ref: '#/componengit responses/UnauthorizedError'
  */
 
 // get application by profile id
@@ -174,11 +174,12 @@ router.get('/profileId/:id', checkApplicationExists, checkRole, (req, res) => {
  * /application/{new/:role}:
  *  post:
  *    summary: Adds a new profile to the database. Stores intake data. Creates application ticket.
- *    description: Post a new object to the profiles table using input from signup(intake) data. A temporary ID is generated and attached to the profile_id of this object and should be replaced at a later date with an okta ID if/when applicant is accepted and their profile is registered. Middleware handles storage of intake data and makes use of the temporary profile_id as well (so this should be updated in parallel with profiles profile_id). Finally, an application_ticket is created for the signee which has an 'approved' key set to false by default. Note - should caching of mentor/mentee intake data fail, the newly created profile will have to be deleted in order to re-do this process. Having three operations built into one endpoint is dangerous.. but it works.
+ *    description: Post a new object to the profiles table using input from signup(intake) data. A temporary ID is generated and attached as the profile_id of this object and should be replaced at a later date with an auth0 ID if/when applicant is accepted and their profile is registered.
+ * Middleware handles storage of intake data and makes use of the temporary profile_id as well (so this should be updated in parallel with profiles profile_id). Finally, an application_ticket is created for the signee which has an 'approved' key set to false by default. Note - should caching of mentor/mentee intake data fail, the newly created profile will have to be deleted in order to re-do this process. Having three operations built into one endpoint is dangerous.. but it works.
  *    tags:
  *      - application
  *    security:
- *      - okta: [authRequired, adminRequired]
+ *      - auth0: [authRequired, adminRequired]
  *    parameters:
  *      - in: param
  *        name: role name
@@ -206,6 +207,7 @@ router.get('/profileId/:id', checkApplicationExists, checkRole, (req, res) => {
 
 // create a new user profile and application ticket
 //this only works for the mentor application because we are passing the mentorApplicationSchema directly (6/4/2022)
+// creeate a new parameter for oauth_id rather than replcing profile_id
 router.post('/new/:role', validation(), async (req, res, next) => {
   let uuid = uuidv4();
   try {
@@ -218,8 +220,8 @@ router.post('/new/:role', validation(), async (req, res, next) => {
       const mentor = req.body;
       mentor['is_active'] = false;
       mentor['accepting_new_mentees'] = false;
-      mentor['commitment'] = false;
-      mentor['industry_knowledge'] = false;
+      // mentor['commitment'] = false; <---- should be included in payload already.
+      // mentor['industry_knowledge'] = false; <--- should be included in payload already
       mentor['profile_id'] = uuid;
     }
     console.log(req.body);

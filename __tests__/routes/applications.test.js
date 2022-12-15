@@ -50,6 +50,7 @@ describe('Sanity Checks', () => {
 });
 
 describe('Application Router', () => {
+  // needs refactor: authRequired not currently implemented on these endpoints <--- this middleware's function is now being handled in auth0Middleware, so test needs to reflect this
   describe('[GET] /application', () => {
     let res;
     beforeAll(async () => {
@@ -83,6 +84,7 @@ describe('Application Router', () => {
           expect(actual).toBe(expected);
         });
 
+        // needs refactor: endpoint currently return list as expected, but test fails because expected profile_id param does not match received <--- identify cause of difference to fix
         it('returns list of mentor applications', () => {
           const expected = [
             {
@@ -112,6 +114,7 @@ describe('Application Router', () => {
           expect(actual).toBe(expected);
         });
 
+        // needs refactor: endpoint currently return list as expected, but test fails because of profile_id param. Expected application also does not match any of the objects in returned array.
         it('returns list of mentee applications', () => {
           const expected = [
             {
@@ -246,7 +249,14 @@ describe('Application Router', () => {
       profile_id: '4e157cae-af53-4645-a865-53a62bcfc08e',
     };
 
-    const validMentor = {
+    const invalidMentee = {
+      email: "joe2@mageddon.com",
+      first_name: "Joe",
+      last_name: "Mageddon",
+      // validate_status: 'pending',
+    }
+
+    constTe validMentor = {
       city: 'Hartford',
       commitment: false,
       country: 'United States',
@@ -254,7 +264,6 @@ describe('Application Router', () => {
       current_position: 'Engineering Manager',
       email: 'gilly@woisley.com',
       first_name: 'Gilly',
-      industry_knowledge: true,
       job_help: true,
       last_name: 'Woisley',
       other_info: 'Kindness',
@@ -270,51 +279,77 @@ describe('Application Router', () => {
         'Android',
         'Data Science',
       ],
-      true: true,
       validate_status: 'pending',
-      profile_id: '4e157cae-af53-4645-a865-53a62bcfc08e',
+    };
+
+    const invalidMentor = {
+      email: "joe2@mageddon.com",
+      first_name: "Joe",
+      last_name: "Mageddon",
+      validate_status: "pending",
+      // commitment: false,
     };
     let role, res;
 
     describe('new mentor endpoint tests', () => {
       role = 'mentor';
-      beforeAll(async () => {
+
+      it('[SUCCESS] correct response to valid mentor application payload', async () => {
+        // test should expect a status 200 when sending properly formatted payload
         res = await request(app)
           .post(`/application/new/${role}`)
-          .payload({})
-          .send();
+          .send({ validMentor });
+
+        const expectedStat = 200;
+        const actualStat = res.status;
+        console.log(actualStat)
+        expect(actualStat).toBe(expectedStat);
       });
 
-      it('success', () => {
-        // test should expect a status 200 when sending properly formatted payload
-        role = 'mentor';
-        const expected = 200;
-        const actual = res.status;
-      });
-
-      it('failure', () => {
+      it('[FAILURE] correct response to invalid mentor application payload', async () => {
         // returns status 400 when sending properly formatted payload to mentee endpoint
+        res = await request(app)
+          .post(`/application/new/${role}`)
+          .send({ invalidMentor });
+
+        const expectedStat = 400;
+        const actualStat = res.status;
+        const expectedErr = /"commitment" (boolean) is required/;
+        const actualErr = res.error;
+
+        expect(actualStat).toBe(expectedStat);
+        expect(expectedErr).toBe(actualErr);
       });
     });
 
     describe('new mentee endpoint tests', () => {
       role = 'mentee';
-      beforeAll(async () => {
-        res = await request(app).post(
-          `/application/new/${role}`,
-          (validMentee) => { }
-        );
-      });
-      request(app).post();
 
-      it('invalid mentor application', () => {
+      it('[SUCCESS] correct response to valid mentee application', async () => {
         // returns error code 400/401/404 according to error in payload formatting
         // consider checking for issue specific error messages too
+        res = await request(app)
+          .post(`/application/new/${role}`)
+          .send({ validMentee });
+
+        const expectedStat = 200;
+        const actualStat = res.status;
+        expect(actualStat).toBe(expectedStat);
       });
 
-      it('invalid mentee application', () => {
+      it('[FAILURE] correct response to invalid mentee application', async () => {
         // returns error code 400/401/404 according to error in payload formatting
         // consider checking for issue specific error messages too
+        res = await request(app)
+          .post(`/application/new/${role}`)
+          .send({ invalidMentee });
+
+        const expectedStat = 400;
+        const actualStat = res.status;
+        const expectedErr = /"commitment" (boolean) is required/;
+        const actualErr = res.error;
+        expect(expectedStat).toBe(actualStat);
+        expect(expectedStat).toBe(actualErr);
       });
     });
   });
