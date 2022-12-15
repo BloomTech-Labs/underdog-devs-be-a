@@ -1,17 +1,13 @@
 const express = require('express');
 // const authRequired = require('../middleware/authRequired');
-const Application = require('./applicationModel');
 const router = express.Router();
 // const { adminRequired } = require('../middleware/permissionsRequired.js');
 const {
-  cacheSignUpData,
-  sendData,
   checkApplicationExists,
   checkRole,
 } = require('../middleware/applicationMiddleware');
 const { v4: uuidv4 } = require('uuid');
 const { getAllApplications } = require('./applicationModel');
-const { createProfile } = require('../middleware/profilesMiddleware');
 const validation = require('../helpers/validation');
 const axios = require('axios');
 const { baseURL } = require('../../config/dsConfig');
@@ -235,7 +231,7 @@ router.post('/new/:role', validation(), async (req, res, next) => {
     next(err);
     return;
   }
-})
+});
 
 /**
  * @swagger
