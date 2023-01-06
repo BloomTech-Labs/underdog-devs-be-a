@@ -1,8 +1,5 @@
 const express = require('express');
-// const authRequired = require('../middleware/authRequired');
-//const Application = require('./applicationModel');
 const router = express.Router();
-// const { adminRequired } = require('../middleware/permissionsRequired.js');
 const {
   checkApplicationExists,
   checkRole,
@@ -173,13 +170,13 @@ router.get('/profileId/:id', checkApplicationExists, checkRole, (req, res) => {
  * @swagger
  * /application/{new/:role}:
  *  post:
- *    summary: Adds a new profile to the database. Stores intake data. Creates application ticket.
- *    description: Post a new object to the profiles table using input from signup(intake) data. A temporary ID is generated and attached as the profile_id of this object and should be replaced at a later date with an auth0 ID if/when applicant is accepted and their profile is registered.
- * Middleware handles storage of intake data and makes use of the temporary profile_id as well (so this should be updated in parallel with profiles profile_id). Finally, an application_ticket is created for the signee which has an 'approved' key set to false by default. Note - should caching of mentor/mentee intake data fail, the newly created profile will have to be deleted in order to re-do this process. Having three operations built into one endpoint is dangerous.. but it works.
+ *    summary: Adds a new user profile to the database depending on the role parameter.
+ *    description: Posts a new user object to the profiles table using data from the signup form. A profile ID is generated and attached as the profile_id parameter, along with other required fields to be updated on approval. If/when approved, an oauth ID parameter should be added to allow for user authentication. Middleware handles validation of form values to ensure required fields are provided.
+ * Note - should caching of mentor/mentee intake data fail, the newly created profile will have to be deleted in order to re-do this process.
  *    tags:
  *      - application
  *    security:
- *      - auth0: [authRequired, adminRequired]
+ *      - auth0: [authRequired, adminRequired] (redundant as unauthenticated users need access to this endpoint to submit applications)
  *    parameters:
  *      - in: param
  *        name: role name
@@ -205,9 +202,6 @@ router.get('/profileId/:id', checkApplicationExists, checkRole, (req, res) => {
  *        $ref: '#/components/responses/UnauthorizedError'
  */
 
-// create a new user profile and application ticket
-//this only works for the mentor application because we are passing the mentorApplicationSchema directly (6/4/2022)
-// creeate a new parameter for oauth_id rather than replcing profile_id
 router.post('/new/:role', validation(), async (req, res, next) => {
   let uuid = uuidv4();
   try {
@@ -220,8 +214,6 @@ router.post('/new/:role', validation(), async (req, res, next) => {
       const mentor = req.body;
       mentor['is_active'] = false;
       mentor['accepting_new_mentees'] = false;
-      // mentor['commitment'] = false; <---- should be included in payload already.
-      // mentor['industry_knowledge'] = false; <--- should be included in payload already
       mentor['profile_id'] = uuid;
     }
     console.log(req.body);
