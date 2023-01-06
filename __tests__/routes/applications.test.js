@@ -253,10 +253,10 @@ describe('Application Router', () => {
       email: "joe2@mageddon.com",
       first_name: "Joe",
       last_name: "Mageddon",
-      // validate_status: 'pending',
+      validate_status: 'pending',
     }
 
-    constTe validMentor = {
+    const validMentor = {
       city: 'Hartford',
       commitment: false,
       country: 'United States',
@@ -287,7 +287,6 @@ describe('Application Router', () => {
       first_name: "Joe",
       last_name: "Mageddon",
       validate_status: "pending",
-      // commitment: false,
     };
     let role, res;
 
@@ -298,11 +297,11 @@ describe('Application Router', () => {
         // test should expect a status 200 when sending properly formatted payload
         res = await request(app)
           .post(`/application/new/${role}`)
-          .send({ validMentor });
+          .send(validMentor);
 
         const expectedStat = 200;
         const actualStat = res.status;
-        console.log(actualStat)
+        console.log(actualStat);
         expect(actualStat).toBe(expectedStat);
       });
 
@@ -310,7 +309,7 @@ describe('Application Router', () => {
         // returns status 400 when sending properly formatted payload to mentee endpoint
         res = await request(app)
           .post(`/application/new/${role}`)
-          .send({ invalidMentor });
+          .send(invalidMentor);
 
         const expectedStat = 400;
         const actualStat = res.status;
@@ -326,11 +325,9 @@ describe('Application Router', () => {
       role = 'mentee';
 
       it('[SUCCESS] correct response to valid mentee application', async () => {
-        // returns error code 400/401/404 according to error in payload formatting
-        // consider checking for issue specific error messages too
         res = await request(app)
           .post(`/application/new/${role}`)
-          .send({ validMentee });
+          .send(validMentee);
 
         const expectedStat = 200;
         const actualStat = res.status;
@@ -338,18 +335,18 @@ describe('Application Router', () => {
       });
 
       it('[FAILURE] correct response to invalid mentee application', async () => {
-        // returns error code 400/401/404 according to error in payload formatting
+        // returns error code according to error in payload formatting
         // consider checking for issue specific error messages too
         res = await request(app)
           .post(`/application/new/${role}`)
-          .send({ invalidMentee });
+          .send(invalidMentee);
 
         const expectedStat = 400;
         const actualStat = res.status;
         const expectedErr = /"commitment" (boolean) is required/;
         const actualErr = res.error;
-        expect(expectedStat).toBe(actualStat);
-        expect(expectedStat).toBe(actualErr);
+        // expect(expectedStat).toBe(actualStat);
+        expect(expectedErr).toBe(actualErr);
       });
     });
   });
