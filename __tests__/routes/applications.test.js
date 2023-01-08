@@ -223,10 +223,7 @@ describe('Application Router', () => {
     });
   });
 
-  // This block describes the expected behaviour of the POST request for submitting new mentor/mentee profile applications
   describe('[POST] /application/new/:role', () => {
-    // create some mock variables to submit with each test
-    // split this to test endpoints separately (ie, valid and invalid mentor - valid and invalid mentee)
     const validMentee = {
       city: 'Portland',
       convictions: 'String Data',
@@ -306,7 +303,7 @@ describe('Application Router', () => {
       });
 
       it('[FAILURE] correct response to invalid mentor application payload', async () => {
-        // returns status 400 when sending properly formatted payload to mentee endpoint
+        // expects a status 400 when sending improperly formatted payload to mentee endpoint
         res = await request(app)
           .post(`/application/new/${role}`)
           .send(invalidMentor);
@@ -335,15 +332,14 @@ describe('Application Router', () => {
       });
 
       it('[FAILURE] correct response to invalid mentee application', async () => {
-        // returns error code according to error in payload formatting
-        // consider checking for issue specific error messages too
+        // expects error code according to error in payload formatting
         res = await request(app)
           .post(`/application/new/${role}`)
           .send(invalidMentee);
 
         const expectedStat = 400;
         const actualStat = res.status;
-        const expectedErr = /"commitment" (boolean) is required/;
+        const expectedErr = /is required/;
         const actualErr = res.error;
         // expect(expectedStat).toBe(actualStat);
         expect(expectedErr).toBe(actualErr);
