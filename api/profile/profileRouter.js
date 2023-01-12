@@ -416,11 +416,32 @@ If the DS API allows that get request in the future, this route should be update
 This route was also built while the authorization tool was being changed from Okta to AuthO so there is currently not an authorization middleware in the route. Once that is completed, the middleware confirming this route is for use by admins only.
 */
 
-router.post('/mentor-information/', (req, res, next) => {
+router.post('/mentor-information/', (req, res) => {
+  console.log('I am before the DS api Request');
+  res.status(200).json({ message: 'This was successful' });
+  // axios
+  //   .post(`${baseURL}/read/mentor`, req.body)
+  //   .then((response) => {
+  //     const mentorInfo = response.data.result.map((results) => {
+  //       const data = {
+  //         name: `${results.first_name} ${results.last_name}`,
+  //         city: results.city,
+  //         state: results.state,
+  //         availability: results.accepting_new_mentees,
+  //       };
+  //       return data;
+  //     });
+  //     res.send(mentorInfo);
+  //   })
+  //   .catch((err) => next(err));
+});
+
+router.post('/mentee-information/', (req, res, next) => {
+  console.log('I am before the DS api Request');
   axios
-    .post(`${baseURL}/read/mentor`, req.body)
+    .post(`${baseURL}/read/mentee`, req.body)
     .then((response) => {
-      const mentorInfo = response.data.result.map((results) => {
+      const menteeInfo = response.data.result.map((results) => {
         const data = {
           name: `${results.first_name} ${results.last_name}`,
           city: results.city,
@@ -429,7 +450,7 @@ router.post('/mentor-information/', (req, res, next) => {
         };
         return data;
       });
-      res.send(mentorInfo);
+      res.send(menteeInfo);
     })
     .catch((err) => next(err));
 });
