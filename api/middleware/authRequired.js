@@ -1,6 +1,4 @@
-/* The following lines are commented out for the linter.
-    Profiles will be needed when Auth0 is implemented */
-// const Profiles = require('../profile/profileModel');
+/* delete this file
 
 // const makeProfileObj = (claims) => {
 //   return {

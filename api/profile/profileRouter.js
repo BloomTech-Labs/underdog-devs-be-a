@@ -16,7 +16,8 @@ validateUser;
 
 // gets current user profile
 
-router.get('/current_user_profile/', authRequired, async (req, res, next) => {
+router.get('/current_user_profile', authRequired, async (req, res, next) => {
+  console.log('fired endpoint');
   try {
     req.profile = await Profiles.findById(req.profile.profile_id);
     res.status(200).json(req.profile);
@@ -25,7 +26,7 @@ router.get('/current_user_profile/', authRequired, async (req, res, next) => {
   }
 });
 
-// gets all profiles
+// // gets all profiles
 
 router.get('/', authRequired, adminRequired, async (req, res, next) => {
   try {
@@ -36,7 +37,7 @@ router.get('/', authRequired, adminRequired, async (req, res, next) => {
   }
 });
 
-// get all profiles by role
+// // get all profiles by role
 
 router.get(
   '/role/:role',
@@ -111,15 +112,6 @@ router.get(
  *      403:
  *        $ref: '#/components/responses/UnauthorizedError'
  */
-router.get('/', authRequired, adminRequired, function (req, res, next) {
-  Profiles.findAll()
-    .then((profiles) => {
-      res.status(200).json(profiles);
-    })
-    .catch((err) => {
-      next({ status: 500, message: err.message });
-    });
-});
 
 /**
  * @swagger
@@ -156,28 +148,23 @@ router.get('/', authRequired, adminRequired, function (req, res, next) {
  *      404:
  *        description: 'Profile not found'
  */
-router.get(
-  '/:id',
-  authRequired,
-
-  async function (req, res, next) {
-    const id = String(req.params.id);
-    const attendance_average = await Profiles.checkAverageAttendance(id);
-    Profiles.findById(id)
-      .then((profile) => {
-        if (profile) {
-          res
-            .status(200)
-            .json({ ...profile, attendance_rate: attendance_average });
-        } else {
-          next({ status: 404, message: 'ProfileNotFound' });
-        }
-      })
-      .catch((err) => {
-        next({ status: 500, message: err.message });
-      });
-  }
-);
+router.get('/:id', authRequired, async function (req, res, next) {
+  const id = String(req.params.id);
+  const attendance_average = await Profiles.checkAverageAttendance(id);
+  Profiles.findById(id)
+    .then((profile) => {
+      if (profile) {
+        res
+          .status(200)
+          .json({ ...profile, attendance_rate: attendance_average });
+      } else {
+        next({ status: 404, message: 'ProfileNotFound' });
+      }
+    })
+    .catch((err) => {
+      next({ status: 500, message: err.message });
+    });
+});
 
 /**
  * @swagger
@@ -416,27 +403,26 @@ If the DS API allows that get request in the future, this route should be update
 This route was also built while the authorization tool was being changed from Okta to AuthO so there is currently not an authorization middleware in the route. Once that is completed, the middleware confirming this route is for use by admins only.
 */
 
-router.post('/mentor-information/', (req, res) => {
+router.get('/mentor/information', (req, res, next) => {
   console.log('I am before the DS api Request');
-  res.status(200).json({ message: 'This was successful' });
-  // axios
-  //   .post(`${baseURL}/read/mentor`, req.body)
-  //   .then((response) => {
-  //     const mentorInfo = response.data.result.map((results) => {
-  //       const data = {
-  //         name: `${results.first_name} ${results.last_name}`,
-  //         city: results.city,
-  //         state: results.state,
-  //         availability: results.accepting_new_mentees,
-  //       };
-  //       return data;
-  //     });
-  //     res.send(mentorInfo);
-  //   })
-  //   .catch((err) => next(err));
+  axios
+    .post(`${baseURL}/read/mentor`, req.body)
+    .then((response) => {
+      const mentorInfo = response.data.result.map((results) => {
+        const data = {
+          name: `${results.first_name} ${results.last_name}`,
+          city: results.city,
+          state: results.state,
+          availability: results.accepting_new_mentees,
+        };
+        return data;
+      });
+      res.send(mentorInfo);
+    })
+    .catch((err) => next(err));
 });
 
-router.post('/mentee-information/', (req, res, next) => {
+router.get('/mentee/information/', (req, res, next) => {
   console.log('I am before the DS api Request');
   axios
     .post(`${baseURL}/read/mentee`, req.body)

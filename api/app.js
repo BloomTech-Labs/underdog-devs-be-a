@@ -9,7 +9,7 @@ const swaggerJSDoc = require('swagger-jsdoc');
 const jsdocConfig = require('../config/jsdoc');
 const dotenv = require('dotenv');
 const config_result = dotenv.config();
-const { authRequired, authProfile } = require('./middleware/auth0Middleware');
+// const { authRequired, authProfile } = require('./middleware/auth0Middleware');
 if (process.env.NODE_ENV != 'production' && config_result.error) {
   throw config_result.error;
 }
@@ -61,9 +61,9 @@ app.use(logger('dev'));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 //using auth0 middleware to verify user is authenticated
-app.use(authRequired);
+// app.use(authRequired);
 //using authProfile middle ware to save current user data
-app.use(authProfile);
+// app.use(authProfile);
 
 // application routes
 app.use('/', indexRouter);
