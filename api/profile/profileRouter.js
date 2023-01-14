@@ -17,7 +17,6 @@ validateUser;
 // gets current user profile
 
 router.get('/current_user_profile', authRequired, async (req, res, next) => {
-  console.log('fired endpoint');
   try {
     req.profile = await Profiles.findById(req.profile.profile_id);
     res.status(200).json(req.profile);
