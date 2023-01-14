@@ -1,5 +1,5 @@
 const express = require('express');
-const authRequired = require('../middleware/authRequired');
+const authRequired = require('../middleware/authRequired'); //needs to change to real auth0Middleware after auth is fixed
 const Profiles = require('./profileModel');
 const router = express.Router();
 const axios = require('axios');
@@ -13,6 +13,8 @@ const validateSelfUpdate = require('../../data/schemas/userProfileSchema');
 const { validateUser } = require('../middleware/validationMiddleware');
 const dsService = require('../dsService/dsModel');
 validateUser;
+
+//TO-DO: Implement Auth0 using the correct middleware(auth0middleware)
 
 // gets current user profile
 
@@ -395,15 +397,8 @@ router.get('/match/:id', authRequired, (req, res, next) => {
     });
 });
 
-/*
-*Author: Melody McClure
-This post route goes to the DS API which does not accept a GET request for the information wanted in the service ticket.
-If the DS API allows that get request in the future, this route should be updated accordingly.
-This route was also built while the authorization tool was being changed from Okta to AuthO so there is currently not an authorization middleware in the route. Once that is completed, the middleware confirming this route is for use by admins only.
-*/
-
+//gets all mentors
 router.get('/mentor/information', (req, res, next) => {
-  console.log('I am before the DS api Request');
   axios
     .post(`${baseURL}/read/mentor`, req.body)
     .then((response) => {
@@ -421,8 +416,8 @@ router.get('/mentor/information', (req, res, next) => {
     .catch((err) => next(err));
 });
 
+//gets all mentees
 router.get('/mentee/information/', (req, res, next) => {
-  console.log('I am before the DS api Request');
   axios
     .post(`${baseURL}/read/mentee`, req.body)
     .then((response) => {
@@ -440,11 +435,7 @@ router.get('/mentee/information/', (req, res, next) => {
     .catch((err) => next(err));
 });
 
-/*Authors: Melody McClure & Miguel Ledesma
-This POST route goes to the DS API.
-This route was also built while the authorization tool was being changed from Okta to AuthO so there is currently not an authorization middleware in the route. Once that is completed, the middleware confirming this route is for use a MENTOR only.
-*/
-
+//mentors posting availablity
 router.post('/availability/:profile_id', (req, res, next) => {
   const { profile_id } = req.params;
   const { accepting_new_mentees } = req.body;
