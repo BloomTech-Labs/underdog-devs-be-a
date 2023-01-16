@@ -1,19 +1,5 @@
-/* The following lines are commented out for the linter.
-    Profiles will be needed when Auth0 is implemented */
-// const Profiles = require('../profile/profileModel');
+// delete this file once we are able to fully implement auth0 without jwt expired message
 
-// const makeProfileObj = (claims) => {
-//   return {
-//     id: claims.sub,
-//     email: claims.email,
-//     name: claims.name,
-//   };
-// };
-/**
- * A simple middleware that asserts valid Okta idToken and sends 401 responses
- * if the token is not present or fails validation. If the token is valid its
- * contents are attached to req.profile
- */
 const authRequired = async (req, res, next) => {
   try {
     const fakeProfile = {
