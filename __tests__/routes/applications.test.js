@@ -247,11 +247,11 @@ describe('Application Router', () => {
     };
 
     const invalidMentee = {
-      email: "joe2@mageddon.com",
-      first_name: "Joe",
-      last_name: "Mageddon",
+      email: 'joe2@mageddon.com',
+      first_name: 'Joe',
+      last_name: 'Mageddon',
       validate_status: 'pending',
-    }
+    };
 
     const validMentor = {
       city: 'Hartford',
@@ -281,30 +281,27 @@ describe('Application Router', () => {
     };
 
     const invalidMentor = {
-      email: "joe2@mageddon.com",
-      first_name: "Joe",
-      last_name: "Mageddon",
-      validate_status: "pending",
+      email: 'joe2@mageddon.com',
+      first_name: 'Joe',
+      last_name: 'Mageddon',
+      validate_status: 'pending',
     };
     let role, res;
 
     describe('new mentor endpoint tests', () => {
       role = 'mentor';
 
-      it('[SUCCESS] correct response to valid mentor application payload', async () => {
-        // test should expect a status 200 when sending properly formatted payload
+      it('[SUCCESS] correct response to valid mentor application', async () => {
         res = await request(app)
           .post(`/application/new/${role}`)
           .send(validMentor);
 
         const expectedStat = 200;
         const actualStat = res.status;
-        // console.log(res.error);
         expect(actualStat).toBe(expectedStat);
       });
 
-      it('[FAILURE] correct response to invalid mentor application payload', async () => {
-        // expects a status 400 when sending improperly formatted payload to mentee endpoint
+      it('[FAILURE] correct response to invalid mentor application', async () => {
         res = await request(app)
           .post(`/application/new/${role}`)
           .send(invalidMentor);
@@ -330,7 +327,6 @@ describe('Application Router', () => {
       });
 
       it('[FAILURE] correct response to invalid mentee application', async () => {
-        // expects error code according to error in payload formatting
         res = await request(app)
           .post(`/application/new/${role}`)
           .send(invalidMentee);

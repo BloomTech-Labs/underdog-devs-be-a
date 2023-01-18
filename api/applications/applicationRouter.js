@@ -215,6 +215,8 @@ router.post('/new/:role', validation(), async (req, res, next) => {
       mentor['is_active'] = false;
       mentor['accepting_new_mentees'] = false;
       mentor['profile_id'] = uuid;
+      // mentor['commitment'] = false;
+      // mentor['industry_knowledge'] = false;
     }
     console.log(req.body);
     await axios
