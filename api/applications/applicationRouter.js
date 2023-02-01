@@ -135,7 +135,7 @@ router.get('/:role', (req, res) => {
  *    tags:
  *      - application
  *    security:
- *      - okta: [authRequired, adminRequired]
+ *      - auth0: [authRequired, adminRequired]
  *    parameters:
  *      - in: param
  *        name: profile ID
@@ -177,7 +177,7 @@ router.get('/profileId/:id', checkApplicationExists, checkRole, (req, res) => {
  *    tags:
  *      - application
  *    security:
- *      - okta: [authRequired, adminRequired]
+ *      - auth0: [authRequired, adminRequired]
  *    parameters:
  *      - in: param
  *        name: role name

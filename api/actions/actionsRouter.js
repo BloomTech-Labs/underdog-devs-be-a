@@ -68,7 +68,7 @@ const {
  *    tags:
  *      - action
  *    security:
- *      - okta: []
+ *      - auth0: []
  *    responses:
  *      '200':
  *        description: An array of action objects
@@ -174,7 +174,7 @@ router.get('/', (req, res) => {
  *    tags:
  *      - action
  *    security:
- *      - okta: []
+ *      - auth0: []
  *    parameters:
  *      - in: path
  *        name: action_ticket_id
@@ -218,7 +218,7 @@ router.get('/:id', checkActionTicketExists, (req, res) => {
  *    tags:
  *      - action
  *    security:
- *      - okta: []
+ *      - auth0: []
  *    requestBody:
  *      description: Information about the action to be posted
  *      content:
@@ -261,7 +261,7 @@ router.post('/', validateSubjectBody, (req, res, next) => {
  *    tags:
  *      - action
  *    security:
- *      - okta: []
+ *      - auth0: []
  *    parameters:
  *      - in: path
  *        name: action_ticket_id

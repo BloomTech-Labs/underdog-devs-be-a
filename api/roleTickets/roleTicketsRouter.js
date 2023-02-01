@@ -68,7 +68,7 @@ const {
  *    description: Returns a list of all role tickets
  *    summary: Get a list of all role tickets
  *    security:
- *      - okta: []
+ *      - auth0: []
  *    tags:
  *      - role ticket
  *    responses:
@@ -128,7 +128,7 @@ router.get('/', authRequired, adminRequired, async (req, res, next) => {
  *    tags:
  *      - role ticket
  *    security:
- *      - okta: []
+ *      - auth0: []
  *    parameters:
  *      - in: path
  *        name: role_ticket_id
@@ -182,7 +182,7 @@ router.get(
  *    tags:
  *      - role ticket
  *    security:
- *      - okta: []
+ *      - auth0: []
  *    requestBody:
  *      description: Information about the role ticket to be posted
  *      content:
@@ -249,7 +249,7 @@ router.post(
  *    tags:
  *      - role ticket
  *    security:
- *      - okta: []
+ *      - auth0: []
  *    parameters:
  *      - in: path
  *        name: role_ticket_id
@@ -339,7 +339,7 @@ router.put(
  *    tags:
  *      - role ticket
  *    security:
- *      - okta: []
+ *      - auth0: []
  *    parameters:
  *      - in: path
  *        name: role_ticket_id

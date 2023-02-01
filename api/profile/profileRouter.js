@@ -87,7 +87,7 @@ router.get(
  *    description: Returns a list of profiles
  *    summary: Get a list of all profiles
  *    security:
- *      - okta: []
+ *      - auth0: []
  *    tags:
  *      - profile
  *    responses:
@@ -132,7 +132,7 @@ router.get(
  *    description: Find profiles by ID
  *    summary: Returns a single profile
  *    security:
- *      - okta: []
+ *      - auth0: []
  *    tags:
  *      - profile
  *    parameters:
@@ -173,7 +173,7 @@ router.get('/:id', authRequired, async function (req, res, next) {
  *  post:
  *    summary: Add a profile
  *    security:
- *      - okta: []
+ *      - auth0: []
  *    tags:
  *      - profile
  *    requestBody:
@@ -233,7 +233,7 @@ router.post('/', authRequired, async (req, res, next) => {
  *  put:
  *    summary: Update a profile
  *    security:
- *      - okta: []
+ *      - auth0: []
  *    tags:
  *      - profile
  *    requestBody:
@@ -326,7 +326,7 @@ router.put('/:id', adminRequired, authRequired, (req, res, next) => {
  *  put:
  *    summary: Update a is_active filed in for the profile table.
  *    security:
- *      - okta: [authRequired,superAdminRequired,validateUser]
+ *      - auth0: [authRequired,superAdminRequired,validateUser]
  *    tags:
  *      - profile
  *    requestBody:
@@ -417,7 +417,7 @@ router.get('/mentor/information', (req, res, next) => {
 });
 
 //gets all mentees
-router.get('/mentee/information/', (req, res, next) => {
+router.get('/mentee/information', (req, res, next) => {
   axios
     .post(`${baseURL}/read/mentee`, req.body)
     .then((response) => {

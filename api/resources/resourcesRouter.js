@@ -75,7 +75,7 @@ const {
  *    tags:
  *      - resource
  *    security:
- *      - okta: []
+ *      - auth0: []
  *    parameters:
  *      - in: query
  *        name: resource property
@@ -163,7 +163,7 @@ router.get('/', authRequired, async (req, res, next) => {
  *    tags:
  *      - resource
  *    security:
- *      - okta: []
+ *      - auth0: []
  *    parameters:
  *      - in: path
  *        name: resource_id
@@ -216,7 +216,7 @@ router.get(
  *    tags:
  *      - resource
  *    security:
- *      - okta: []
+ *      - auth0: []
  *    requestBody:
  *      description: Information about the resource to be posted
  *      content:
@@ -276,7 +276,7 @@ router.post(
  *    tags:
  *      - resource
  *    security:
- *      - okta: []
+ *      - auth0: []
  *    parameters:
  *      - in: path
  *        name: resource_id
@@ -367,7 +367,7 @@ router.put(
  *    tags:
  *      - resource
  *    security:
- *      - okta: []
+ *      - auth0: []
  *    parameters:
  *      - in: path
  *        name: resource_id

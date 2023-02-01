@@ -10,7 +10,7 @@ const authRequired = require('../middleware/authRequired');
  *    description: Get prediction for 3 inputs
  *    summary: Returns a prediction result
  *    security:
- *      - okta: []
+ *      - auth0: []
  *    tags:
  *      - data
  *    parameters:
@@ -83,7 +83,7 @@ router.get('/predict/:x1/:x2/:3', authRequired, function (req, res) {
  *    description: plotly vizualization data
  *    summary: Returns a plotly data
  *    security:
- *      - okta: []
+ *      - auth0: []
  *    tags:
  *      - data
  *    parameters:
