@@ -1,7 +1,10 @@
 const express = require('express');
 const Meeting = require('../meetings/meetingsModel');
 const Profiles = require('../profile/profileModel');
+//import below has been commented out until we have DS working. Also note, in dsModel.js, the commented out code has been commented out for the linter... Once we have DS working, we can uncomment and utilize this code...
+/*
 const dsService = require('../dsService/dsModel');
+*/
 const router = express.Router();
 const jwt = require('jwt-decode');
 const authRequired = require('../middleware/authRequired');
@@ -36,7 +39,7 @@ router.get(
         if (meetings) {
           res.status(200).json(meetings);
         } else {
-          res.status(404).json({ error: 'Meetings not found' });
+          res.status(400).json({ error: 'Meetings not found' });
         }
       })
       .catch((err) => {
@@ -61,29 +64,35 @@ router.get('/my-meetings', authRequired, async (req, res, next) => {
 });
 
 //create a meeting
+//TODO FIX DS SERVICE, it currently only updates the local testing db
 
 router.post(
   '/',
   authRequired,
   validNewMeeting,
-  validHostID,
-  validAttendeeID,
+  validMentorId,
+  validMenteeId,
   mentorRequired,
   (req, res, next) => {
     const meeting = req.body;
     Meeting.Create(meeting)
       .then(async (meeting_object) => {
         if (meeting_object.meeting_missed !== 'pending') {
-          await dsService.postMeeting(meeting_object);
+          await Meeting.Create(meeting_object);
+          //await dsService.postMeeting(meeting_object);
         }
         res.status(201).json({ message: 'success', meeting });
+      })
+      .catch((err) => {
+        console.log(err);
+        next({ status: 500, message: err.message });
       })
       .catch(next);
   }
 );
 
 //update a meeting
-
+//TODO FIX DS SERVICE, it currently only updates the local testing db
 router.put(
   '/:meeting_id',
   authRequired,
@@ -98,7 +107,8 @@ router.put(
         if (change) {
           Meeting.findByMeetingId(id).then(async (meeting_object) => {
             if (meeting_object.meeting_missed !== 'pending') {
-              await dsService.postMeeting(meeting_object);
+              Meeting.Update(id, meeting_object); //local db update
+              //await dsService.postMeeting(meeting_object);
             }
             res.status(200).json({
               message: `Meeting '${meeting_object.meeting_id}' updated`,
@@ -107,12 +117,15 @@ router.put(
           });
         }
       })
+      .catch((err) => {
+        next({ status: 500, message: err.message });
+      })
       .catch(next);
   }
 );
 
 //delete a meeting
-
+//TODO FIX DS SERVICE, it currently only deletes from the local testing db
 router.delete(
   '/:meeting_id',
   authRequired,
@@ -155,7 +168,7 @@ function validMeetingID(req, res, next) {
       req.meeting = meeting;
       next();
     } else {
-      next({ status: 404, message: 'Meeting_id Not Found' });
+      next({ status: 400, message: 'Meeting_id Not Found' });
     }
   });
 }
@@ -169,7 +182,7 @@ function validProfileID(req, res, next) {
         req.profile = profile;
         next();
       } else {
-        res.status(404).json({
+        res.status(400).json({
           message: 'Invalid ID',
         });
       }
@@ -179,15 +192,15 @@ function validProfileID(req, res, next) {
 
 //host_id must have a valid profile_id
 
-function validHostID(req, res, next) {
-  Profiles.findById(req.body.host_id)
+function validMentorId(req, res, next) {
+  Profiles.findById(req.body.mentor_id)
     .then((profile) => {
       if (profile) {
         req.profile = profile;
         next();
       } else {
-        res.status(404).json({
-          message: 'Invalid Host ID',
+        res.status(400).json({
+          message: 'Invalid Mentor ID',
         });
       }
     })
@@ -196,15 +209,15 @@ function validHostID(req, res, next) {
 
 //attendee_id must have a valid profile_id
 
-function validAttendeeID(req, res, next) {
-  Profiles.findById(req.body.attendee_id)
+function validMenteeId(req, res, next) {
+  Profiles.findById(req.body.mentee_id)
     .then((profile) => {
       if (profile) {
         req.profile = profile;
         next();
       } else {
-        res.status(404).json({
-          message: 'Invalid attendee_id',
+        res.status(400).json({
+          message: 'Invalid Mentee ID',
         });
       }
     })
@@ -223,25 +236,21 @@ function validNewMeeting(req, res, next) {
     res.status(400).json({
       message: 'Missing meeting_topic field',
     });
-  } else if (!meeting.meeting_date) {
+  } else if (!meeting.meeting_start_time) {
     res.status(400).json({
-      message: 'Missing meeting_date field',
+      message: 'Missing meeting_start_time field',
     });
-  } else if (!meeting.meeting_start_date) {
+  } else if (!meeting.meeting_end_time) {
     res.status(400).json({
-      message: 'Missing meeting_start_date field',
+      message: 'Missing meeting_end_time field',
     });
-  } else if (!meeting.meeting_end_date) {
+  } else if (!meeting.mentor_id) {
     res.status(400).json({
-      message: 'Missing meeting_end_date field',
+      message: 'Missing mentor_id field',
     });
-  } else if (!meeting.host_id) {
+  } else if (!meeting.mentee_id) {
     res.status(400).json({
-      message: 'Missing host_id field',
-    });
-  } else if (!meeting.attendee_id) {
-    res.status(400).json({
-      message: 'Missing attendee_id field',
+      message: 'Missing mentee_id field',
     });
   } else {
     next();

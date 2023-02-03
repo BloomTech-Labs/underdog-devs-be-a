@@ -12,6 +12,10 @@ const findById = (profile_id) => {
   return db('profiles').where({ profile_id }).first().select('*');
 };
 
+const findByRole = (role) => {
+  return db('profiles').where({ role }).select('*');
+};
+
 const create = (profile) => {
   return db('profiles').insert(profile).returning('*');
 };
@@ -98,4 +102,5 @@ module.exports = {
   mentorApplicationData,
   menteeApplicationData,
   checkAverageAttendance,
+  findByRole,
 };

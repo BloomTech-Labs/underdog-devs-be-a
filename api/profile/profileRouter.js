@@ -1,5 +1,5 @@
 const express = require('express');
-const authRequired = require('../middleware/authRequired');
+const authRequired = require('../middleware/authRequired'); //needs to change to real auth0Middleware after auth is fixed
 const Profiles = require('./profileModel');
 const router = express.Router();
 const axios = require('axios');
@@ -14,9 +14,11 @@ const { validateUser } = require('../middleware/validationMiddleware');
 const dsService = require('../dsService/dsModel');
 validateUser;
 
+//TO-DO: Implement Auth0 using the correct middleware(auth0middleware)
+
 // gets current user profile
 
-router.get('/current_user_profile/', authRequired, async (req, res, next) => {
+router.get('/current_user_profile', authRequired, async (req, res, next) => {
   try {
     req.profile = await Profiles.findById(req.profile.profile_id);
     res.status(200).json(req.profile);
@@ -24,6 +26,33 @@ router.get('/current_user_profile/', authRequired, async (req, res, next) => {
     next({ status: 500, message: err.message });
   }
 });
+
+// // gets all profiles
+
+router.get('/', authRequired, adminRequired, async (req, res, next) => {
+  try {
+    const profiles = await Profiles.findAll();
+    res.status(200).json(profiles);
+  } catch (err) {
+    next({ status: 500, message: err.message });
+  }
+});
+
+// // get all profiles by role
+
+router.get(
+  '/role/:role',
+  authRequired,
+  adminRequired,
+  async (req, res, next) => {
+    try {
+      const profiles = await Profiles.findByRole(req.params.role);
+      res.status(200).json(profiles);
+    } catch (err) {
+      next({ status: 500, message: err.message });
+    }
+  }
+);
 
 /**
  * @swagger
@@ -84,15 +113,6 @@ router.get('/current_user_profile/', authRequired, async (req, res, next) => {
  *      403:
  *        $ref: '#/components/responses/UnauthorizedError'
  */
-router.get('/', authRequired, adminRequired, function (req, res, next) {
-  Profiles.findAll()
-    .then((profiles) => {
-      res.status(200).json(profiles);
-    })
-    .catch((err) => {
-      next({ status: 500, message: err.message });
-    });
-});
 
 /**
  * @swagger
@@ -129,28 +149,23 @@ router.get('/', authRequired, adminRequired, function (req, res, next) {
  *      404:
  *        description: 'Profile not found'
  */
-router.get(
-  '/:id',
-  authRequired,
-
-  async function (req, res, next) {
-    const id = String(req.params.id);
-    const attendance_average = await Profiles.checkAverageAttendance(id);
-    Profiles.findById(id)
-      .then((profile) => {
-        if (profile) {
-          res
-            .status(200)
-            .json({ ...profile, attendance_rate: attendance_average });
-        } else {
-          next({ status: 404, message: 'ProfileNotFound' });
-        }
-      })
-      .catch((err) => {
-        next({ status: 500, message: err.message });
-      });
-  }
-);
+router.get('/:id', authRequired, async function (req, res, next) {
+  const id = String(req.params.id);
+  const attendance_average = await Profiles.checkAverageAttendance(id);
+  Profiles.findById(id)
+    .then((profile) => {
+      if (profile) {
+        res
+          .status(200)
+          .json({ ...profile, attendance_rate: attendance_average });
+      } else {
+        next({ status: 404, message: 'ProfileNotFound' });
+      }
+    })
+    .catch((err) => {
+      next({ status: 500, message: err.message });
+    });
+});
 
 /**
  * @swagger
@@ -382,14 +397,8 @@ router.get('/match/:id', authRequired, (req, res, next) => {
     });
 });
 
-/*
-*Author: Melody McClure
-This post route goes to the DS API which does not accept a GET request for the information wanted in the service ticket.
-If the DS API allows that get request in the future, this route should be updated accordingly.
-This route was also built while the authorization tool was being changed from Okta to AuthO so there is currently not an authorization middleware in the route. Once that is completed, the middleware confirming this route is for use by admins only.
-*/
-
-router.post('/mentor-information/', (req, res, next) => {
+//gets all mentors
+router.get('/mentor/information', (req, res, next) => {
   axios
     .post(`${baseURL}/read/mentor`, req.body)
     .then((response) => {
@@ -407,11 +416,26 @@ router.post('/mentor-information/', (req, res, next) => {
     .catch((err) => next(err));
 });
 
-/*Authors: Melody McClure & Miguel Ledesma
-This POST route goes to the DS API.
-This route was also built while the authorization tool was being changed from Okta to AuthO so there is currently not an authorization middleware in the route. Once that is completed, the middleware confirming this route is for use a MENTOR only.
-*/
+//gets all mentees
+router.get('/mentee/information/', (req, res, next) => {
+  axios
+    .post(`${baseURL}/read/mentee`, req.body)
+    .then((response) => {
+      const menteeInfo = response.data.result.map((results) => {
+        const data = {
+          name: `${results.first_name} ${results.last_name}`,
+          city: results.city,
+          state: results.state,
+          availability: results.accepting_new_mentees,
+        };
+        return data;
+      });
+      res.send(menteeInfo);
+    })
+    .catch((err) => next(err));
+});
 
+//mentors posting availablity
 router.post('/availability/:profile_id', (req, res, next) => {
   const { profile_id } = req.params;
   const { accepting_new_mentees } = req.body;

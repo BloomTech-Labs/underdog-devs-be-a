@@ -18,6 +18,7 @@ const verifyJwt = jwt({
 }).unless({
   path: ['/', /^\/application\/.*/, /^\/update-validate_status\/.*/],
 });
+
 //************ */
 //in the above line add all public endpoints (routes with no need for auth) as a string inside the path array [] <=
 // **** IMPORTANT note: if your public endpoint has descendent end points (ex.: ./yourRouterEndPoint/:user_id) you need ot use regex as in the following example:
