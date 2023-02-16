@@ -30,16 +30,19 @@ router.get('/current_user_profile', authRequired, async (req, res, next) => {
 // // gets all profiles
 
 router.get('/', authRequired, adminRequired, async (req, res, next) => {
-  try {
-    const profiles = await Profiles.findAll();
-    res.status(200).json(profiles);
-  } catch (err) {
-    next({ status: 500, message: err.message });
-  }
+  //eslint-disable-line
+  axios
+    .get(`${baseURL}/get/all`)
+    .then((resp) => {
+      console.log(resp.data);
+      res.json(resp.data);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
 });
 
 // // get all profiles by role
-
 router.get(
   '/role/:role',
   authRequired,
