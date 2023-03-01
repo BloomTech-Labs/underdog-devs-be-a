@@ -71,7 +71,6 @@ router.get('/', (req, res) => {
   axios
     .get(`${baseURL}/get/all`)
     .then((app) => {
-      console.log('in the .then', app.data);
       res.send(app.data);
     })
     .catch((err) => {
