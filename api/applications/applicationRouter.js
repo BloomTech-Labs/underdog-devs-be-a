@@ -7,7 +7,6 @@ const {
   checkRole,
 } = require('../middleware/applicationMiddleware');
 const { v4: uuidv4 } = require('uuid');
-const { getAllApplications } = require('./applicationModel');
 const validation = require('../helpers/validation');
 const axios = require('axios');
 const { baseURL } = require('../../config/dsConfig');
@@ -39,8 +38,8 @@ const Profiles = require('../profile/profileModel');
 /**
  * @swagger
  * /application:
- *  post:
- *    summary: Get the list of all applications (mentor and mentees)
+ *  get:
+ *    summary: Get the list of all applications
  *    description: Provides a JSON array of applications (as objects) for FE to consume and filter.
  *    tags:
  *      - application
@@ -65,16 +64,15 @@ const Profiles = require('../profile/profileModel');
  */
 
 /*
-  Author: Melody McClure
-  This post route will read the 'readAllUsers' middleware and send back only the users who have applications in a pending validation status.
-  authRequired, and AdminRequired imports have been left (commented out) because they will likely be needed when auth0 is implemented.
+  This get route will read the '/get/all' DS API endpoint and send back all users.
+  authRequired, and AdminRequired imports have been left out because they will likely be needed when auth0 is implemented.
 */
-router.post('/', (req, res) => {
-  console.log(req.body);
-  const query = req.body;
-  getAllApplications(query)
-    .then((results) => {
-      res.send(results);
+router.get('/', (req, res) => {
+  axios
+    .get(`https://underdogdevs-ds-api.herokuapp.com/get/all`)
+    .then((app) => {
+      console.log('in the .then', app.data);
+      res.send(app.data);
     })
     .catch((err) => {
       res.send(err.message);
