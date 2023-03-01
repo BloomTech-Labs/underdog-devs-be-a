@@ -69,8 +69,9 @@ const Profiles = require('../profile/profileModel');
 */
 router.get('/', (req, res) => {
   axios
-    .get(`${baseURL}/get/all`)
+    .get(`https://underdogdevs-ds-api.herokuapp.com/get/all`)
     .then((app) => {
+      console.log('in the .then', app.data);
       res.send(app.data);
     })
     .catch((err) => {
