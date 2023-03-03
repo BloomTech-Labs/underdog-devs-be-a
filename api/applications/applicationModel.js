@@ -1,5 +1,3 @@
-const axios = require('axios');
-const { baseURL } = require('../../config/dsConfig');
 const db = require('../../data/db-config');
 
 const getTicketById = async (ticket_id) => {
@@ -66,32 +64,6 @@ const updateTicket = async (application_id) => {
   return result;
 };
 
-//tag the mentors/mentees during this search.
-const getAllApplications = async (query) => {
-  const mentorData = await axios
-    .post(`${baseURL}/read/mentor`, query)
-    .then((results) => {
-      const mentors = results.data.result;
-      return mentors;
-    })
-    .catch((err) => {
-      return { err };
-    });
-
-  const menteeData = await axios
-    .post(`${baseURL}/read/mentee`, query)
-    .then((results) => {
-      const mentees = results.data.result;
-      return mentees;
-    })
-    .catch((err) => {
-      return { err };
-    });
-
-  const users = mentorData.concat(menteeData);
-  return users;
-};
-
 module.exports = {
   getTicketById,
   getMentorIntake,
@@ -102,5 +74,5 @@ module.exports = {
   getMenteeSubject,
   updateApplicationNotes,
   updateTicket,
-  getAllApplications,
+  // getAllApplications,
 };
