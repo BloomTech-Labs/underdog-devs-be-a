@@ -29,12 +29,10 @@ router.get('/current_user_profile', authRequired, async (req, res, next) => {
 
 // // gets all profiles
 
-router.get('/', authRequired, adminRequired, async (req, res, next) => {
-  //eslint-disable-line
+router.get('/', authRequired, adminRequired, async (req, res) => {
   axios
     .get(`${baseURL}/get/all`)
     .then((resp) => {
-      console.log(resp.data);
       res.json(resp.data);
     })
     .catch((err) => {
@@ -206,6 +204,7 @@ router.get('/:id', authRequired, async function (req, res, next) {
  *                profile:
  *                  $ref: '#/components/schemas/Profile'
  */
+// post new mentee/mentor account from application
 router.post('/', authRequired, async (req, res, next) => {
   const profile = req.body;
   if (profile) {
