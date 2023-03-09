@@ -43,16 +43,17 @@ router.get('/', authRequired, adminRequired, async (req, res) => {
 //get all profiles by role including matches
 
 router.get('/role/:role', authRequired, adminRequired, (req, res) => {
-  if (req.params.role === 'mentee') {
+  if (req.params.role === 'mentor') {
     axios
-      .get(`${baseURL}/mentee/matches/all/obj`)
+      .get(`${baseURL}/matches/all/obj`)
       .then((response) => {
+        console.log(`Response`, response);
         res.status(200).json(response.data);
       })
       .catch((err) => console.log(err));
   } else {
     axios
-      .get(`${baseURL}/matches/all/obj`)
+      .get(`${baseURL}/mentee/matches/all/obj`)
       .then((response) => {
         res.status(200).json(response.data);
       })
