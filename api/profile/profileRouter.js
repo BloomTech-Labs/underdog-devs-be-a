@@ -29,30 +29,37 @@ router.get('/current_user_profile', authRequired, async (req, res, next) => {
 
 // // gets all profiles
 
-router.get('/', authRequired, adminRequired, async (req, res, next) => {
-  try {
-    const profiles = await Profiles.findAll();
-    res.status(200).json(profiles);
-  } catch (err) {
-    next({ status: 500, message: err.message });
-  }
+router.get('/', authRequired, adminRequired, async (req, res) => {
+  axios
+    .get(`${baseURL}/get/all`)
+    .then((resp) => {
+      res.json(resp.data);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
 });
 
-// // get all profiles by role
+//get all profiles by role including matches
 
-router.get(
-  '/role/:role',
-  authRequired,
-  adminRequired,
-  async (req, res, next) => {
-    try {
-      const profiles = await Profiles.findByRole(req.params.role);
-      res.status(200).json(profiles);
-    } catch (err) {
-      next({ status: 500, message: err.message });
-    }
+router.get('/role/:role', authRequired, adminRequired, (req, res) => {
+  if (req.params.role === 'mentor') {
+    axios
+      .get(`${baseURL}/matches/all/obj`)
+      .then((response) => {
+        console.log(`Response`, response);
+        res.status(200).json(response.data);
+      })
+      .catch((err) => console.log(err));
+  } else {
+    axios
+      .get(`${baseURL}/mentee/matches/all/obj`)
+      .then((response) => {
+        res.status(200).json(response.data);
+      })
+      .catch((err) => console.log(err));
   }
-);
+});
 
 /**
  * @swagger
@@ -203,6 +210,7 @@ router.get('/:id', authRequired, async function (req, res, next) {
  *                profile:
  *                  $ref: '#/components/schemas/Profile'
  */
+// post new mentee/mentor account from application
 router.post('/', authRequired, async (req, res, next) => {
   const profile = req.body;
   if (profile) {

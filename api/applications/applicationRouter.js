@@ -298,19 +298,24 @@ router.post('/update-validate_status/:profile_id', async (req, res, next) => {
   let user_id;
 
   try {
-    await axios.post(`${baseURL}/update/${role}/${profile_id}`, {
-      validate_status: status,
-    });
+    const statusUpdate = await axios.post(
+      `${baseURL}/update/${role}/${profile_id}`,
+      {
+        validate_status: status,
+      }
+    );
     if (status === 'rejected') {
       res.json({ status: 200, message: `${role} rejected!` });
-      return;
+      return statusUpdate;
+    } else {
+      res.json({ status: 200, message: `${role} accepted!` });
+      return statusUpdate;
     }
   } catch (err) {
     next({
       status: err.response.status,
       message: err.response.data.detail[0].msg,
     });
-    return;
   }
 
   try {
