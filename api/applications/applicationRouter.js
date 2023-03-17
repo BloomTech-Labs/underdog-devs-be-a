@@ -10,9 +10,9 @@ const { v4: uuidv4 } = require('uuid');
 const validation = require('../helpers/validation');
 const axios = require('axios');
 const { baseURL } = require('../../config/dsConfig');
-const { issuer, connection, token } = require('../../config/auth0');
-const { passGenerator } = require('../helpers/passGenerator');
-const Profiles = require('../profile/profileModel');
+// const { issuer, connection, token } = require('../../config/auth0');
+// const { passGenerator } = require('../helpers/passGenerator');
+// const Profiles = require('../profile/profileModel');
 
 /**
  * @swagger
@@ -292,69 +292,76 @@ router.post('/new/:role', validation(), async (req, res, next) => {
  *                message:  'insert into \"profiles\" (\"profile_id\", \"role\") values ($1, $2) returning * - null value in column \"user_id\" of relation \"profiles\" violates not-null constraint'
  */
 
-router.post('/update-validate_status/:profile_id', async (req, res, next) => {
-  const { role, email, status } = req.body;
-  const { profile_id } = req.params;
-  let user_id;
-
-  try {
-    const statusUpdate = await axios.post(
-      `${baseURL}/update/${role}/${profile_id}`,
-      {
-        validate_status: status,
+router.post('/update-validate_status/mentee/:profile_id', (req, res) => {
+  //add back next, role, and email
+  const { validate_status } = req.body;
+  let { profile_id } = req.params;
+  axios
+    .patch(`${baseURL}/update/mentee/${profile_id}`, {
+      validate_status: validate_status,
+    })
+    .then(() => {
+      console.log('I AM IN THE TRY');
+      if (validate_status === 'rejected') {
+        res.json({ status: 200, message: `mentee rejected!` });
+        console.log('PATCH complete');
+      } else {
+        res.json({ status: 200, message: `mentee accepted!` });
+        console.log('PATCH complete');
       }
-    );
-    if (status === 'rejected') {
-      res.json({ status: 200, message: `${role} rejected!` });
-      return statusUpdate;
-    } else {
-      res.json({ status: 200, message: `${role} accepted!` });
-      return statusUpdate;
-    }
-  } catch (err) {
-    next({
-      status: err.response.status,
-      message: err.response.data.detail[0].msg,
+    })
+    .catch((err) => {
+      console.log('CAUGHT IN PATCH ERROR');
+      console.log(err.message);
     });
-  }
 
-  try {
-    const payload = {
-      email,
-      password: passGenerator(8),
-      connection,
-    };
-    const authData = await axios.post(`${issuer}api/v2/users`, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    user_id = authData.data.identities[0].user_id;
-  } catch (err) {
-    next({
-      status: err.response.data.statusCode,
-      message: `${err.response.data.error}: ${err.response.data.message}`,
-    });
-    return;
-  }
+  // next({
+  //   status: err.response.status,
+  //   message: err.response.data.detail[0].msg,
+  // });
 
-  try {
-    const newProfile = {
-      user_id,
-      profile_id,
-      role,
-    };
+  // try {
+  //   const payload = {
+  //     email,
+  //     password: passGenerator(8),
+  //     connection,
+  //   };
+  //   console.log('IN THE AUTH0 POST');
+  //   const authData = await axios.post(`${issuer}api/v2/users`, payload, {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //   });
+  //   console.log('AUTH0 POST COMPLETE');
+  //   profile_id = authData.data[authData.length - 1].user_id;
+  //   console.log(profile_id);
+  //   console.log(authData);
+  //   next();
+  // } catch (err) {
+  //   // next({
+  //   //   status: err.response,
+  //   //   message: `${err.response}: ${err.response}`,
+  //   // });
+  //   console.log('CAUGHT IN THE POST ERROR');
+  //   return;
+  // }
 
-    await Profiles.create(newProfile);
-  } catch (err) {
-    next({ status: 422, message: err.message });
-    return;
-  }
+  // try {
+  //   const newProfile = {
+  //     profile_id,
+  //     role,
+  //   };
 
-  res.json({
-    status: 201,
-    message: `${role} application approved and user created!`,
-  });
+  //   await Profiles.create(newProfile);
+  // } catch (err) {
+  //   next({ status: 422, message: err.message });
+  //   return;
+  // }
+  // console.log('USER CREATED');
+  // res.json({
+  //   status: 201,
+  //   message: `${role} application approved and user created!`,
+  // });
 });
 
 module.exports = router;

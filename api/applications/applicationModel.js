@@ -74,5 +74,4 @@ module.exports = {
   getMenteeSubject,
   updateApplicationNotes,
   updateTicket,
-  // getAllApplications,
 };
