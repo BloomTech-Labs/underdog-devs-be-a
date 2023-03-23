@@ -18,10 +18,20 @@ validateUser;
 
 // gets current user profile
 
-router.get('/current_user_profile', authRequired, async (req, res, next) => {
+// router.post('/current_user_profile', authRequired, async (req, res, next) => {
+//   try {
+//     req.profile = await Profiles.findById(req.profile.profile_id);
+//     res.status(200).json(req.profile);
+//   } catch (err) {
+//     next({ status: 500, message: err.message });
+//   }
+// });
+
+router.post('/current_user_profile', authRequired, async (req, res, next) => {
   try {
-    req.profile = await Profiles.findById(req.profile.profile_id);
-    res.status(200).json(req.profile);
+    let profile = await Profiles.findById(req.body.sub);
+    console.log(profile);
+    profile ? res.status(200).json(profile) : console.log('searching...');
   } catch (err) {
     next({ status: 500, message: err.message });
   }

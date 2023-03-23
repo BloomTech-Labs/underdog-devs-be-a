@@ -29,6 +29,11 @@ const profiles = [
     profile_id: 'aa388259-28a9-4fa3-a988-ec08070a4f2e',
     role: 'mentee',
   },
+  {
+    user_id: '57575473563cb2353260e',
+    profile_id: 'auth0|62e4439b9b1f5f6077c26aab',
+    role: 'admin',
+  },
 ];
 
 exports.seed = function (knex) {
