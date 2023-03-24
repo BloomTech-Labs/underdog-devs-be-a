@@ -29,10 +29,47 @@ const profiles = [
     profile_id: 'aa388259-28a9-4fa3-a988-ec08070a4f2e',
     role: 'mentee',
   },
+  // bear001
   {
     user_id: '57575473563cb2353260e',
     profile_id: 'auth0|62e4439b9b1f5f6077c26aab',
     role: 'admin',
+  },
+  // bear002
+  {
+    user_id: '36537y357143g3464t43g3',
+    profile_id: 'auth0|62e443bde8116e9fce827b52',
+    role: 'mentor',
+  },
+  // bear003
+  {
+    user_id: '989071241356n35ung325',
+    profile_id: 'auth0|62e443dfdf1dad2163efdb89',
+    role: 'mentor',
+  },
+  // bear004
+  {
+    user_id: '3405709746j46425098080e',
+    profile_id: 'auth0|62e443f59b1f5f6077c26ab9',
+    role: 'mentee',
+  },
+  // bear005
+  {
+    user_id: '245097896214607f09708e',
+    profile_id: 'auth0|62e44408e1c5006f71b0f30a',
+    role: 'mentee',
+  },
+  // bear006
+  {
+    user_id: '23407298569f09708739542j',
+    profile_id: 'auth0|62e444269b1f5f6077c26abd',
+    role: 'mentee',
+  },
+  // bear007
+  {
+    user_id: '235908798640609780325jd34',
+    profile_id: 'auth0|62e444448fc49f84e9d39497',
+    role: 'mentee',
   },
 ];
 
