@@ -294,18 +294,18 @@ router.post('/new/:role', validation(), async (req, res, next) => {
 
 router.post('/update-validate_status/mentee/:profile_id', (req, res, next) => {
   //add back next, role
-  const { email, validate_status } = req.body;
+  const { validate_status } = req.body;
   let { profile_id } = req.params;
-  const payload = {
-    email,
-    password: passGenerator(8),
-    connection,
-  };
-  const tokenPayload = {
-    grant_type: 'refresh_token',
-    client_id: id,
-    refresh_token: token,
-  };
+  // const payload = {
+  //   email,
+  //   password: passGenerator(8),
+  //   connection,
+  // };
+  // const tokenPayload = {
+  //   grant_type: 'refresh_token',
+  //   client_id: id,
+  //   refresh_token: token,
+  // };
 
   axios
     .patch(`${baseURL}/update/mentee/${profile_id}`, {
@@ -327,28 +327,28 @@ router.post('/update-validate_status/mentee/:profile_id', (req, res, next) => {
       console.log(err.message);
     });
 
-  let options = {
-    method: 'POST',
-    url: 'https://dev-35n2stap.auth0.com/oauth/token',
-    headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      authorization: 'Basic {yourApplicationCredentials}',
-    },
-    data: new URLSearchParams({
-      grant_type: 'refresh_token',
-      client_id: 'bg2CfdU4AcbHszYn3IKh5nqCqTINxmsW',
-      refresh_token: token,
-    }),
-  };
+  // let options = {
+  //   method: 'POST',
+  //   url: 'https://dev-35n2stap.auth0.com/oauth/token',
+  //   headers: {
+  //     'content-type': 'application/x-www-form-urlencoded',
+  //     authorization: 'Basic {yourApplicationCredentials}',
+  //   },
+  //   data: new URLSearchParams({
+  //     grant_type: 'refresh_token',
+  //     client_id: 'bg2CfdU4AcbHszYn3IKh5nqCqTINxmsW',
+  //     refresh_token: token,
+  //   }),
+  // };
 
-  axios
-    .request(options)
-    .then(function (response) {
-      console.log(response.data);
-    })
-    .catch(function (error) {
-      console.error(error);
-    });
+  // axios
+  //   .request(options)
+  //   .then(function (response) {
+  //     console.log(response.data);
+  //   })
+  //   .catch(function (error) {
+  //     console.error(error);
+  //   });
 
   // axios
   //   .post('https://dev-35n2stap.auth0.com/oauth/token', tokenPayload)
