@@ -10,8 +10,8 @@ const { v4: uuidv4 } = require('uuid');
 const validation = require('../helpers/validation');
 const axios = require('axios');
 const { baseURL } = require('../../config/dsConfig');
-// const { issuer, connection, token } = require('../../config/auth0');
-// const { passGenerator } = require('../helpers/passGenerator');
+const { issuer, connection, token, id } = require('../../config/auth0');
+const { passGenerator } = require('../helpers/passGenerator');
 // const Profiles = require('../profile/profileModel');
 
 /**
@@ -292,22 +292,34 @@ router.post('/new/:role', validation(), async (req, res, next) => {
  *                message:  'insert into \"profiles\" (\"profile_id\", \"role\") values ($1, $2) returning * - null value in column \"user_id\" of relation \"profiles\" violates not-null constraint'
  */
 
-router.post('/update-validate_status/mentee/:profile_id', (req, res) => {
-  //add back next, role, and email
-  const { validate_status } = req.body;
+router.post('/update-validate_status/mentee/:profile_id', (req, res, next) => {
+  //add back next, role
+  const { email, validate_status } = req.body;
   let { profile_id } = req.params;
+  const payload = {
+    email,
+    password: passGenerator(8),
+    connection,
+  };
+  const tokenPayload = {
+    grant_type: 'refresh_token',
+    client_id: id,
+    refresh_token: token,
+  };
+
   axios
     .patch(`${baseURL}/update/mentee/${profile_id}`, {
       validate_status: validate_status,
     })
     .then(() => {
-      console.log('I AM IN THE TRY');
+      console.log('I AM IN THE PATCH THEN');
       if (validate_status === 'rejected') {
         res.json({ status: 200, message: `mentee rejected!` });
         console.log('PATCH complete');
       } else {
-        res.json({ status: 200, message: `mentee accepted!` });
-        console.log('PATCH complete');
+        // res.json({ status: 200, message: `mentee accepted!` });
+        console.log('ELSE PATCH complete');
+        next();
       }
     })
     .catch((err) => {
@@ -315,33 +327,54 @@ router.post('/update-validate_status/mentee/:profile_id', (req, res) => {
       console.log(err.message);
     });
 
-  // next({
-  //   status: err.response.status,
-  //   message: err.response.data.detail[0].msg,
-  // });
+  let options = {
+    method: 'POST',
+    url: 'https://dev-35n2stap.auth0.com/oauth/token',
+    headers: {
+      'content-type': 'application/x-www-form-urlencoded',
+      authorization: 'Basic {yourApplicationCredentials}',
+    },
+    data: new URLSearchParams({
+      grant_type: 'refresh_token',
+      client_id: 'bg2CfdU4AcbHszYn3IKh5nqCqTINxmsW',
+      refresh_token: token,
+    }),
+  };
 
-  // try {
-  //   const payload = {
-  //     email,
-  //     password: passGenerator(8),
-  //     connection,
-  //   };
-  //   console.log('IN THE AUTH0 POST');
-  //   const authData = await axios.post(`${issuer}api/v2/users`, payload, {
+  axios
+    .request(options)
+    .then(function (response) {
+      console.log(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+
+  // axios
+  //   .post('https://dev-35n2stap.auth0.com/oauth/token', tokenPayload)
+  //   .then((response) => {
+  //     console.log('HELLO FROM THE GET');
+  //     console.log(response);
+  //     next();
+  //   })
+  //   .catch((err) => console.log(err.message));
+
+  // axios
+  //   .post(`https://underdog-devs-a-api.herokuapp.com/api/v2/users`, payload, {
   //     headers: {
   //       Authorization: `Bearer ${token}`,
   //     },
-  //   });
-  //   console.log('AUTH0 POST COMPLETE');
+  //   })
+  //   .then((resp) => console.log('AUTH0 POST THEN', resp))
+  //   .catch((err) => console.log('CAUGHT IN AUTH0 POST ERROR', err.message));
+  // console.log('AUTH0 POST COMPLETE');
+
+  // try {
   //   profile_id = authData.data[authData.length - 1].user_id;
   //   console.log(profile_id);
   //   console.log(authData);
   //   next();
   // } catch (err) {
-  //   // next({
-  //   //   status: err.response,
-  //   //   message: `${err.response}: ${err.response}`,
-  //   // });
   //   console.log('CAUGHT IN THE POST ERROR');
   //   return;
   // }

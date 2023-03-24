@@ -4,4 +4,6 @@ module.exports = {
   issuer: process.env.AUTH0_ISSUER,
   connection: process.env.AUTH0_CONNECTION,
   token: process.env.AUTH0_TOKEN,
+  secret: process.env.AUTH0_SECRET,
+  id: process.env.AUTH0_CLIENT_ID,
 };

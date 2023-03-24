@@ -45,7 +45,7 @@ router.get('/', authRequired, adminRequired, async (req, res) => {
 router.get('/role/:role', authRequired, adminRequired, (req, res) => {
   if (req.params.role === 'mentee') {
     axios
-      .get(`${baseURL}/mentee/matches/all/obj`)
+      .get(`${baseURL}/get/all`)
       .then((response) => {
         res.status(200).json(response.data);
       })
