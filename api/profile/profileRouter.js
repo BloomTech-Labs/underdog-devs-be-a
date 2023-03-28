@@ -45,7 +45,7 @@ router.get('/', authRequired, adminRequired, async (req, res) => {
 router.get('/role/:role', authRequired, adminRequired, (req, res) => {
   if (req.params.role === 'mentor') {
     axios
-      .get(`${baseURL}mentor/matches`)
+      .get(`${baseURL}/matches/all/obj`)
       .then((response) => {
         console.log(`Response`, response);
         res.status(200).json(response.data);
@@ -60,6 +60,66 @@ router.get('/role/:role', authRequired, adminRequired, (req, res) => {
       .catch((err) => console.log(err));
   }
 });
+
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    Profile:
+ *      type: object
+ *      required:
+ *        - id
+ *        - email
+ *        - name
+ *        - avatarUrl
+ *      properties:
+ *        id:
+ *          type: string
+ *          description: This is a foreign key (the okta user ID)
+ *        email:
+ *          type: string
+ *        name:
+ *          type: string
+ *        avatarUrl:
+ *          type: string
+ *          description: public url of profile avatar
+ *      example:
+ *        id: '00uhjfrwdWAQvD8JV4x6'
+ *        email: 'frank@example.com'
+ *        name: 'Frank Martinez'
+ *        avatarUrl: 'https://s3.amazonaws.com/uifaces/faces/twitter/hermanobrother/128.jpg'
+ *
+ * /profile:
+ *  get:
+ *    description: Returns a list of profiles
+ *    summary: Get a list of all profiles
+ *    security:
+ *      - okta: []
+ *    tags:
+ *      - profile
+ *    responses:
+ *      200:
+ *        description: array of profiles
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: array
+ *              items:
+ *                $ref: '#/components/schemas/Profile'
+ *              example:
+ *                - id: '00uhjfrwdWAQvD8JV4x6'
+ *                  email: 'frank@example.com'
+ *                  name: 'Frank Martinez'
+ *                  avatarUrl: 'https://s3.amazonaws.com/uifaces/faces/twitter/hermanobrother/128.jpg'
+ *                - id: '013e4ab94d96542e791f'
+ *                  email: 'cathy@example.com'
+ *                  name: 'Cathy Warmund'
+ *                  avatarUrl: 'https://s3.amazonaws.com/uifaces/faces/twitter/geneseleznev/128.jpg'
+ *      401:
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *      403:
+ *        $ref: '#/components/responses/UnauthorizedError'
+ */
 
 router.get('/:id', authRequired, async function (req, res, next) {
   const id = String(req.params.id);
@@ -78,6 +138,43 @@ router.get('/:id', authRequired, async function (req, res, next) {
       next({ status: 500, message: err.message });
     });
 });
+
+/**
+ * @swagger
+ * /profile:
+ *  post:
+ *    summary: Add a profile
+ *    security:
+ *      - okta: []
+ *    tags:
+ *      - profile
+ *    requestBody:
+ *      description: Profile object to to be added
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/Profile'
+ *    responses:
+ *      400:
+ *        $ref: '#/components/responses/BadRequest'
+ *      401:
+ *        $ref: '#/components/responses/UnauthorizedError'
+ *      404:
+ *        description: 'Profile not found'
+ *      201:
+ *        description: A profile object
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: A message about the result
+ *                  example: profile created
+ *                profile:
+ *                  $ref: '#/components/schemas/Profile'
+ */
 
 // post new mentee/mentor account from application
 router.post('/', authRequired, async (req, res, next) => {
