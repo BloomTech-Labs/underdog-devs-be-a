@@ -121,41 +121,6 @@ router.get('/role/:role', authRequired, adminRequired, (req, res) => {
  *        $ref: '#/components/responses/UnauthorizedError'
  */
 
-/**
- * @swagger
- * components:
- *  parameters:
- *    profile_id:
- *      name: id
- *      in: path
- *      description: ID of the profile to return
- *      required: true
- *      example: 00uhjfrwdWAQvD8JV4x6
- *      schema:
- *        type: string
- *
- * /profile/{id}:
- *  get:
- *    description: Find profiles by ID
- *    summary: Returns a single profile
- *    security:
- *      - okta: []
- *    tags:
- *      - profile
- *    parameters:
- *      - $ref: '#/components/parameters/profile_id'
- *    responses:
- *      200:
- *        description: A profile object
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/Profile'
- *      401:
- *        $ref: '#/components/responses/UnauthorizedError'
- *      404:
- *        description: 'Profile not found'
- */
 router.get('/:id', authRequired, async function (req, res, next) {
   const id = String(req.params.id);
   const attendance_average = await Profiles.checkAverageAttendance(id);
@@ -210,6 +175,7 @@ router.get('/:id', authRequired, async function (req, res, next) {
  *                profile:
  *                  $ref: '#/components/schemas/Profile'
  */
+
 // post new mentee/mentor account from application
 router.post('/', authRequired, async (req, res, next) => {
   const profile = req.body;
@@ -235,40 +201,7 @@ router.post('/', authRequired, async (req, res, next) => {
     next({ status: 404, message: 'Profile missing' });
   }
 });
-/**
- * @swagger
- * /profile:
- *  put:
- *    summary: Update a profile
- *    security:
- *      - okta: []
- *    tags:
- *      - profile
- *    requestBody:
- *      description: Profile object to to be updated
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#/components/schemas/Profile'
- *    responses:
- *      401:
- *        $ref: '#/components/responses/UnauthorizedError'
- *      404:
- *        $ref: '#/components/responses/NotFound'
- *      200:
- *        description: A profile object
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  description: A message about the result
- *                  example: profile created
- *                profile:
- *                  $ref: '#/components/schemas/Profile'
- */
+
 // update current profile firstname, lastname, email
 router.put(
   '/',
@@ -328,40 +261,7 @@ router.put('/:id', adminRequired, authRequired, (req, res, next) => {
     next(err);
   }
 });
-/**
- * @swagger
- * /profile/is_active/:profile_id:
- *  put:
- *    summary: Update a is_active filed in for the profile table.
- *    security:
- *      - okta: [authRequired,superAdminRequired,validateUser]
- *    tags:
- *      - profile
- *    requestBody:
- *      description: Profile object to updated is_active
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#/components/schemas/Profile'
- *    responses:
- *      401:
- *        $ref: '#/components/responses/UnauthorizedError'
- *      404:
- *        $ref: '#/components/responses/NotFound'
- *      200:
- *        description: A profile object
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  description: A message about the result
- *                  example: profile created
- *                profile:
- *                  $ref: '#/components/schemas/Profile'
- */
+
 // Activates or deactivates a user depending on what their current is_active status is
 router.put(
   '/is_active/:profile_id',

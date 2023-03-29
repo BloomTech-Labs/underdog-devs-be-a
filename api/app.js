@@ -37,6 +37,8 @@ const roleTicketsRouter = require('./roleTickets/roleTicketsRouter');
 const noteRouter = require('./notes/noteRouter');
 const reviewsRouter = require('./reviews/reviewsRouter');
 const gettingStartedRouter = require('./getting_started/gettingStartedRouter');
+const userManagementRouter = require('./userManagement/userManagementRouter');
+const matchingModalRouter = require('./matchingModal/matchingModalRouter');
 
 const app = express();
 
@@ -83,6 +85,8 @@ app.use('/role-tickets', roleTicketsRouter);
 app.use('/notes', noteRouter);
 app.use('/reviews', reviewsRouter);
 app.use('/getting_started', gettingStartedRouter);
+app.use('/users', userManagementRouter);
+app.use('/matches', matchingModalRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
