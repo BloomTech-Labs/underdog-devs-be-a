@@ -3,10 +3,11 @@ const router = express.Router();
 const axios = require('axios');
 const { baseURL } = require('../../config/dsConfig');
 
-router.post('/read/mentor', (req, res) => {
+router.post('/read/:role', (req, res) => {
+  const role = req.params.role;
   axios({
     method: 'post',
-    url: `${baseURL}/read/mentor`,
+    url: `${baseURL}/read/${role}`,
     data: req.body,
   })
     .then((resp) => {
@@ -15,11 +16,12 @@ router.post('/read/mentor', (req, res) => {
     .catch((err) => console.error(err));
 });
 
-router.post('/read/mentee', (req, res) => {
+router.post('/:role/:profile_id', (req, res) => {
+  const role = req.params.role;
+  const profile_id = req.params.profile_id;
   axios({
     method: 'post',
-    url: `${baseURL}/read/mentee`,
-    data: req.body,
+    url: `${baseURL}/${role}-match/${profile_id}`,
   })
     .then((resp) => {
       res.status(200).json(resp.data.result);
