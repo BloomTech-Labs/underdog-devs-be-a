@@ -218,14 +218,13 @@ router.post('/new/:role', validation(), async (req, res, next) => {
       mentor['industry_knowledge'] = false;
       mentor['profile_id'] = uuid;
     }
-    console.log(req.body);
     await axios
       .post(`${baseURL}/create/${req.params.role}`, req.body)
-      .then((res) => {
-        next({ status: res.status, message: res.data });
+      .then((response) => {
+        res.status(200).json(response.data);
       });
   } catch (err) {
-    next(err);
+    next({ status: 500, message: err.message });
     return;
   }
 });
