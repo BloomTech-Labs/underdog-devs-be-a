@@ -30,8 +30,6 @@ validateUser;
 router.post('/current_user_profile', authRequired, async (req, res, next) => {
   try {
     let profile = await Profiles.findById(req.body.sub);
-    console.log(profile);
-
     if (profile.role === 'admin') {
       profile ? res.status(200).json(profile) : console.log('searching...');
     } else {
@@ -40,7 +38,6 @@ router.post('/current_user_profile', authRequired, async (req, res, next) => {
           profile_id: profile.profile_id,
         })
         .then((userInfo) => {
-          console.log(userInfo.data.result[0]);
           res
             .status(200)
             .json({ ...userInfo.data.result[0], role: profile.role });
@@ -74,7 +71,6 @@ router.get('/role/:role', authRequired, adminRequired, (req, res) => {
     axios
       .get(`${baseURL}/matches/all/obj`)
       .then((response) => {
-        console.log(`Response`, response);
         res.status(200).json(response.data);
       })
       .catch((err) => console.log(err));

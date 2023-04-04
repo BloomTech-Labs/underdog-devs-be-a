@@ -5,7 +5,6 @@ const { baseURL } = require('../../config/dsConfig');
 
 router.post('/read/:role', (req, res) => {
   const role = req.params.role;
-  console.log(role);
   axios({
     method: 'post',
     url: `${baseURL}/read/${role}`,
