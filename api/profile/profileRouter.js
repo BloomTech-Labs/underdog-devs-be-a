@@ -32,7 +32,9 @@ router.post('/current_user_profile', authRequired, async (req, res, next) => {
     let profile = await Profiles.findById(req.body.sub);
     console.log(profile);
 
-    if (profile.role === 'admin') {
+    if (profile === undefined) {
+      res.status(404).json({ userExists: false });
+    } else if (profile.role === 'admin') {
       profile ? res.status(200).json(profile) : console.log('searching...');
     } else {
       axios

@@ -20,6 +20,10 @@ const create = (profile) => {
   return db('profiles').insert(profile).returning('*');
 };
 
+const createTemp = (profile) => {
+  return db('temp_user_data').insert(profile).returning('*');
+};
+
 const update = (id, profile) => {
   return db('profiles')
     .where({ profile_id: id })
@@ -42,6 +46,10 @@ const updateIsActive = async (profile_id, status) => {
 
 const remove = (id) => {
   return db('profiles').where({ id }).del();
+};
+
+const removeTemp = (id) => {
+  return db('temp_user_data').where({ id }).del();
 };
 
 const findOrCreateProfile = async (profileObj) => {
@@ -103,4 +111,6 @@ module.exports = {
   menteeApplicationData,
   checkAverageAttendance,
   findByRole,
+  createTemp,
+  removeTemp,
 };
