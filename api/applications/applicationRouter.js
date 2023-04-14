@@ -10,6 +10,8 @@ const { v4: uuidv4 } = require('uuid');
 const validation = require('../helpers/validation');
 const axios = require('axios');
 const { baseURL } = require('../../config/dsConfig');
+const Profiles = require('../profile/profileModel');
+
 /**
  * @swagger
  * components:
@@ -287,24 +289,29 @@ router.post('/new/:role', validation(), async (req, res, next) => {
  *                message:  'insert into \"profiles\" (\"profile_id\", \"role\") values ($1, $2) returning * - null value in column \"user_id\" of relation \"profiles\" violates not-null constraint'
  */
 
+// eslint-disable-next-line no-unused-vars
 router.post('/update-validate_status/:profile_id', async (req, res, next) => {
   const { role, validate_status } = req.body;
   const { profile_id } = req.params;
+  const newProfile = {
+    profile_id,
+    role,
+    validate_status,
+  };
 
   axios
-    .patch(`${baseURL}update/${role}/${profile_id}`, {
+    .patch(`${baseURL}/update/${role}/${profile_id}`, {
       validate_status: validate_status,
     })
     // eslint-disable-next-line no-unused-vars
     .then((resp) => {
+      Profiles.create(newProfile);
       res.status(200).json({
         message: `${role} ${validate_status}!`,
       });
     })
     .catch((err) => {
-      next({
-        message: err.response,
-      });
+      console.error(err.response.message);
     });
 });
 
