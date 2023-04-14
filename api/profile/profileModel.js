@@ -12,6 +12,10 @@ const findById = (profile_id) => {
   return db('profiles').where({ profile_id }).first().select('*');
 };
 
+const findTempById = (profile_id) => {
+  return db('temp_user_data').where({ profile_id }).first().select('*');
+};
+
 const findByRole = (role) => {
   return db('profiles').where({ role }).select('*');
 };
@@ -114,4 +118,5 @@ module.exports = {
   findByRole,
   createTemp,
   removeTemp,
+  findTempById,
 };
