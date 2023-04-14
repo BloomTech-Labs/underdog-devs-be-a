@@ -157,7 +157,7 @@ Please see [this file](./__tests__/README.md) for more info.
 | GET    | `/application/:role`            | -`mentor or mentee (req.param)`                                                  | `gets all pending applications filtered by role`                 | `Admin`   |
 | GET    | `/application/profileId/:id`    | -`profile id (req.param)`                                                        | `gets pending application by profile id`                         | `Admin`   |
 | POST   | `/application/new/:role`        | -`mentor or mentee (req.param)`, `sign-up form data(mentor/mentee intake)`       | `stores intake data & creates new pending application`           |           |
-| PUT    | `/application/update-role`      | -`position (role_id)`, `application_id`, `profile_id`,                           | `update profile role and update application to approved: true`   | `Admin`   |
+| PUT    | `/update-validate_status/:profile_id`      | -`position (role)`, `validate_status`,                           | `create profile and update application to approved: true`   | `Admin`   |
 | PUT    | `/application/register/:id`     | -`profile_id (req.param)`                                                        | `registers user to okta & updates application to approved: true` | `Admin`   |
 | PUT    | `/application/update-notes/:id` | -`application_id (req.param)` , `application_notes (req.body.application_notes)` | `updates note field on application ticket`                       | `Admin`   |
 | PUT    | `/application/intake/:role/:id` | -`role (req.param)` , `profile_id (req.param)`                                   | `get mentor or mentee intake data from DS database`              | `Admin`   |

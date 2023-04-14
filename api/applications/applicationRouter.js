@@ -290,7 +290,7 @@ router.post('/new/:role', validation(), async (req, res, next) => {
  */
 
 // eslint-disable-next-line no-unused-vars
-router.post('/update-validate_status/:profile_id', async (req, res, next) => {
+router.put('/update-validate_status/:profile_id', async (req, res, next) => {
   const { role, validate_status } = req.body;
   const { profile_id } = req.params;
   const newProfile = {
