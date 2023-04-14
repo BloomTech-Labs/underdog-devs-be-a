@@ -31,9 +31,21 @@ router.post('/current_user_profile', authRequired, async (req, res, next) => {
   try {
     let profile = await Profiles.findById(req.body.sub);
     console.log(profile);
+    console.log({
+      profile_id: req.body.sub,
+      role: req.body[`${process.env.REACT_APP_AUTH0_IDTOKEN_IDENTIFIER}/role`],
+      email: req.body.email,
+    });
 
     if (profile === undefined) {
-      res.status(404).json({ userExists: false });
+      let newProfile = await Profiles.createTemp({
+        profile_id: req.body.sub,
+        role: req.body[
+          `${process.env.REACT_APP_AUTH0_IDTOKEN_IDENTIFIER}/role`
+        ],
+        email: req.body.email,
+      });
+      console.log(newProfile);
     } else if (profile.role === 'admin') {
       profile ? res.status(200).json(profile) : console.log('searching...');
     } else {

@@ -21,6 +21,7 @@ const create = (profile) => {
 };
 
 const createTemp = (profile) => {
+  // console.log(profile);
   return db('temp_user_data').insert(profile).returning('*');
 };
 
