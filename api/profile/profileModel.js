@@ -54,7 +54,7 @@ const remove = (id) => {
 };
 
 const removeTemp = (id) => {
-  return db('temp_user_data').where({ id }).del();
+  return db('temp_user_data').where('profile_id', id).del();
 };
 
 const findOrCreateProfile = async (profileObj) => {
