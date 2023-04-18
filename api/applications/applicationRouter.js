@@ -10,8 +10,6 @@ const { v4: uuidv4 } = require('uuid');
 const validation = require('../helpers/validation');
 const axios = require('axios');
 const { baseURL } = require('../../config/dsConfig');
-const { issuer, connection, token } = require('../../config/auth0');
-const { passGenerator } = require('../helpers/passGenerator');
 const Profiles = require('../profile/profileModel');
 
 /**
@@ -291,69 +289,30 @@ router.post('/new/:role', validation(), async (req, res, next) => {
  *                message:  'insert into \"profiles\" (\"profile_id\", \"role\") values ($1, $2) returning * - null value in column \"user_id\" of relation \"profiles\" violates not-null constraint'
  */
 
-router.post('/update-validate_status/:profile_id', async (req, res, next) => {
-  const { role, email, status } = req.body;
+// eslint-disable-next-line no-unused-vars
+router.put('/update-validate_status/:profile_id', async (req, res, next) => {
+  const { role, validate_status } = req.body;
   const { profile_id } = req.params;
-  let user_id;
+  const newProfile = {
+    profile_id,
+    role,
+    validate_status,
+  };
 
-  try {
-    const statusUpdate = await axios.post(
-      `${baseURL}/update/${role}/${profile_id}`,
-      {
-        validate_status: status,
-      }
-    );
-    if (status === 'rejected') {
-      res.json({ status: 200, message: `${role} rejected!` });
-      return statusUpdate;
-    } else {
-      res.json({ status: 200, message: `${role} accepted!` });
-      return statusUpdate;
-    }
-  } catch (err) {
-    next({
-      status: err.response.status,
-      message: err.response.data.detail[0].msg,
+  axios
+    .patch(`${baseURL}/update/${role}/${profile_id}`, {
+      validate_status: validate_status,
+    })
+    // eslint-disable-next-line no-unused-vars
+    .then((resp) => {
+      Profiles.create(newProfile);
+      res.status(200).json({
+        message: `${role} ${validate_status}!`,
+      });
+    })
+    .catch((err) => {
+      console.error(err.response.message);
     });
-  }
-
-  try {
-    const payload = {
-      email,
-      password: passGenerator(8),
-      connection,
-    };
-    const authData = await axios.post(`${issuer}api/v2/users`, payload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    user_id = authData.data.identities[0].user_id;
-  } catch (err) {
-    next({
-      status: err.response.data.statusCode,
-      message: `${err.response.data.error}: ${err.response.data.message}`,
-    });
-    return;
-  }
-
-  try {
-    const newProfile = {
-      user_id,
-      profile_id,
-      role,
-    };
-
-    await Profiles.create(newProfile);
-  } catch (err) {
-    next({ status: 422, message: err.message });
-    return;
-  }
-
-  res.json({
-    status: 201,
-    message: `${role} application approved and user created!`,
-  });
 });
 
 module.exports = router;
