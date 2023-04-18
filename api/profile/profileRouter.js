@@ -16,22 +16,10 @@ validateUser;
 
 //TO-DO: Implement Auth0 using the correct middleware(auth0middleware)
 
-// gets current user profile
-
-// router.post('/current_user_profile', authRequired, async (req, res, next) => {
-//   try {
-//     req.profile = await Profiles.findById(req.profile.profile_id);
-//     res.status(200).json(req.profile);
-//   } catch (err) {
-//     next({ status: 500, message: err.message });
-//   }
-// });
-
 router.post('/current_user_profile', authRequired, async (req, res, next) => {
   try {
     let profile = await Profiles.findById(req.body.sub);
     let tempProfile = await Profiles.findTempById(req.body.sub);
-    console.log(profile);
 
     if (profile === undefined && tempProfile === undefined) {
       await Profiles.createTemp({
@@ -58,7 +46,6 @@ router.post('/current_user_profile', authRequired, async (req, res, next) => {
           profile_id: profile.profile_id,
         })
         .then((userInfo) => {
-          console.log(userInfo.data.result[0]);
           res
             .status(200)
             .json({ ...userInfo.data.result[0], role: profile.role });
@@ -92,7 +79,6 @@ router.get('/role/:role', authRequired, adminRequired, (req, res) => {
     axios
       .get(`${baseURL}/matches/all/obj`)
       .then((response) => {
-        console.log(`Response`, response);
         res.status(200).json(response.data);
       })
       .catch((err) => console.log(err));
