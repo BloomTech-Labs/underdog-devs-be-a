@@ -12,12 +12,21 @@ const findById = (profile_id) => {
   return db('profiles').where({ profile_id }).first().select('*');
 };
 
+const findTempById = (profile_id) => {
+  return db('temp_user_data').where({ profile_id }).first().select('*');
+};
+
 const findByRole = (role) => {
   return db('profiles').where({ role }).select('*');
 };
 
 const create = (profile) => {
   return db('profiles').insert(profile).returning('*');
+};
+
+const createTemp = (profile) => {
+  // console.log(profile);
+  return db('temp_user_data').insert(profile).returning('*');
 };
 
 const update = (id, profile) => {
@@ -42,6 +51,10 @@ const updateIsActive = async (profile_id, status) => {
 
 const remove = (id) => {
   return db('profiles').where({ id }).del();
+};
+
+const removeTemp = (id) => {
+  return db('temp_user_data').where('profile_id', id).del();
 };
 
 const findOrCreateProfile = async (profileObj) => {
@@ -103,4 +116,7 @@ module.exports = {
   menteeApplicationData,
   checkAverageAttendance,
   findByRole,
+  createTemp,
+  removeTemp,
+  findTempById,
 };

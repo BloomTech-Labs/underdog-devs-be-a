@@ -19,8 +19,26 @@ validateUser;
 router.post('/current_user_profile', authRequired, async (req, res, next) => {
   try {
     let profile = await Profiles.findById(req.body.sub);
+    let tempProfile = await Profiles.findTempById(req.body.sub);
 
-    if (profile.role === 'admin') {
+    if (profile === undefined && tempProfile === undefined) {
+      await Profiles.createTemp({
+        profile_id: req.body.sub,
+        role: req.body[
+          `${process.env.REACT_APP_AUTH0_IDTOKEN_IDENTIFIER}/role`
+        ],
+        email: req.body.email,
+      });
+
+      res.status(200).json({
+        tempProfile: true,
+        role: req.body[
+          `${process.env.REACT_APP_AUTH0_IDTOKEN_IDENTIFIER}/role`
+        ],
+      });
+    } else if (profile === undefined && tempProfile) {
+      res.status(200).json({ tempProfile: true, role: tempProfile.role });
+    } else if (profile.role === 'admin') {
       profile ? res.status(200).json(profile) : console.log('searching...');
     } else {
       axios
