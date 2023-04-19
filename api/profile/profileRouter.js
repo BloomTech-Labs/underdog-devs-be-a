@@ -20,6 +20,9 @@ router.post('/current_user_profile', authRequired, async (req, res, next) => {
   try {
     let profile = await Profiles.findById(req.body.sub);
     let tempProfile = await Profiles.findTempById(req.body.sub);
+    console.log(req.body);
+    console.log(`Profile: ${profile}`);
+    console.log(`tempProfile: ${tempProfile}`);
 
     if (profile === undefined && tempProfile === undefined) {
       await Profiles.createTemp({
@@ -30,6 +33,8 @@ router.post('/current_user_profile', authRequired, async (req, res, next) => {
         email: req.body.email,
       });
 
+      console.log('profile/tempProfile undefined path hit');
+
       res.status(200).json({
         tempProfile: true,
         role: req.body[
@@ -37,8 +42,10 @@ router.post('/current_user_profile', authRequired, async (req, res, next) => {
         ],
       });
     } else if (profile === undefined && tempProfile) {
+      console.log('profile undefined && tempProfile path hit');
       res.status(200).json({ tempProfile: true, role: tempProfile.role });
     } else if (profile.role === 'admin') {
+      console.log('admin path hit');
       profile ? res.status(200).json(profile) : console.log('searching...');
     } else {
       axios
