@@ -62,6 +62,7 @@ router.post('/current_user_profile', authRequired, async (req, res, next) => {
         });
     }
   } catch (err) {
+    console.log(err);
     next({ status: 500, message: err.message });
   }
 });
