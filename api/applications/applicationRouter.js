@@ -302,8 +302,6 @@ router.put('/update-validate_status/:profile_id', async (req, res, next) => {
     validate_status,
   };
 
-  console.log(req.body);
-
   axios
     .patch(`${baseURL}/update/${role}/${profile_id}`, {
       validate_status: validate_status,
