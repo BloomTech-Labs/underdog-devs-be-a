@@ -25,7 +25,7 @@ const adminRequired = (req, res, next) => {
 
   // Profiles.findById(user.sub)
   //   .then((selectedUser) => {
-  //     if (selectedUser.role_id <= 2) next();
+  //     if (selectedUser.role_name === 'admin') next();
   //     else
   //       next({
   //         status: 401,
@@ -41,7 +41,7 @@ const mentorRequired = async (req, res, next) => {
   // const user = jwt_decode(token);
   // await Profiles.findById(user.sub)
   //   .then((selectedUser) => {
-  //     if (selectedUser.role_id <= 3) {
+  //     if (selectedUser.role_name === 'mentor') {
   //       next();
   //     } else {
   //       next({
