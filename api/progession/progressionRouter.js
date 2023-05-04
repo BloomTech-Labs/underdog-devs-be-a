@@ -11,10 +11,9 @@ const {
   mentorRequired,
   adminRequired,
 } = require('../middleware/permissionsRequired');
-const authRequired = require('../middleware/authRequired');
 
 // Responds with the available progression labels
-router.get('/', authRequired, mentorRequired, (req, res, next) => {
+router.get('/', mentorRequired, (req, res, next) => {
   Progression.findAllLabels()
     .then((labels) => {
       res.status(200).json(labels);
@@ -30,7 +29,6 @@ router.get('/', authRequired, mentorRequired, (req, res, next) => {
 // Responds with a mentee's current progress.
 router.get(
   '/:profile_id',
-  authRequired,
   mentorRequired,
   validateUser,
   checkIfMentee,
@@ -51,7 +49,6 @@ router.get(
 // allows an admin to update a mentee's progress
 router.put(
   '/:profile_id',
-  authRequired,
   adminRequired,
   validateUser,
   validateProgressId,

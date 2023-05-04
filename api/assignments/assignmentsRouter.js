@@ -2,13 +2,12 @@ const express = require('express');
 const Assignment = require('./assignmentsModel');
 const router = express.Router();
 const { adminRequired } = require('../middleware/permissionsRequired');
-const authRequired = require('../middleware/authRequired');
 const axios = require('axios');
 const { baseURL } = require('../../config/dsConfig');
 
 // possible endpoint for admin use case of retrieving all matches / assignments (needs to be refactored to point to DS API instead of Postgres BE)
 
-router.get('/', authRequired, adminRequired, (req, res, next) => {
+router.get('/', adminRequired, (req, res, next) => {
   Assignment.findAll()
     .then((assignments) => {
       res.status(200).json(assignments);

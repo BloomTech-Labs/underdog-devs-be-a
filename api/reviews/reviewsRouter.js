@@ -3,11 +3,10 @@ const Review = require('./reviewsModel');
 const Profiles = require('../profile/profileModel');
 const router = express.Router();
 const { adminRequired } = require('../middleware/permissionsRequired');
-const authRequired = require('../middleware/authRequired');
 
 //Get all reviews
 
-router.get('/', authRequired, adminRequired, (req, res, next) => {
+router.get('/', adminRequired, (req, res, next) => {
   Review.findAll()
     .then((reviews) => {
       res.status(200).json(reviews);
@@ -19,7 +18,7 @@ router.get('/', authRequired, adminRequired, (req, res, next) => {
 
 //Get all reviews by mentor's id
 
-router.get('/mentor/:id', authRequired, validProfileID, (req, res, next) => {
+router.get('/mentor/:id', validProfileID, (req, res, next) => {
   const id = req.params.id;
   Review.findByMentorId(id)
     .then((reviews) => {
@@ -36,7 +35,7 @@ router.get('/mentor/:id', authRequired, validProfileID, (req, res, next) => {
 
 //get all mentee reviews by mentee_id
 
-router.get('/mentee/:id', authRequired, validProfileID, (req, res, next) => {
+router.get('/mentee/:id', validProfileID, (req, res, next) => {
   const id = req.params.id;
   Review.findByMenteeId(id)
     .then((reviews) => {
@@ -53,24 +52,18 @@ router.get('/mentee/:id', authRequired, validProfileID, (req, res, next) => {
 
 // Create a review for a mentee
 
-router.post(
-  '/',
-  authRequired,
-  validNewReview,
-  adminRequired,
-  (req, res, next) => {
-    const review = req.body;
-    Review.Create(review)
-      .then(() => {
-        res.status(201).json({ message: 'success' });
-      })
-      .catch(next);
-  }
-);
+router.post('/', validNewReview, adminRequired, (req, res, next) => {
+  const review = req.body;
+  Review.Create(review)
+    .then(() => {
+      res.status(201).json({ message: 'success' });
+    })
+    .catch(next);
+});
 
 // Create a review for a mentor
 
-router.post('/', authRequired, validNewReview, (req, res, next) => {
+router.post('/', validNewReview, (req, res, next) => {
   const review = req.body;
   Review.Create(review)
     .then(() => {

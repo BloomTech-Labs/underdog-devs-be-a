@@ -7,7 +7,6 @@ const dsService = require('../dsService/dsModel');
 */
 const router = express.Router();
 const jwt = require('jwt-decode');
-const authRequired = require('../middleware/authRequired');
 const {
   mentorRequired,
   adminRequired,
@@ -15,7 +14,7 @@ const {
 
 // get all meetings
 
-router.get('/', authRequired, adminRequired, (req, res, next) => {
+router.get('/', adminRequired, (req, res, next) => {
   Meeting.findAll()
     .then((meetings) => {
       res.status(200).json(meetings);
@@ -29,7 +28,6 @@ router.get('/', authRequired, adminRequired, (req, res, next) => {
 
 router.get(
   '/profile/:profile_id',
-  authRequired,
   validProfileID,
   adminRequired,
   (req, res, next) => {
@@ -50,7 +48,7 @@ router.get(
 
 // get all the meetings the current user has
 
-router.get('/my-meetings', authRequired, async (req, res, next) => {
+router.get('/my-meetings', async (req, res, next) => {
   const token = req.headers.authorization;
   const user = jwt(token);
   const id = user.sub;
@@ -68,7 +66,6 @@ router.get('/my-meetings', authRequired, async (req, res, next) => {
 
 router.post(
   '/',
-  authRequired,
   validNewMeeting,
   validMentorId,
   validMenteeId,
@@ -95,7 +92,6 @@ router.post(
 //TODO FIX DS SERVICE, it currently only updates the local testing db
 router.put(
   '/:meeting_id',
-  authRequired,
   validMeetingID,
   validNewMeeting,
   mentorRequired,
@@ -128,7 +124,6 @@ router.put(
 //TODO FIX DS SERVICE, it currently only deletes from the local testing db
 router.delete(
   '/:meeting_id',
-  authRequired,
   validMeetingID,
   mentorRequired,
   (req, res, next) => {
@@ -147,7 +142,7 @@ router.delete(
 
 // get a meeting by meeting_id
 
-router.get('/:meeting_id', authRequired, validMeetingID, (req, res, next) => {
+router.get('/:meeting_id', validMeetingID, (req, res, next) => {
   const id = req.params.meeting_id;
   Meeting.findByMeetingId(id)
     .then((meeting) => {
