@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const RoleTickets = require('./roleTicketsModel');
-
-const authRequired = require('../middleware/authRequired');
 const { adminRequired } = require('../middleware/permissionsRequired');
 const {
   checkRoleTicketIdExists,
@@ -106,7 +104,7 @@ const {
  */
 
 // Responds with all available role ticket requests
-router.get('/', authRequired, adminRequired, async (req, res, next) => {
+router.get('/', adminRequired, async (req, res, next) => {
   await RoleTickets.findAll()
     .then((roletickets) => {
       if (roletickets.length === 0) {
@@ -160,7 +158,6 @@ router.get('/', authRequired, adminRequired, async (req, res, next) => {
 
 router.get(
   '/:role_ticket_id',
-  authRequired,
   adminRequired,
   checkRoleTicketIdExists,
   (req, res, next) => {
@@ -221,24 +218,18 @@ router.get(
  *        $ref: '#/components/responses/UnauthorizedError'
  */
 
-router.post(
-  '/',
-  authRequired,
-  adminRequired,
-  validateRoleTicket,
-  async (req, res, next) => {
-    try {
-      const roleTicketInput = req.roleTicketInput;
-      const postResponse = await RoleTickets.Create(roleTicketInput);
-      return res.status(201).json({
-        message: 'new role ticket created, successfully!',
-        roleTicket: postResponse,
-      });
-    } catch (err) {
-      next({ status: 500, message: err.message });
-    }
+router.post('/', adminRequired, validateRoleTicket, async (req, res, next) => {
+  try {
+    const roleTicketInput = req.roleTicketInput;
+    const postResponse = await RoleTickets.Create(roleTicketInput);
+    return res.status(201).json({
+      message: 'new role ticket created, successfully!',
+      roleTicket: postResponse,
+    });
+  } catch (err) {
+    next({ status: 500, message: err.message });
   }
-);
+});
 
 /**
  * @swagger
@@ -308,7 +299,6 @@ router.post(
 
 router.put(
   '/:role_ticket_id',
-  authRequired,
   adminRequired,
   checkRoleTicketIdExists,
   validateRoleTicket,
@@ -377,7 +367,6 @@ router.put(
 
 router.delete(
   '/:role_ticket_id',
-  authRequired,
   adminRequired,
   checkRoleTicketIdExists,
   async (req, res, next) => {

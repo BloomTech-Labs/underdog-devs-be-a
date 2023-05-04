@@ -2,7 +2,6 @@ const express = require('express');
 const Ticket = require('./resourceTicketsModel');
 const router = express.Router();
 const jwt = require('jwt-decode');
-const authRequired = require('../middleware/authRequired');
 const {
   mentorRequired,
   adminRequired,
@@ -10,7 +9,7 @@ const {
 
 //get all Resource tickets
 
-router.get('/', authRequired, adminRequired, async (req, res, next) => {
+router.get('/', adminRequired, async (req, res, next) => {
   await Ticket.findAll()
     .then((tickets) => {
       if (tickets.length < 1) {
@@ -26,7 +25,7 @@ router.get('/', authRequired, adminRequired, async (req, res, next) => {
 
 //get all the tickets the current user has
 
-router.get('/mytickets', authRequired, mentorRequired, async (req, res) => {
+router.get('/mytickets', mentorRequired, async (req, res) => {
   const token = req.headers.authorization;
   const user = jwt(token);
   const id = user.sub;
@@ -43,7 +42,6 @@ router.get('/mytickets', authRequired, mentorRequired, async (req, res) => {
 
 router.get(
   '/:resource_ticket_id',
-  authRequired,
   adminRequired,
   validRecTicketID,
   (req, res) => {
@@ -60,28 +58,21 @@ router.get(
 
 //create a resource ticket, current user logged in
 
-router.post(
-  '/',
-  authRequired,
-  mentorRequired,
-  validNewTicket,
-  (req, res, next) => {
-    const token = req.headers.authorization;
-    const User = jwt(token);
-    const ticket = req.body;
-    Ticket.Create(User.sub, ticket)
-      .then(() => {
-        res.status(201).json({ message: 'success', ticket });
-      })
-      .catch(next);
-  }
-);
+router.post('/', mentorRequired, validNewTicket, (req, res, next) => {
+  const token = req.headers.authorization;
+  const User = jwt(token);
+  const ticket = req.body;
+  Ticket.Create(User.sub, ticket)
+    .then(() => {
+      res.status(201).json({ message: 'success', ticket });
+    })
+    .catch(next);
+});
 
 // update a resource ticket
 
 router.put(
   '/:resource_ticket_id',
-  authRequired,
   mentorRequired,
   validNewTicket,
   (req, res, next) => {
@@ -104,23 +95,18 @@ router.put(
 
 // Delete a resource ticket
 
-router.delete(
-  '/:resource_ticket_id',
-  authRequired,
-  mentorRequired,
-  (req, res, next) => {
-    const id = req.params.resource_ticket_id;
-    Ticket.Delete(id)
-      .then((ticket) => {
-        if (ticket) {
-          res.status(200).json({
-            message: 'ticket deleted',
-          });
-        }
-      })
-      .catch(next);
-  }
-);
+router.delete('/:resource_ticket_id', mentorRequired, (req, res, next) => {
+  const id = req.params.resource_ticket_id;
+  Ticket.Delete(id)
+    .then((ticket) => {
+      if (ticket) {
+        res.status(200).json({
+          message: 'ticket deleted',
+        });
+      }
+    })
+    .catch(next);
+});
 
 ///////////////////////////MIDDLEWARE///////////////////////////////
 

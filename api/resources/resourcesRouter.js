@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const Resources = require('./resourcesModel');
-const authRequired = require('../middleware/authRequired');
 const { adminRequired } = require('../middleware/permissionsRequired');
 const {
   checkResourceIdExists,
@@ -129,7 +128,7 @@ const {
  *        $ref: '#/components/responses/UnauthorizedError'
  */
 
-router.get('/', authRequired, async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const filters = req.query;
     const allResources = await Resources.findAll();
@@ -193,19 +192,14 @@ router.get('/', authRequired, async (req, res, next) => {
  *                  example: 'Resource with ID 1 not found!'
  */
 
-router.get(
-  '/:resource_id',
-  authRequired,
-  checkResourceIdExists,
-  (req, res, next) => {
-    try {
-      const resource = req._resource;
-      return res.status(200).json(resource);
-    } catch (err) {
-      next({ status: 500, message: err.message });
-    }
+router.get('/:resource_id', checkResourceIdExists, (req, res, next) => {
+  try {
+    const resource = req._resource;
+    return res.status(200).json(resource);
+  } catch (err) {
+    next({ status: 500, message: err.message });
   }
-);
+});
 
 /**
  * @swagger
@@ -248,24 +242,18 @@ router.get(
  *        $ref: '#/components/responses/UnauthorizedError'
  */
 
-router.post(
-  '/',
-  authRequired,
-  adminRequired,
-  validateResource,
-  async (req, res, next) => {
-    try {
-      const resourceInput = req._resource;
-      const postResponse = await Resources.Create(resourceInput);
-      return res.status(201).json({
-        message: 'new resource created, successfully!',
-        resource: postResponse,
-      });
-    } catch (err) {
-      next({ status: 500, message: err.message });
-    }
+router.post('/', adminRequired, validateResource, async (req, res, next) => {
+  try {
+    const resourceInput = req._resource;
+    const postResponse = await Resources.Create(resourceInput);
+    return res.status(201).json({
+      message: 'new resource created, successfully!',
+      resource: postResponse,
+    });
+  } catch (err) {
+    next({ status: 500, message: err.message });
   }
-);
+});
 
 /**
  * @swagger
@@ -336,7 +324,6 @@ router.post(
 
 router.put(
   '/:resource_id',
-  authRequired,
   adminRequired,
   checkResourceIdExists,
   validateResource,
@@ -405,7 +392,6 @@ router.put(
 
 router.delete(
   '/:resource_id',
-  authRequired,
   adminRequired,
   checkResourceIdExists,
   async (req, res, next) => {

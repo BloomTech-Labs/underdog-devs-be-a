@@ -4,11 +4,10 @@ const Roles = require('./rolesModel');
 
 const { validateUser } = require('../middleware/validationMiddleware');
 const { validateRoleId, checkCurrentRoleId } = require('./rolesMiddleware');
-const authRequired = require('../middleware/authRequired');
 const { adminRequired } = require('../middleware/permissionsRequired');
 
 // Responds with all available roles
-router.get('/', authRequired, adminRequired, (req, res, next) => {
+router.get('/', adminRequired, (req, res, next) => {
   Roles.findAllRoles()
     .then((roles) => {
       res.status(200).json(roles);
@@ -37,7 +36,6 @@ router.get('/:profile_id', validateUser, (req, res, next) => {
 // allows an admin to change a profile's role_id to any role but super admin
 router.put(
   '/:profile_id',
-  authRequired,
   adminRequired,
   validateUser,
   validateRoleId,

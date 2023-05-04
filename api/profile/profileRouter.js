@@ -1,5 +1,5 @@
 const express = require('express');
-const authRequired = require('../middleware/authRequired'); //needs to change to real auth0Middleware after auth is fixed
+
 const Profiles = require('./profileModel');
 const router = express.Router();
 const axios = require('axios');
@@ -16,7 +16,7 @@ validateUser;
 
 //TO-DO: Implement Auth0 using the correct middleware(auth0middleware)
 
-router.post('/current_user_profile', authRequired, async (req, res, next) => {
+router.post('/current_user_profile', async (req, res, next) => {
   try {
     let profile = await Profiles.findById(req.body.sub);
     let tempProfile = await Profiles.findTempById(req.body.sub);
@@ -59,9 +59,9 @@ router.post('/current_user_profile', authRequired, async (req, res, next) => {
   }
 });
 
-// // gets all profiles
+// gets all profiles
 
-router.get('/', authRequired, adminRequired, async (req, res) => {
+router.get('/', adminRequired, async (req, res) => {
   axios
     .get(`${baseURL}/get/all`)
     .then((resp) => {
@@ -74,7 +74,7 @@ router.get('/', authRequired, adminRequired, async (req, res) => {
 
 //get all profiles by role including matches
 
-router.get('/role/:role', authRequired, adminRequired, (req, res) => {
+router.get('/role/:role', adminRequired, (req, res) => {
   if (req.params.role === 'mentor') {
     axios
       .get(`${baseURL}/matches/all/obj`)
@@ -152,7 +152,7 @@ router.get('/role/:role', authRequired, adminRequired, (req, res) => {
  *        $ref: '#/components/responses/UnauthorizedError'
  */
 
-router.get('/:id', authRequired, async function (req, res, next) {
+router.get('/:id', async function (req, res, next) {
   const id = String(req.params.id);
   const attendance_average = await Profiles.checkAverageAttendance(id);
   Profiles.findById(id)
@@ -208,7 +208,7 @@ router.get('/:id', authRequired, async function (req, res, next) {
  */
 
 // post new mentee/mentor account from application
-router.post('/', authRequired, async (req, res, next) => {
+router.post('/', async (req, res, next) => {
   const profile = req.body;
   if (profile) {
     const id = profile.id || 0;
@@ -234,40 +234,35 @@ router.post('/', authRequired, async (req, res, next) => {
 });
 
 // update current profile firstname, lastname, email
-router.put(
-  '/',
-  validation(validateSelfUpdate),
-  authRequired,
-  (req, res, next) => {
-    try {
-      const changes = req.body;
-      const user = req.profile;
-      if (changes) {
-        Profiles.update(user.profile_id, changes)
-          .then(async (updated) => {
-            await dsService.postProfileUpdate(updated, updated.role_id);
-            res.status(200).json({ updated_profile: updated[0] });
-          })
-          .catch(() => {
-            next({
-              status: 500,
-              message: `Could not update profile ${user.profile_id}`,
-            });
+router.put('/', validation(validateSelfUpdate), (req, res, next) => {
+  try {
+    const changes = req.body;
+    const user = req.profile;
+    if (changes) {
+      Profiles.update(user.profile_id, changes)
+        .then(async (updated) => {
+          await dsService.postProfileUpdate(updated, updated.role_id);
+          res.status(200).json({ updated_profile: updated[0] });
+        })
+        .catch(() => {
+          next({
+            status: 500,
+            message: `Could not update profile ${user.profile_id}`,
           });
-      } else {
-        next({
-          status: 400,
-          message: `Missing or invalid request`,
         });
-      }
-    } catch (err) {
-      next(err);
+    } else {
+      next({
+        status: 400,
+        message: `Missing or invalid request`,
+      });
     }
+  } catch (err) {
+    next(err);
   }
-);
+});
 
 // update profile by id (admin)
-router.put('/:id', adminRequired, authRequired, (req, res, next) => {
+router.put('/:id', adminRequired, (req, res, next) => {
   try {
     const changes = req.body;
     if (changes) {
@@ -296,7 +291,6 @@ router.put('/:id', adminRequired, authRequired, (req, res, next) => {
 // Activates or deactivates a user depending on what their current is_active status is
 router.put(
   '/is_active/:profile_id',
-  authRequired,
   superAdminRequired,
   validateUser,
   async (req, res, next) => {
@@ -319,7 +313,7 @@ router.put(
 );
 
 //get match mentor by profile_id
-router.get('/match/:id', authRequired, (req, res, next) => {
+router.get('/match/:id', (req, res, next) => {
   axios
     .post(`${baseURL}/match/${req.params.id}/?n_matches=5`)
     .then((results) => {

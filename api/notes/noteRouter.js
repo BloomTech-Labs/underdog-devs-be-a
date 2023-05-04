@@ -1,7 +1,6 @@
 const express = require('express');
 const Notes = require('./noteModel');
 const router = express.Router();
-const authRequired = require('../middleware/authRequired');
 const validation = require('../helpers/validation');
 const notesSchema = require('../../data/schemas/notesSchema');
 
@@ -14,7 +13,7 @@ const {
   checkBodyIsComplete,
 } = require('../middleware/notesMiddleware');
 
-router.get('/', authRequired, async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const notes = await Notes.findAll();
     res.status(200).json(notes);
@@ -23,23 +22,17 @@ router.get('/', authRequired, async (req, res, next) => {
   }
 });
 
-router.get(
-  '/:note_id',
-  authRequired,
-  checkNoteExists,
-  async (req, res, next) => {
-    try {
-      const note = req.body.retrievedNote;
-      res.status(200).json(note);
-    } catch (error) {
-      next(error);
-    }
+router.get('/:note_id', checkNoteExists, async (req, res, next) => {
+  try {
+    const note = req.body.retrievedNote;
+    res.status(200).json(note);
+  } catch (error) {
+    next(error);
   }
-);
+});
 
 router.get(
   '/mentee/:mentee_id',
-  authRequired,
   checkMenteeIdExists,
   async (req, res, next) => {
     try {
@@ -55,7 +48,6 @@ router.get(
 
 router.post(
   '/',
-  authRequired,
   validation(notesSchema),
   checkBodyIsComplete,
   checkStatusEnum,
@@ -85,7 +77,6 @@ router.post(
 
 router.put(
   '/:note_id',
-  authRequired,
   checkNoteExists,
   checkUpdateInfo,
   async (req, res, next) => {
@@ -110,28 +101,23 @@ router.put(
   }
 );
 
-router.delete(
-  '/:note_id',
-  authRequired,
-  checkNoteExists,
-  async (req, res, next) => {
-    try {
-      const deleted = await Notes.remove(req.params.note_id);
-      if (deleted) {
-        res.status(200).json({ message: 'Note successfully deleted' });
-      } else {
-        next({
-          status: 500,
-          message: 'Could not delete',
-        });
-      }
-    } catch (error) {
-      next(error);
+router.delete('/:note_id', checkNoteExists, async (req, res, next) => {
+  try {
+    const deleted = await Notes.remove(req.params.note_id);
+    if (deleted) {
+      res.status(200).json({ message: 'Note successfully deleted' });
+    } else {
+      next({
+        status: 500,
+        message: 'Could not delete',
+      });
     }
+  } catch (error) {
+    next(error);
   }
-);
+});
 
-router.get('/:id/comments', authRequired, async (req, res, next) => {
+router.get('/:id/comments', async (req, res, next) => {
   try {
     const comments = await Notes.getNoteComments(req.params.id);
     res.status(200).json(comments);
@@ -140,7 +126,7 @@ router.get('/:id/comments', authRequired, async (req, res, next) => {
   }
 });
 
-router.post('/:note_id/comments', authRequired, async (req, res, next) => {
+router.post('/:note_id/comments', async (req, res, next) => {
   try {
     const newComment = {
       comment_text: req.body.comment_text,

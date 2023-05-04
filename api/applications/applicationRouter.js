@@ -1,7 +1,6 @@
 const express = require('express');
-// const authRequired = require('../middleware/authRequired');
 const router = express.Router();
-// const { adminRequired } = require('../middleware/permissionsRequired.js');
+const { adminRequired } = require('../middleware/permissionsRequired.js');
 const {
   checkApplicationExists,
   checkRole,
@@ -64,7 +63,7 @@ const Profiles = require('../profile/profileModel');
   This get route will read the '/get/all' DS API endpoint and send back all users.
   authRequired, and AdminRequired imports have been left out because they will likely be needed when auth0 is implemented.
 */
-router.get('/', (req, res) => {
+router.get('/', adminRequired, (req, res) => {
   axios
     .get(`${baseURL}/get/all`)
     .then((app) => {
@@ -76,7 +75,7 @@ router.get('/', (req, res) => {
 });
 // get pending application tickets by role
 
-router.get('/:role', (req, res) => {
+router.get('/:role', adminRequired, (req, res) => {
   if (req.params.role === 'mentor') {
     res.json([
       {
@@ -158,9 +157,15 @@ router.get('/:role', (req, res) => {
 
 // get application by profile id
 
-router.get('/profileId/:id', checkApplicationExists, checkRole, (req, res) => {
-  res.status(200).json(req.intakeData);
-});
+router.get(
+  '/profileId/:id',
+  adminRequired,
+  checkApplicationExists,
+  checkRole,
+  (req, res) => {
+    res.status(200).json(req.intakeData);
+  }
+);
 
 /**
  * @swagger
@@ -293,29 +298,34 @@ router.post('/new/:role', validation(), async (req, res, next) => {
  */
 
 // eslint-disable-next-line no-unused-vars
-router.put('/update-validate_status/:profile_id', async (req, res, next) => {
-  const { role, validate_status } = req.body;
-  const { profile_id } = req.params;
-  const newProfile = {
-    profile_id,
-    role,
-    validate_status,
-  };
+router.put(
+  '/update-validate_status/:profile_id',
+  adminRequired,
+  async (req, res, next) => {
+    const { role, validate_status } = req.body;
+    const { profile_id } = req.params;
+    const newProfile = {
+      profile_id,
+      role,
+      validate_status,
+    };
 
-  axios
-    .patch(`${baseURL}/update/${role}/${profile_id}`, {
-      validate_status: validate_status,
-    })
-    // eslint-disable-next-line no-unused-vars
-    .then((resp) => {
-      Profiles.create(newProfile);
-      res.status(200).json({
-        message: `${role} ${validate_status}!`,
+    axios
+      .patch(`${baseURL}/update/${role}/${profile_id}`, {
+        validate_status: validate_status,
+      })
+      // eslint-disable-next-line no-unused-vars
+      .then((resp) => {
+        Profiles.create(newProfile);
+        res.status(200).json({
+          message: `${role} ${validate_status}!`,
+        });
+        next();
+      })
+      .catch((err) => {
+        console.error(err.response.message);
       });
-    })
-    .catch((err) => {
-      console.error(err.response.message);
-    });
-});
+  }
+);
 
 module.exports = router;
