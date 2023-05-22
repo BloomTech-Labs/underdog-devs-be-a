@@ -1,9 +1,9 @@
 const request = require('supertest');
 const express = require('express');
 const db = require('../../data/db-config');
-const authRequired = require('../../api/middleware/authRequired');
 const handleError = require('../../api/middleware/handleError');
 const applicationRouter = require('../../api/applications/applicationRouter');
+const permissionsRequired = require('../../api/middleware/permissionsRequired');
 
 // Reset Test Database Before/After Tests
 
@@ -19,13 +19,8 @@ afterEach(() => jest.clearAllMocks());
 
 // Bypass Auth/Permissions Middleware
 
-jest.mock('../../api/middleware/authRequired', () =>
-  jest.fn((req, res, next) => next())
-);
-
 jest.mock('../../api/middleware/permissionsRequired', () => ({
   adminRequired: jest.fn((req, res, next) => next()),
-  superAdminRequired: jest.fn((req, res, next) => next()),
 }));
 
 // Instantiate Test API
@@ -57,7 +52,7 @@ describe('Application Router', () => {
     });
 
     it('requires authentication', () => {
-      expect(authRequired).toBeCalled();
+      expect(permissionsRequired).toBeCalled();
     });
 
     it('responds with status 200', async () => {
