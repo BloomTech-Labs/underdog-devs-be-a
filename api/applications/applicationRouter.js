@@ -203,11 +203,11 @@ router.post('/new/:role', validation(), async (req, res, next) => {
   try {
     if (req.params.role === 'mentee') {
       const mentee = req.body;
-      mentee['is_active'] = false;
+      mentee['is_active'] = true;
       mentee['in_project_underdog'] = false;
     } else {
       const mentor = req.body;
-      mentor['is_active'] = false;
+      mentor['is_active'] = true;
       mentor['accepting_new_mentees'] = false;
       mentor['commitment'] = false;
       mentor['industry_knowledge'] = false;
