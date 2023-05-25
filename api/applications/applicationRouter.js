@@ -208,7 +208,7 @@ router.post('/new/:role', validation(), async (req, res, next) => {
     } else {
       const mentor = req.body;
       mentor['is_active'] = true;
-      mentor['accepting_new_mentees'] = false;
+      mentor['accepting_new_mentees'] = true;
       mentor['commitment'] = false;
       mentor['industry_knowledge'] = false;
     }
