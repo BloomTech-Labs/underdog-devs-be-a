@@ -205,12 +205,14 @@ router.post('/new/:role', validation(), async (req, res, next) => {
       const mentee = req.body;
       mentee['is_active'] = true;
       mentee['in_project_underdog'] = false;
+      mentee['matches'] = [];
     } else {
       const mentor = req.body;
       mentor['is_active'] = true;
       mentor['accepting_new_mentees'] = true;
       mentor['commitment'] = false;
       mentor['industry_knowledge'] = false;
+      mentor['matches'] = [];
     }
 
     await Profiles.removeTemp(req.body.profile_id);
