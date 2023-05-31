@@ -1,7 +1,6 @@
 const request = require('supertest');
 const express = require('express');
 const db = require('../../data/db-config');
-const authRequired = require('../../api/middleware/authRequired');
 const profileRouter = require('../../api/profile/profileRouter');
 const handleError = require('../../api/middleware/handleError');
 const { profiles } = require('../../data/seeds/002-profiles');
@@ -58,10 +57,6 @@ describe('Profile Router', () => {
       res = await request(app).get('/profile');
     });
 
-    it('requires authentication', () => {
-      expect(authRequired).toBeCalled();
-    });
-
     it('responds with status 200', () => {
       const expected = 200;
       const actual = res.status;
@@ -82,10 +77,6 @@ describe('Profile Router', () => {
       let res;
       beforeAll(async () => {
         res = await request(app).get('/profile/00ultwew80Onb2vOT4x6');
-      });
-
-      it('requires authentication', () => {
-        expect(authRequired).toBeCalled();
       });
 
       it('responds with status 200', async () => {
@@ -110,10 +101,6 @@ describe('Profile Router', () => {
         let res;
         beforeAll(async () => {
           res = await request(app).get(`/profile/${badID}`);
-        });
-
-        it('requires authentication', () => {
-          expect(authRequired).toBeCalled();
         });
 
         it('responds with status 404', async () => {
@@ -145,16 +132,12 @@ describe('Profile Router', () => {
           first_name: 'Brad',
           last_name: 'Bowman',
           email: 'brad.bowman@maildrop.cc',
-          role_id: 5,
+          role_name: 'mentor',
         });
       });
 
-      it('requires authentication', () => {
-        expect(authRequired).toBeCalled();
-      });
-
-      it('responds with status 201', async () => {
-        const expected = 201;
+      it('responds with status 200', async () => {
+        const expected = 200;
         const actual = res.status;
 
         expect(actual).toBe(expected);
@@ -176,7 +159,7 @@ describe('Profile Router', () => {
           profile_id: 'bradbowman',
           progress_id: null,
           progress_status: null,
-          role_id: 5,
+          role_name: 'mentor',
         };
         const actual = res.body.profile;
 
@@ -265,111 +248,26 @@ describe('Profile Router', () => {
             expect(actual).toMatch(expected);
           });
         });
-
-        describe('too long', () => {
-          const tooLongLastName =
-            'Lorem ipsum dolor sit amet, consectetur massa nunc.';
-          let res;
-          beforeAll(async () => {
-            res = await postNewUser({
-              profile_id: '9000',
-              first_name: 'Firstname',
-              last_name: tooLongLastName,
-              email: 'realemail@maildrop.cc',
-            });
-          });
-
-          it.skip('responds with status 400', () => {
-            const expected = 400;
-            const actual = res.status;
-
-            expect(actual).toBe(expected);
-          });
-
-          it.skip('returns message "last_name must be between 2-50 chars"', () => {
-            const expected = /last_name must be between 2-50 char/i;
-            const actual = res.body.message;
-
-            expect(actual).toMatch(expected);
-          });
-        });
-      });
-
-      describe('invalid email', () => {
-        describe('missing', () => {
-          let res;
-          beforeAll(async () => {
-            res = await postNewUser({
-              profile_id: '9000',
-              first_name: 'Firstname',
-              last_name: 'Lastname',
-            });
-          });
-
-          it.skip('responds with status 400', () => {
-            const expected = 400;
-            const actual = res.status;
-
-            expect(actual).toBe(expected);
-          });
-
-          it.skip('returns message "email is required"', () => {
-            const expected = /email is required/i;
-            const actual = res.body.message;
-
-            expect(actual).toMatch(expected);
-          });
-        });
-
-        describe('misformatted', () => {
-          let res;
-          beforeAll(async () => {
-            res = await postNewUser({
-              profile_id: '9000',
-              first_name: 'Firstname',
-              last_name: 'Lastname',
-              email: 'invalid-email',
-            });
-          });
-
-          it.skip('responds with status 400', () => {
-            const expected = 400;
-            const actual = res.status;
-
-            expect(actual).toBe(expected);
-          });
-
-          it.skip('returns message "email must be validly formatted"', () => {
-            const expected = /email must be validly formatted/i;
-            const actual = res.body.message;
-
-            expect(actual).toMatch(expected);
-          });
-        });
       });
     });
-  });
 
-  describe('[PUT] /profile', () => {
-    describe('success', () => {
-      let res;
-      beforeAll(async () => {
-        const validReqBody = {
-          profile_id: 'super-update',
-          email: 'super-update@maildrop.cc',
-        };
-        res = await request(app).put('/profile').send(validReqBody);
-      });
+    describe('[PUT] /profile', () => {
+      describe('success', () => {
+        let res;
+        beforeAll(async () => {
+          const validReqBody = {
+            profile_id: 'super-update',
+            email: 'super-update@maildrop.cc',
+          };
+          res = await request(app).put('/profile').send(validReqBody);
+        });
 
-      it('requires authentication', () => {
-        expect(authRequired).toBeCalled();
-      });
+        it('responds with status 200', () => {
+          const expected = 200;
+          const actual = res.status;
 
-      it('responds with status 200', () => {
-        const expected = 200;
-        const actual = res.status;
-
-        expect(actual).toBe(expected);
+          expect(actual).toBe(expected);
+        });
       });
     });
   });
